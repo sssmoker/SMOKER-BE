@@ -1,4 +1,4 @@
-package com.ssmoker.smoker.global.exception;
+package com.ssmoker.smoker.global.exception.code;
 
 import lombok.Builder;
 import lombok.Getter;
