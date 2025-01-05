@@ -34,20 +34,11 @@ public class SmokingArea extends BaseEntity {
     @Embedded
     private Location location;
 
+    @Embedded
+    private Feature feature;
+
     @Column(nullable = false)
     private Boolean isApproved;
-
-    @Column(nullable = false)
-    private Boolean isEnclosedSmokingArea;
-
-    @Column(nullable = false)
-    private Boolean hasTrashBin;
-
-    @Column(nullable = false)
-    private Boolean hasChair;
-
-    @Column(nullable = false)
-    private Boolean hasAirConditioning;
 
     @OneToMany(mappedBy = "smokingArea", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
