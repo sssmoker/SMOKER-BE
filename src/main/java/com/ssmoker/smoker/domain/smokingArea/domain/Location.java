@@ -1,5 +1,6 @@
 package com.ssmoker.smoker.domain.smokingArea.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
@@ -11,9 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class Location {
-
+    @Column(nullable = false)
     private Double latitude;
 
+    @Column(nullable = false)
     private Double longitude;
 
     // equals 사용을 위해 Override
