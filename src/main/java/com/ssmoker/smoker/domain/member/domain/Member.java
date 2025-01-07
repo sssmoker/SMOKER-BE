@@ -38,6 +38,11 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
+    private String profileImageUrl;
+
+    @Column(nullable = false, unique = true)
+    private Long socialId;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UpdatedHistory> updatedHistories = new ArrayList<>();
 }
