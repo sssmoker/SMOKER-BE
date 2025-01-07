@@ -43,6 +43,9 @@ public class Member extends BaseEntity {
     @Column(nullable = false, unique = true)
     private Long socialId;
 
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UpdatedHistory> updatedHistories = new ArrayList<>();
 }
