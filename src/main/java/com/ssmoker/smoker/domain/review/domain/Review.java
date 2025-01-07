@@ -1,15 +1,9 @@
 package com.ssmoker.smoker.domain.review.domain;
 
+import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.global.common.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,4 +30,8 @@ public class Review extends BaseEntity {
     private String content;
 
     private String imageUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "user_id", nullable = false)
+    private Member member;
 }
