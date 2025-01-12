@@ -1,8 +1,12 @@
 package com.ssmoker.smoker.domain.smokingArea.service;
 
+import static com.ssmoker.smoker.global.exception.code.ErrorStatus.SMOKING_AREA_NOT_FOUND;
+
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
+import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
 import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaRepository;
-import com.ssmoker.smoker.domain.smokingArea.service.dto.SmokingAreaInfoResponse;
+import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaInfoResponse;
+import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,6 @@ public class SmokingAreaService {
         if (smokingArea.isPresent()) {
             return SmokingAreaInfoResponse.of(smokingArea.get());
         }
-        throw new RuntimeException("버그에요");
+        throw new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND);
     }
 }
