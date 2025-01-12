@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class SmokerUnauthorizedException {
+public class SmokerUnauthorizedException extends RuntimeException{
     private BaseErrorCode code;
 
     public ErrorReasonDTO getErrorReason() {
