@@ -67,6 +67,30 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(generalException, errorReasonHttpStatus, null, request);
     }
 
+    @ExceptionHandler(value = SmokerBadRequestException.class)
+    public ResponseEntity onThrowException(SmokerBadRequestException badRequestException, HttpServletRequest request) {
+        ErrorReasonDTO errorReasonHttpStatus = badRequestException.getErrorReasonHttpStatus();
+        return handleExceptionInternal(badRequestException, errorReasonHttpStatus, null, request);
+    }
+
+    @ExceptionHandler(value = SmokerForbiddenException.class)
+    public ResponseEntity onThrowException(SmokerForbiddenException forbiddenException, HttpServletRequest request) {
+        ErrorReasonDTO errorReasonHttpStatus = forbiddenException.getErrorReasonHttpStatus();
+        return handleExceptionInternal(forbiddenException, errorReasonHttpStatus, null, request);
+    }
+
+    @ExceptionHandler(value = SmokerNotFoundException.class)
+    public ResponseEntity onThrowException(SmokerNotFoundException notFoundException, HttpServletRequest request) {
+        ErrorReasonDTO errorReasonHttpStatus = notFoundException.getErrorReasonHttpStatus();
+        return handleExceptionInternal(notFoundException, errorReasonHttpStatus, null, request);
+    }
+
+    @ExceptionHandler(value = SmokerUnauthorizedException.class)
+    public ResponseEntity onThrowException(SmokerUnauthorizedException unauthorizedException, HttpServletRequest request) {
+        ErrorReasonDTO errorReasonHttpStatus = unauthorizedException.getErrorReasonHttpStatus();
+        return handleExceptionInternal(unauthorizedException, errorReasonHttpStatus, null, request);
+    }
+
     private ResponseEntity<Object> handleExceptionInternal(Exception e, ErrorReasonDTO reason,
                                                            HttpHeaders headers, HttpServletRequest request) {
 
