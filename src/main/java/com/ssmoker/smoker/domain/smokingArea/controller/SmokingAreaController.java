@@ -1,10 +1,9 @@
 package com.ssmoker.smoker.domain.smokingArea.controller;
 
 import com.ssmoker.smoker.domain.smokingArea.service.SmokingAreaService;
-import com.ssmoker.smoker.domain.smokingArea.service.dto.SmokingAreaInfoResponse;
+import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaInfoResponse;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

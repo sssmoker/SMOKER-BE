@@ -1,4 +1,4 @@
-package com.ssmoker.smoker.domain.smokingArea.service.dto;
+package com.ssmoker.smoker.domain.smokingArea.dto;
 
 import com.ssmoker.smoker.domain.smokingArea.domain.Feature;
 import com.ssmoker.smoker.domain.smokingArea.domain.Location;
