@@ -99,15 +99,15 @@ public class MemberServiceImpl implements MemberService {
                 memberRepository.findByEmail(
                         googleProfile.getEmail()); //이메일
 
-        // 가입자 혹은 비가입자 체크해서 로그인 처리
-        if (queryMember.isPresent()) { // 이미 가입 -> 로그인
+
+        if (queryMember.isPresent()) {
             Member member = queryMember.get();
             String accessToken = jwtTokenProvider.createAccessToken(member.getId());
             String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
             member.updateToken(accessToken, refreshToken);
             memberRepository.save(member);
             return AuthConverter.toOAuthResponse(accessToken, refreshToken, member);
-        } else { // 회원 가입
+        } else {
             Member member = memberRepository.save(AuthConverter.googleToMember(googleProfile));
             String accessToken = jwtTokenProvider.createAccessToken(member.getId());
             String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
@@ -134,14 +134,4 @@ public class MemberServiceImpl implements MemberService {
         return AuthConverter.toTokenRefreshResponse(newAccessToken, newRefreshToken);
     } // 토큰 재발급
 
-    @Override
-    @Transactional
-    public void logout(Member member){
-        member.setAccessToken(null);
-    } // 로그아웃
-
-    @Override
-    @Transactional
-    public void deactivate(Member member){
-    } // 회원 탈퇴
 }

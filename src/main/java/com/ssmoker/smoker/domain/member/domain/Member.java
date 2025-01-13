@@ -29,6 +29,7 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //아이디
 
+    @Column(nullable = false)
     private String nickName; //닉네임
 
     @Column(nullable = false)

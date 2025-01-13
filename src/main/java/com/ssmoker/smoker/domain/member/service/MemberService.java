@@ -12,8 +12,4 @@ public interface MemberService {
     AuthResponseDTO.TokenRefreshResponse refresh(String refreshToken);
 
     AuthResponseDTO.OAuthResponse GoogleLogin(String code);
-
-    void logout(Member member); // 로그아웃
-
-    void deactivate(Member member); // 회원 탈퇴
 }

@@ -35,8 +35,8 @@ public class SecurityConfig {
             "api/smoking_areas/{smokingAreaId}/rating_info", //총 별점 & 별점 개수 조회
             "api/smoking_areas/search", //흡연 구역 검색
             "api/smoking_areas/{smokingAreaIid}/simple", //흡연 구역 지도 마커 클릭했을 때 흡연 구역 정보 조회 (모달)
-            "/test/{status}", //테스트
-            //등등 추가중...
+            "/test/{status}", //테스트 컨트롤러
+            //등등 추가해주세요
             "/health",
             "/error",
             "/swagger-ui/**",

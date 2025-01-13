@@ -41,27 +41,4 @@ public class MemberController {
     public ApiResponse<AuthResponseDTO.TokenRefreshResponse> refresh(@RequestBody AuthRequestDTO.RefreshTokenDTO request) {
         return ApiResponse.of(SuccessStatus.USER_REFRESH_OK, memberService.refresh(request.getRefreshToken()));
     } // JWT Access Token 재발급
-
-/*
-    @ResponseStatus(code = HttpStatus.OK)
-    @Operation(
-            summary = "로그아웃 API",
-            description = "로그아웃 합니다.")
-    @PostMapping("/logout")
-    public ApiResponse<Void> logout(@Parameter(name = "user", hidden = true) @AuthUser Member member) {
-        memberService.logout(member);
-        return ApiResponse.of(SuccessStatus.USER_LOGOUT_OK,null);
-    } // 로그아웃
-
-    @ResponseStatus(code = HttpStatus.OK)
-    @Operation(
-            summary = "회원 탈퇴 API",
-            description = "회원 탈퇴를 합니다.")
-    @PostMapping("/deactivate")
-    public ApiResponse<Void> deactivate(@Parameter(name = "user", hidden = true) @AuthUser Member member) {
-        memberService.deactivate(member);
-        return ApiResponse.of(SuccessStatus.USER_DELETE_OK,null);
-    } // 회원 탈퇴
-*/
-
 }
