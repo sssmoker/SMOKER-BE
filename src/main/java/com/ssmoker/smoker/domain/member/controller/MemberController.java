@@ -17,7 +17,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @ResponseStatus(code = HttpStatus.OK)
-    @Operation(summary = "카카오 로그인 API", description = "카카오 로그인 및 회원 가입을 진행하는 API입니다. 파라미터로 인가코드를 넘겨주세요")
+    @Operation(summary = "카카오 로그인 API", description = "카카오 로그인 및 회원 가입을 진행하는 API입니다. 인가코드를 넘겨주세요")
     @GetMapping("/login/kakao")
     public ApiResponse<AuthResponseDTO.OAuthResponse> kakaoLogin(@RequestParam("code") String code) {
         return ApiResponse.of(SuccessStatus.USER_LOGIN_OK, memberService.kakaoLogin(code));

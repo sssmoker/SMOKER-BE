@@ -8,7 +8,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
@@ -26,9 +26,7 @@ spring:
             client-secret: ${KAKAO_CLIENT_SECRET}
             redirect-uri: ${KAKAO_REDIRECT_URI}
             authorization-grant-type: authorization_code
-            scope: profile_nickname
             client-name: Kakao
-
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
