@@ -3,14 +3,23 @@ package com.ssmoker.smoker.security.converter;
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.member.domain.MemberStatus;
 import com.ssmoker.smoker.domain.member.dto.AuthResponseDTO;
+import com.ssmoker.smoker.security.authDTO.GoogleProfile;
 import com.ssmoker.smoker.security.authDTO.KakaoProfile;
 
 public class AuthConverter {
 
-    public static Member toMember(KakaoProfile kakaoProfile) {
+    public static Member kakaoToMember(KakaoProfile kakaoProfile) {
         return Member.builder()
                 .nickName(kakaoProfile.getKakaoNickname().getNickname())
                 .email(kakaoProfile.getKakaoAccount().getEmail())
+                .status(MemberStatus.ACTIVE)
+                .build();
+    }
+
+    public static Member googleToMember(GoogleProfile googleProfile) {
+        return Member.builder()
+                .nickName(googleProfile.getNickName())
+                .email(googleProfile.getEmail())
                 .status(MemberStatus.ACTIVE)
                 .build();
     }

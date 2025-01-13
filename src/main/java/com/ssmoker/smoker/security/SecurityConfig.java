@@ -24,12 +24,12 @@ public class SecurityConfig {
 
     private final JwtRequestFilter jwtRequestFilter;
 
-    private static final String[] SECURITY_ALLOW_ARRAY  = { //인증 없이 접근 가능한 드 포인트
-            "api/auth/login/kakao", //카카오 로그인
+    private static final String[] SECURITY_ALLOW_ARRAY  = { //인증 없이 접근 가능한 엔드 포인트
             "api/auth/login/google", //구글 로그인
+            "api/auth/login/kakao", //카카오 로그인
             "api/auth/refresh", //토큰 재발급
-
             "api/member/notices", //공지사항
+            "/test/{status}", //테스트
             //등등 추가중...
             "/health",
             "/error",
@@ -93,6 +93,5 @@ public class SecurityConfig {
             response.getWriter().write("{ \"error\": \"Access Denied\", \"message\": \"권한이 없습니다.\", \"path\": \"" + request.getRequestURI() + "\" }");
         };
     }
-
 
 }

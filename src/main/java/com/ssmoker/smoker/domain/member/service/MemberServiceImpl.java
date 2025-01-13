@@ -5,9 +5,11 @@ import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
 import com.ssmoker.smoker.global.exception.AuthException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
+import com.ssmoker.smoker.security.authDTO.GoogleProfile;
 import com.ssmoker.smoker.security.authDTO.KakaoProfile;
 import com.ssmoker.smoker.security.authDTO.OAuthToken;
 import com.ssmoker.smoker.security.converter.AuthConverter;
+import com.ssmoker.smoker.security.provider.GoogleAuthProvider;
 import com.ssmoker.smoker.security.provider.JwtTokenProvider;
 import com.ssmoker.smoker.security.provider.KakaoAuthProvider;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +26,14 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final KakaoAuthProvider kakaoAuthProvider;
+    private final GoogleAuthProvider googleAuthProvider;
 
     @Override
     public Member findMemberById(Long memberId) {
         return memberRepository
                 .findById(memberId)
                 .orElseThrow(() -> new AuthException(ErrorStatus.USER_NOT_FOUND));
-    }
+    } // 유저 찾기
 
     @Override
     @Transactional
@@ -47,7 +50,7 @@ public class MemberServiceImpl implements MemberService {
             kakaoProfile =
                     kakaoAuthProvider.requestKakaoProfile(oAuthToken.getAccess_token());
         }catch (Exception e){
-            throw new AuthException(ErrorStatus.INVALID_REQUEST_INFO);
+            throw new AuthException(ErrorStatus.INVALID_REQUEST_INFO_KAKAO);
         }
 
         // 유저 정보 받기
@@ -64,14 +67,55 @@ public class MemberServiceImpl implements MemberService {
             memberRepository.save(member);
             return AuthConverter.toOAuthResponse(accessToken, refreshToken, member);
         } else {
-            Member member = memberRepository.save(AuthConverter.toMember(kakaoProfile));
+            Member member = memberRepository.save(AuthConverter.kakaoToMember(kakaoProfile));
             String accessToken = jwtTokenProvider.createAccessToken(member.getId());
             String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
             member.updateToken(accessToken, refreshToken);
             memberRepository.save(member);
             return AuthConverter.toOAuthResponse(accessToken, refreshToken, member);
         }
-    }
+    } //카카오 로그인
+
+    @Override
+    @Transactional
+    public AuthResponseDTO.OAuthResponse GoogleLogin(String code) {
+        OAuthToken oAuthToken;
+        try {
+            oAuthToken = googleAuthProvider.requestToken(code);
+        } catch (Exception e){
+            throw new AuthException(ErrorStatus.AUTH_INVALID_CODE);
+        }
+
+        GoogleProfile googleProfile;
+        try {
+            googleProfile =
+                    googleAuthProvider.requestGoogleProfile(oAuthToken.getAccess_token());
+        }catch (Exception e){
+            throw new AuthException(ErrorStatus.INVALID_REQUEST_INFO_GOOGLE);
+        }
+
+        // 유저 정보 받기
+        Optional<Member> queryMember =
+                memberRepository.findByEmail(
+                        googleProfile.getEmail()); //이메일
+
+        // 가입자 혹은 비가입자 체크해서 로그인 처리
+        if (queryMember.isPresent()) { // 이미 가입 -> 로그인
+            Member member = queryMember.get();
+            String accessToken = jwtTokenProvider.createAccessToken(member.getId());
+            String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
+            member.updateToken(accessToken, refreshToken);
+            memberRepository.save(member);
+            return AuthConverter.toOAuthResponse(accessToken, refreshToken, member);
+        } else { // 회원 가입
+            Member member = memberRepository.save(AuthConverter.googleToMember(googleProfile));
+            String accessToken = jwtTokenProvider.createAccessToken(member.getId());
+            String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
+            member.updateToken(accessToken, refreshToken);
+            memberRepository.save(member);
+            return AuthConverter.toOAuthResponse(accessToken, refreshToken, member);
+        }
+    } // 구글 로그인
 
     @Override
     @Transactional
@@ -88,7 +132,16 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
         // refreshTokenService.saveToken(newRefreshToken);
         return AuthConverter.toTokenRefreshResponse(newAccessToken, newRefreshToken);
-    }
+    } // 토큰 재발급
 
+    @Override
+    @Transactional
+    public void logout(Member member){
+        member.setAccessToken(null);
+    } // 로그아웃
 
+    @Override
+    @Transactional
+    public void deactivate(Member member){
+    } // 회원 탈퇴
 }

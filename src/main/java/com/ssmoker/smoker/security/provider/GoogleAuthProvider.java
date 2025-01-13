@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssmoker.smoker.global.exception.AuthException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
-import com.ssmoker.smoker.security.authDTO.KakaoProfile;
+import com.ssmoker.smoker.security.authDTO.GoogleProfile;
 import com.ssmoker.smoker.security.authDTO.OAuthToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,14 +17,20 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+
 @Component
 @RequiredArgsConstructor
-public class KakaoAuthProvider {
-    @Value("${KAKAO_CLIENT_ID}")
+public class GoogleAuthProvider {
+    @Value("${GOOGLE_CLIENT_ID}")
     private String client;
 
-    @Value("${KAKAO_REDIRECT_URI}")
+    @Value("${GOOGLE_REDIRECT_URI}")
     private String redirect;
+
+    @Value("${GOOGLE_CLIENT_SECRET}")
+    private String clientSecret;
 
     // code로 access 토큰 요청하기
     public OAuthToken requestToken(String code) {
@@ -33,20 +39,23 @@ public class KakaoAuthProvider {
 
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", client);
-        params.add("redirect_uri", redirect);
-        params.add("code", code);
+        String decode = URLDecoder.decode(code, StandardCharsets.UTF_8);
 
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("code", decode);
+        params.add("client_id", client);
+        params.add("client_secret", clientSecret);
+        params.add("redirect_uri", redirect);
+        params.add("grant_type", "authorization_code");
+
+        HttpEntity<MultiValueMap<String, String>> GoogleTokenRequest =
                 new HttpEntity<>(params, headers);
 
         ResponseEntity<String> response =
                 restTemplate.exchange(
-                        "https://kauth.kakao.com/oauth/token",
+                        "https://oauth2.googleapis.com/token", // 구글 토큰 요청 URL
                         HttpMethod.POST,
-                        kakaoTokenRequest,
+                        GoogleTokenRequest,
                         String.class);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -56,37 +65,37 @@ public class KakaoAuthProvider {
         try {
             oAuthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
         } catch (JsonProcessingException e) {
-            throw new AuthException(ErrorStatus.INVALID_REQUEST_INFO_KAKAO);
+            throw new AuthException(ErrorStatus.INVALID_REQUEST_INFO_GOOGLE);
         }
 
         return oAuthToken;
     }
 
     // Token으로 정보 요청하기
-    public KakaoProfile requestKakaoProfile(String token) {
+    public GoogleProfile requestGoogleProfile(String token) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
         headers.add("Authorization", "Bearer " + token);
 
-        HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers);
+        HttpEntity<String> googleProfileRequest = new HttpEntity<>(headers);
 
         ResponseEntity<String> response =
                 restTemplate.exchange(
-                        "https://kapi.kakao.com/v2/user/me",
-                        HttpMethod.POST,
-                        kakaoProfileRequest,
+                        "https://www.googleapis.com/oauth2/v3/userinfo", // Google 사용자 정보 요청 URL
+                        HttpMethod.GET,
+                        googleProfileRequest,
                         String.class);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        KakaoProfile kakaoProfile = null;
-        System.out.println(response.getBody());
+        GoogleProfile googleProfile = null;
+
         try {
-            kakaoProfile = objectMapper.readValue(response.getBody(), KakaoProfile.class);
+            googleProfile = objectMapper.readValue(response.getBody(), GoogleProfile.class);
         } catch (JsonProcessingException e) {
-            throw new AuthException(ErrorStatus.INVALID_REQUEST_INFO_KAKAO);
+            throw new AuthException(ErrorStatus.INVALID_REQUEST_INFO_GOOGLE);
         }
-        System.out.println(kakaoProfile.getKakaoAccount().getEmail());
-        return kakaoProfile;
+
+        System.out.println(googleProfile.getEmail()); // 이메일 출력 예시
+        return googleProfile;
     }
 }
