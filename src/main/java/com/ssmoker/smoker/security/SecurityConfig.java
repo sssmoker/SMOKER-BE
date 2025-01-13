@@ -29,6 +29,12 @@ public class SecurityConfig {
             "api/auth/login/kakao", //카카오 로그인
             "api/auth/refresh", //토큰 재발급
             "api/member/notices", //공지사항
+            "api/smoking_areas/{smokingAreaId}", //흡연 구역 상세 정보 조회
+            "api/smoking_areas/{smokingAreaId}/reviews", // 흡연 구역 리뷰 조회
+            "api/updated_history/{smokingAreaId}", // 업데이트 히스토리 조회
+            "api/smoking_areas/{smokingAreaId}/rating_info", //총 별점 & 별점 개수 조회
+            "api/smoking_areas/search", //흡연 구역 검색
+            "api/smoking_areas/{smokingAreaIid}/simple", //흡연 구역 지도 마커 클릭했을 때 흡연 구역 정보 조회 (모달)
             "/test/{status}", //테스트
             //등등 추가중...
             "/health",
