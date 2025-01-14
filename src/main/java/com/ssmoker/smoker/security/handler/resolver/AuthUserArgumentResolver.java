@@ -36,9 +36,9 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
 
         Object principal = null;
         if (authentication != null) {
-            // 로그인하지 않은 익명 사용자라면 null 반환
+
             if (authentication.getName().equals("anonymousUser")) {
-                return null;
+                throw new AuthException(ErrorStatus._UNAUTHORIZED);
             }
             principal = authentication.getPrincipal();
         }
@@ -51,6 +51,6 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
             Long userId = userDetails.getId();
             return memberService.findMemberById(userId);
         }
-        return null;
+        throw new AuthException(ErrorStatus.USER_NOT_FOUND);
     }
 }
