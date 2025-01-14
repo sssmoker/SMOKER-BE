@@ -45,10 +45,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                                         userDetails, "", userDetails.getAuthorities());
                         SecurityContextHolder.getContext()
                                 .setAuthentication(usernamePasswordAuthenticationToken);
-                    } else {
+                    } else { //유저 없음
                         throw new AuthException(ErrorStatus.USER_NOT_FOUND);
                     }
-                } else {
+                } else { //토큰이 유효하지 않음
                     throw new AuthException(ErrorStatus.AUTH_INVALID_TOKEN);
                 }
             }

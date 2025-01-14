@@ -50,13 +50,4 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>(); // 작성 리뷰
-
-    private String accessToken; //액세스 토큰
-
-    private String refreshToken; //리프레시 토큰
-
-    public void updateToken(String accessToken, String refreshToken) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-    }
 }

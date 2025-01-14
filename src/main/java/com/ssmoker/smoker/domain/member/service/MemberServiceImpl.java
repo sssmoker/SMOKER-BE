@@ -63,14 +63,12 @@ public class MemberServiceImpl implements MemberService {
             Member member = queryMember.get();
             String accessToken = jwtTokenProvider.createAccessToken(member.getId());
             String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
-            member.updateToken(accessToken, refreshToken);
             memberRepository.save(member);
             return AuthConverter.toOAuthResponse(accessToken, refreshToken, member);
         } else {
             Member member = memberRepository.save(AuthConverter.kakaoToMember(kakaoProfile));
             String accessToken = jwtTokenProvider.createAccessToken(member.getId());
             String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
-            member.updateToken(accessToken, refreshToken);
             memberRepository.save(member);
             return AuthConverter.toOAuthResponse(accessToken, refreshToken, member);
         }
@@ -104,14 +102,12 @@ public class MemberServiceImpl implements MemberService {
             Member member = queryMember.get();
             String accessToken = jwtTokenProvider.createAccessToken(member.getId());
             String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
-            member.updateToken(accessToken, refreshToken);
             memberRepository.save(member);
             return AuthConverter.toOAuthResponse(accessToken, refreshToken, member);
         } else {
             Member member = memberRepository.save(AuthConverter.googleToMember(googleProfile));
             String accessToken = jwtTokenProvider.createAccessToken(member.getId());
             String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
-            member.updateToken(accessToken, refreshToken);
             memberRepository.save(member);
             return AuthConverter.toOAuthResponse(accessToken, refreshToken, member);
         }
@@ -128,9 +124,6 @@ public class MemberServiceImpl implements MemberService {
                 jwtTokenProvider.createAccessToken(id);
         String newRefreshToken =
                 jwtTokenProvider.createRefreshToken(id);
-        member.updateToken(newAccessToken, newRefreshToken);
-        memberRepository.save(member);
-        // refreshTokenService.saveToken(newRefreshToken);
         return AuthConverter.toTokenRefreshResponse(newAccessToken, newRefreshToken);
     } // 토큰 재발급
 
