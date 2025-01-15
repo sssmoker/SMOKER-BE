@@ -2,7 +2,7 @@ package com.ssmoker.smoker.security.provider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssmoker.smoker.global.exception.AuthException;
+import com.ssmoker.smoker.security.exception.AuthException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import com.ssmoker.smoker.security.authDTO.KakaoProfile;
 import com.ssmoker.smoker.security.authDTO.OAuthToken;
