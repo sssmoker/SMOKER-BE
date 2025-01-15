@@ -26,10 +26,7 @@ public class UpdatedHistory extends BaseEntity {
     private Long id;
 
     //행위 ENUM 추가 ?
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    private String memberName;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "smoking_area_id", nullable = false)
