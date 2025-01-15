@@ -12,6 +12,5 @@ import lombok.Setter;
 public class SmokingAreaMarkersResponse {
     private Long smokingId;
     private String name;
-    private String address;
     private Location location;
 }

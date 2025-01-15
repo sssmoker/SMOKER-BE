@@ -67,7 +67,6 @@ public class SmokingAreaService {
                         .map(marker -> new SmokingAreaMarkersResponse(
                                 marker.getId(),
                                 marker.getSmokingAreaName(),
-                                marker.getLocation().getAddress(),
                                 marker.getLocation()
                         ))
                         .collect(Collectors.toList());
