@@ -3,7 +3,7 @@ package com.ssmoker.smoker.domain.member.service;
 import com.ssmoker.smoker.domain.member.dto.AuthResponseDTO;
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
-import com.ssmoker.smoker.global.exception.AuthException;
+import com.ssmoker.smoker.security.exception.AuthException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import com.ssmoker.smoker.security.authDTO.GoogleProfile;
 import com.ssmoker.smoker.security.authDTO.KakaoProfile;
