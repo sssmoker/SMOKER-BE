@@ -31,6 +31,9 @@ public class SmokingArea extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String smokingAreaName;
 
+    @Column(nullable = false, length = 20)
+    private String address;
+    
     @Embedded
     private Location location;
 

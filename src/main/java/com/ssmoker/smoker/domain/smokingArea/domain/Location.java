@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Location {
     @Column(nullable = false)
-    private String name;
+    private String address;
 
     @Column(nullable = false)
     private Double latitude;
