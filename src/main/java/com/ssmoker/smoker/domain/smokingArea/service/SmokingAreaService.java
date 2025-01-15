@@ -58,7 +58,7 @@ public class SmokingAreaService {
         return ReviewResponse.of(review, review.getMember().getNickName());
     }
 
-   /* //marker를 위한 모든 db 보내기
+    //marker를 위한 모든 db 보내기
     public MapResponse.SmokingMarkersResponse getSmokingMarkersResponse() {
         List<SmokingArea> smokingAreas = smokingAreaRepository.findAll();
 
@@ -73,7 +73,7 @@ public class SmokingAreaService {
                         .collect(Collectors.toList());
 
         return new MapResponse.SmokingMarkersResponse(markers);
-    }*/
+    }
 
 /*    public MapResponse.MarkerResponse getMarkerResponse(Long smokinAreaId,
                                                         Double userLat,

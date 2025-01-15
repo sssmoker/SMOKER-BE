@@ -39,7 +39,7 @@ public class SmokingAreaController {
         return ApiResponse.onSuccess(result);
     }
 
-/*    //지도 api
+   //지도 api
     @Operation(summary = "흡연 구역 지도_마커표시 위함",
     description = "프론트가 지도에 마커표시를 할 수 있도록 흡연구역 db를 보내주는 역할")
     @GetMapping
@@ -47,7 +47,7 @@ public class SmokingAreaController {
         MapResponse.SmokingMarkersResponse markers = smokingAreaService.getSmokingMarkersResponse();
 
         return ApiResponse.of(SuccessStatus.MAP_INFO_OK, markers);
-    }*/
+    }
 
 /*    @Operation(summary = "흡연 구역 마커 클릭(모달)",
     description = "흡연구역 마커 클릭 시 다른 작은 창으로 마커 정보 알려주는 역할")
