@@ -4,12 +4,13 @@ import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.review.dto.ReviewRequestDTO;
 import com.ssmoker.smoker.domain.review.service.ReviewService;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
+import com.ssmoker.smoker.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/reviews")
@@ -22,12 +23,9 @@ public class ReviewController {
     @PostMapping("/{smokingAreaId}")
     public ApiResponse<Long> createReview(@PathVariable Long smokingAreaId,
                                           @RequestBody @Valid ReviewRequestDTO reviewRequestDTO,
-                                          @AuthenticationPrincipal Member authenticatedMember) {
+                                          @Parameter(name = "user", hidden = true) @AuthUser Member member) {
 
-        reviewRequestDTO.setSmokingAreaId(smokingAreaId);
-        reviewRequestDTO.setMemberId(authenticatedMember.getId());
-
-        Long reviewId = reviewService.saveReview(reviewRequestDTO);
+        Long reviewId = reviewService.saveReview(smokingAreaId, reviewRequestDTO, member);
         return ApiResponse.onSuccess(reviewId);
     }
 }

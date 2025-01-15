@@ -10,11 +10,6 @@ import lombok.Setter;
 @Setter
 public class ReviewRequestDTO {
 
-    private Long smokingAreaId;
-
-    @NotNull(message = "사용자 ID는 필수입니다.")
-    private Long memberId;
-
     @NotNull(message = "점수는 필수입니다.")
     private Double score;
 
