@@ -1,6 +1,6 @@
 package com.ssmoker.smoker.security.filter;
 
-import com.ssmoker.smoker.global.exception.AuthException;
+import com.ssmoker.smoker.security.exception.AuthException;
 import com.ssmoker.smoker.security.principal.PrincipalDetailsService;
 import com.ssmoker.smoker.security.provider.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
