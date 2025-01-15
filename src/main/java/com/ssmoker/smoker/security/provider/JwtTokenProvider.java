@@ -1,10 +1,9 @@
 package com.ssmoker.smoker.security.provider;
 
-import com.ssmoker.smoker.global.exception.AuthException;
+import com.ssmoker.smoker.security.exception.AuthException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

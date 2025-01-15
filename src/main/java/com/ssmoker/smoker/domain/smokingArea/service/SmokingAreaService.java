@@ -39,9 +39,6 @@ public class SmokingAreaService {
     }
 
     public ReviewResponses getReviews(Long id, int pageNumber) {
-        if (pageNumber < 0) {
-            throw new ReviewPageNumberException(REVIEW_BAD_REQUEST);
-        }
         Page<Review> reviewPage = reviewRepository.findReviewsWithMemberById(id,
                 PageRequest.of(pageNumber, REVIEW_PAGE_SIZE));
 

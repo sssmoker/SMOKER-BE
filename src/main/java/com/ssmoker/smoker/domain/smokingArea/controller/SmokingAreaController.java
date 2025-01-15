@@ -5,6 +5,8 @@ import com.ssmoker.smoker.domain.smokingArea.service.SmokingAreaService;
 import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaInfoResponse;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,7 +32,8 @@ public class SmokingAreaController {
 
     @Operation(summary = "흡연 구역 리뷰 조회(최신순)", description = "쿼리 스트링으로 원하는 페이지를 넘겨주시면 됩니다.")
     @GetMapping("/{smokingAreaId}/reviews")
-    public ApiResponse<ReviewResponses> getReviews(@PathVariable Long smokingAreaId, @RequestParam int pageNumber) {
+    public ApiResponse<ReviewResponses> getReviews(@PathVariable Long smokingAreaId,
+                                                   @RequestParam @Min(0) @NotNull Integer pageNumber) {
         ReviewResponses result = smokingAreaService.getReviews(smokingAreaId, pageNumber);
 
         return ApiResponse.onSuccess(result);
