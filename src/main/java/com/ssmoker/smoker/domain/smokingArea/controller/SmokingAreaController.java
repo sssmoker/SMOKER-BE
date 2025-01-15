@@ -1,9 +1,12 @@
 package com.ssmoker.smoker.domain.smokingArea.controller;
 
+import com.ssmoker.smoker.domain.smokingArea.dto.MapResponse;
 import com.ssmoker.smoker.domain.smokingArea.dto.ReviewResponses;
+import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaMarkersResponse;
 import com.ssmoker.smoker.domain.smokingArea.service.SmokingAreaService;
 import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaInfoResponse;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
+import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -38,4 +41,25 @@ public class SmokingAreaController {
 
         return ApiResponse.onSuccess(result);
     }
+
+   //지도 api
+    @Operation(summary = "흡연 구역 지도_마커표시 위함",
+    description = "프론트가 지도에 마커표시를 할 수 있도록 흡연구역 db를 보내주는 역할")
+    @GetMapping
+    public ApiResponse<MapResponse.SmokingMarkersResponse> getSmokingAreaMakersInfo(){
+        MapResponse.SmokingMarkersResponse markers = smokingAreaService.getSmokingMarkersResponse();
+
+        return ApiResponse.of(SuccessStatus.MAP_INFO_OK, markers);
+    }
+
+/*    @Operation(summary = "흡연 구역 마커 클릭(모달)",
+    description = "흡연구역 마커 클릭 시 다른 작은 창으로 마커 정보 알려주는 역할")
+    @GetMapping("/{smokingAreaId}")
+    public ApiResponse<MapResponse.MarkerResponse> getSmokingAreaMarker(
+            @PathVariable(name = "smokingAreaId") Long smokingAreaId,
+            @RequestParam Double userLat,
+            @RequestParam Double userLng
+    ){
+
+    }*/
 }

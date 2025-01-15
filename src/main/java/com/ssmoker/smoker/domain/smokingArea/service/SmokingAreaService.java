@@ -6,12 +6,10 @@ import static com.ssmoker.smoker.global.exception.code.ErrorStatus.SMOKING_AREA_
 import com.ssmoker.smoker.domain.review.domain.Review;
 import com.ssmoker.smoker.domain.review.repository.ReviewRepository;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
-import com.ssmoker.smoker.domain.smokingArea.dto.ReviewResponse;
-import com.ssmoker.smoker.domain.smokingArea.dto.ReviewResponses;
+import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.exception.ReviewPageNumberException;
 import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
 import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaRepository;
-import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaInfoResponse;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import java.util.List;
 import java.util.Optional;
@@ -56,4 +54,27 @@ public class SmokingAreaService {
     private ReviewResponse getReviewResponse(Review review) {
         return ReviewResponse.of(review, review.getMember().getNickName());
     }
+
+    //marker를 위한 모든 db 보내기
+    public MapResponse.SmokingMarkersResponse getSmokingMarkersResponse() {
+        List<SmokingArea> smokingAreas = smokingAreaRepository.findAll();
+
+        List<SmokingAreaMarkersResponse> markers =
+                smokingAreas.stream()
+                        .map(marker -> new SmokingAreaMarkersResponse(
+                                marker.getId(),
+                                marker.getSmokingAreaName(),
+                                marker.getLocation()
+                        ))
+                        .collect(Collectors.toList());
+
+        return new MapResponse.SmokingMarkersResponse(markers);
+    }
+
+/*    public MapResponse.MarkerResponse getMarkerResponse(Long smokinAreaId,
+                                                        Double userLat,
+                                                        Double userLng) {
+        SmokingArea smokingArea = smokingAreaRepository.findById(smokinAreaId)
+                .orElse(throw new );
+    }*/
 }
