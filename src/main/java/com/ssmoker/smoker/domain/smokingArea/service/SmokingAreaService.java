@@ -10,6 +10,7 @@ import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.exception.ReviewPageNumberException;
 import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
 import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaRepository;
+import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import java.util.List;
 import java.util.Optional;
@@ -71,10 +72,26 @@ public class SmokingAreaService {
         return new MapResponse.SmokingMarkersResponse(markers);
     }
 
-/*    public MapResponse.MarkerResponse getMarkerResponse(Long smokinAreaId,
+    //거리 계산하는 함수
+    private Double calculateDistance(Double userLat, Double userLng,
+                                     Double destLat,Double destLng) {
+
+    }
+
+    //marker 간단한 정보 보여주기 (모달)
+    public MapResponse.MarkerResponse getMarkerResponse(Long smokingAreaId,
                                                         Double userLat,
                                                         Double userLng) {
-        SmokingArea smokingArea = smokingAreaRepository.findById(smokinAreaId)
-                .orElse(throw new );
-    }*/
+        SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
+                .orElse(null);
+
+        //smoking area 예외처리
+        if(smokingArea == null){
+            throw new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND);
+        }else{
+
+        }
+
+        return
+    }
 }
