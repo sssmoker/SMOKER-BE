@@ -4,7 +4,7 @@ import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.exception.SmokerBadRequestException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
-import com.ssmoker.smoker.security.handler.annotation.AuthUser;
+import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +22,8 @@ public class TestController {
     }
 
     @GetMapping("/test2")
-    public ApiResponse<String> test2(@Parameter(hidden = true) @AuthUser Member member) {
-        System.out.println("member.getNickName() = " + member.getNickName());
+    public ApiResponse<String> test2(@AuthUser Long memberId) {
+        System.out.println(memberId);
         return ApiResponse.onSuccess("success");
     }
 }

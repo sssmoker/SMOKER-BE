@@ -1,6 +1,6 @@
-package com.ssmoker.smoker.global;
+package com.ssmoker.smoker.global.configuration;
 
-import com.ssmoker.smoker.security.handler.resolver.AuthUserArgumentResolver;
+import com.ssmoker.smoker.global.security.handler.resolver.AuthUserArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

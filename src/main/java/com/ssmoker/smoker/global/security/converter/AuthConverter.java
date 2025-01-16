@@ -1,10 +1,10 @@
-package com.ssmoker.smoker.security.converter;
+package com.ssmoker.smoker.global.security.converter;
 
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.member.domain.MemberStatus;
 import com.ssmoker.smoker.domain.member.dto.AuthResponseDTO;
-import com.ssmoker.smoker.security.authDTO.GoogleProfile;
-import com.ssmoker.smoker.security.authDTO.KakaoProfile;
+import com.ssmoker.smoker.global.security.authDTO.GoogleProfile;
+import com.ssmoker.smoker.global.security.authDTO.KakaoProfile;
 
 public class AuthConverter {
 

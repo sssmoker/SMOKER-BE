@@ -1,8 +1,8 @@
-package com.ssmoker.smoker.security.principal;
+package com.ssmoker.smoker.global.security.principal;
 
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
-import com.ssmoker.smoker.security.exception.AuthException;
+import com.ssmoker.smoker.global.security.exception.AuthException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,4 +1,4 @@
-package com.ssmoker.smoker.security.authDTO;
+package com.ssmoker.smoker.global.security.authDTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

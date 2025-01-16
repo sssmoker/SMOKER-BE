@@ -1,14 +1,11 @@
 package com.ssmoker.smoker.domain.member.controller;
 
-import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.member.dto.AuthRequestDTO;
 import com.ssmoker.smoker.domain.member.dto.AuthResponseDTO;
 import com.ssmoker.smoker.domain.member.service.MemberService;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
-import com.ssmoker.smoker.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
