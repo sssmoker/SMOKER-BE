@@ -47,4 +47,18 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>(); // 작성 리뷰
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", nickName='" + nickName + '\'' +
+                ", email='" + email + '\'' +
+                ", updateCount=" + updateCount +
+                ", deactivationDate=" + deactivationDate +
+                ", status=" + status +
+                ", profileImageUrl='" + profileImageUrl + '\'' +
+                ", reviews=" + reviews +
+                '}';
+    }
 }

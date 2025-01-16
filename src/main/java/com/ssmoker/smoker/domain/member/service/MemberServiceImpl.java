@@ -13,12 +13,13 @@ import com.ssmoker.smoker.security.provider.GoogleAuthProvider;
 import com.ssmoker.smoker.security.provider.JwtTokenProvider;
 import com.ssmoker.smoker.security.provider.KakaoAuthProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.Optional;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
@@ -30,6 +31,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member findMemberById(Long memberId) {
+        log.info("memberId: {}", memberId);
         return memberRepository
                 .findById(memberId)
                 .orElseThrow(() -> new AuthException(ErrorStatus.USER_NOT_FOUND));

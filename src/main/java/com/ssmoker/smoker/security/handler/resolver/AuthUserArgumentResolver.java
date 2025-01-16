@@ -36,7 +36,6 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
 
         Object principal = null;
         if (authentication != null) {
-
             if (authentication.getName().equals("anonymousUser")) {
                 throw new AuthException(ErrorStatus._UNAUTHORIZED);
             }
