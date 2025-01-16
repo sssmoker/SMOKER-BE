@@ -6,10 +6,9 @@ import lombok.*;
 
 @Entity
 @Builder
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class InactivateUsers extends BaseEntity {
+public class DeactivatedUsers extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
