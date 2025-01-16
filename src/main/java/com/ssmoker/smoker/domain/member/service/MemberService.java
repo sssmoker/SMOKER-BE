@@ -12,4 +12,6 @@ public interface MemberService {
     AuthResponseDTO.TokenRefreshResponse refresh(String refreshToken);
 
     AuthResponseDTO.OAuthResponse GoogleLogin(String code);
+
+    void deactivateMember(Long memberId);
 }

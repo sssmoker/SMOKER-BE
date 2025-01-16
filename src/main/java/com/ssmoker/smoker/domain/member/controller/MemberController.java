@@ -1,10 +1,12 @@
 package com.ssmoker.smoker.domain.member.controller;
 
+import com.ssmoker.smoker.domain.DeactivateUsers.service.DeactivatedUsersService;
 import com.ssmoker.smoker.domain.member.dto.AuthRequestDTO;
 import com.ssmoker.smoker.domain.member.dto.AuthResponseDTO;
 import com.ssmoker.smoker.domain.member.service.MemberService;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
+import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/auth")
 public class MemberController {
     private final MemberService memberService;
+    private final DeactivatedUsersService deactivatedUsersService;
 
     @ResponseStatus(code = HttpStatus.OK)
     @Operation(summary = "카카오 로그인 API", description = "카카오 로그인 및 회원 가입을 진행하는 API입니다. 인가코드를 넘겨주세요")
@@ -38,4 +41,15 @@ public class MemberController {
     public ApiResponse<AuthResponseDTO.TokenRefreshResponse> refresh(@RequestBody AuthRequestDTO.RefreshTokenDTO request) {
         return ApiResponse.of(SuccessStatus.USER_REFRESH_OK, memberService.refresh(request.getRefreshToken()));
     } // JWT Access Token 재발급
+
+    @ResponseStatus(code = HttpStatus.OK)
+    @Operation(
+            summary = "회원 비활성화 API",
+            description = "회원 비활성화를 진행합니다.")
+    @PostMapping("/deactivate")
+    public ApiResponse<Void> memberDeactivate(@AuthUser Long memberId) {
+        memberService.deactivateMember(memberId); //status 전환
+        deactivatedUsersService.addToDeactivateTable(memberId); //블랙리스트 등록
+        return ApiResponse.of(SuccessStatus.USER_DEACTIVATE_OK,null);
+    } // 회원 탈퇴
 }

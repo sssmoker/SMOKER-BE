@@ -15,6 +15,6 @@ public class DeactivatedUsers extends BaseEntity {
     private Long id; //아이디
 
     @Column(nullable = false, unique = true)
-    private Long inactiveUserId; //탈퇴 유저 ID
+    private Long deactiveUserId; //탈퇴 유저 ID
 
 }

@@ -1,5 +1,6 @@
 package com.ssmoker.smoker.domain.member.service;
 
+import com.ssmoker.smoker.domain.member.domain.MemberStatus;
 import com.ssmoker.smoker.domain.member.dto.AuthResponseDTO;
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
@@ -114,6 +115,14 @@ public class MemberServiceImpl implements MemberService {
             return AuthConverter.toOAuthResponse(accessToken, refreshToken, member);
         }
     } // 구글 로그인
+
+    @Override
+    public void deactivateMember(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new AuthException(ErrorStatus.USER_NOT_FOUND));
+        member.setStatus(MemberStatus.DEACTIVATED); // 비활성화로 전환
+        memberRepository.save(member);
+    } // 회원 탈퇴
 
     @Override
     @Transactional
