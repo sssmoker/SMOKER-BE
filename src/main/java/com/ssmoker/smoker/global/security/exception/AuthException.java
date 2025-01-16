@@ -1,4 +1,4 @@
-package com.ssmoker.smoker.security.exception;
+package com.ssmoker.smoker.global.security.exception;
 
 import com.ssmoker.smoker.global.exception.GeneralException;
 import com.ssmoker.smoker.global.exception.code.BaseErrorCode;

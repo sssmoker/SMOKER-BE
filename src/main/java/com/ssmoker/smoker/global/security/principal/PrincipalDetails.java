@@ -1,4 +1,4 @@
-package com.ssmoker.smoker.security.principal;
+package com.ssmoker.smoker.global.security.principal;
 
 import com.ssmoker.smoker.domain.member.domain.Member;
 import lombok.RequiredArgsConstructor;
