@@ -1,8 +1,6 @@
 package com.ssmoker.smoker.global.scheduler;
 
 import com.ssmoker.smoker.domain.DeactivateUsers.repository.DeactivatedUsersRepository;
-import com.ssmoker.smoker.domain.member.domain.MemberStatus;
-import com.ssmoker.smoker.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

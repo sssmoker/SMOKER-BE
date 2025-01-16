@@ -7,4 +7,5 @@ import java.time.LocalDateTime;
 
 public interface DeactivatedUsersRepository extends JpaRepository<DeactivatedUsers,Long> {
     void deleteByCreatedAtBefore(LocalDateTime dateTime);
+    boolean existsByDeactiveUserId(Long deactiveUserId);
 }
