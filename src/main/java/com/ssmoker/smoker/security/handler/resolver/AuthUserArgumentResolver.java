@@ -2,7 +2,7 @@ package com.ssmoker.smoker.security.handler.resolver;
 
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.member.service.MemberService;
-import com.ssmoker.smoker.global.exception.AuthException;
+import com.ssmoker.smoker.security.exception.AuthException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import com.ssmoker.smoker.security.principal.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,6 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
 
         Object principal = null;
         if (authentication != null) {
-
             if (authentication.getName().equals("anonymousUser")) {
                 throw new AuthException(ErrorStatus._UNAUTHORIZED);
             }
