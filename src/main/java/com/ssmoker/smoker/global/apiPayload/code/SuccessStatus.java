@@ -16,7 +16,7 @@ public enum SuccessStatus implements BaseCode {
     USER_LOGOUT_OK(HttpStatus.OK, "AUTH2002", "회원 로그아웃이 완료되었습니다."),
     USER_DELETE_OK(HttpStatus.OK, "AUTH2003", "회원 탈퇴가 완료되었습니다."),
     USER_REFRESH_OK(HttpStatus.OK, "AUTH2004", "토큰 재발급이 완료되었습니다."),
-    USER_DEACTIVATE_OK(HttpStatus.OK, "AUTH2005", "회원 비활성화가 완료되었습니다."),
+    USER_DEACTIVATE_OK(HttpStatus.OK, "AUTH2005", "회원 탈퇴가 완료되었습니다."),
 
     //map 관련
     MAP_INFO_OK(HttpStatus.OK, "MAP2001", "마커를 위한 흡연 구역 모두를 불러왔습니다."),

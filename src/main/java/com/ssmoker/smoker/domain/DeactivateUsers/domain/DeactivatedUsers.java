@@ -5,16 +5,16 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 @AllArgsConstructor
+@Builder
 public class DeactivatedUsers extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //아이디
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private Long deactiveUserId; //탈퇴 유저 ID
 
 }

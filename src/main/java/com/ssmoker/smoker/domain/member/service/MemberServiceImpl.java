@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 @Slf4j
 @Service
@@ -117,11 +118,11 @@ public class MemberServiceImpl implements MemberService {
     } // 구글 로그인
 
     @Override
+    @Transactional
     public void deactivateMember(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new AuthException(ErrorStatus.USER_NOT_FOUND));
-        member.setStatus(MemberStatus.DEACTIVATED); // 비활성화로 전환
-        memberRepository.save(member);
+        memberRepository.delete(member);
     } // 회원 탈퇴
 
     @Override

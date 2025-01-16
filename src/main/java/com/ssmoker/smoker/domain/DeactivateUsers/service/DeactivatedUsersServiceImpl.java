@@ -21,8 +21,9 @@ public class DeactivatedUsersServiceImpl implements DeactivatedUsersService {
     public void addToDeactivateTable(long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new AuthException(ErrorStatus.USER_NOT_FOUND)); // 실제 존제하는지 확인
+
         DeactivatedUsers deactivatedUsers = DeactivatedUsers.builder()
-                .inactiveUserId(member.getId())
+                .deactiveUserId(memberId)
                 .build();
         deactivatedUsersRepository.save(deactivatedUsers);
     } //테이블에 유저 ID 추가
