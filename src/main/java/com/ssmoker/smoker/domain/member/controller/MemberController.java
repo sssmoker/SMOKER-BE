@@ -1,6 +1,6 @@
 package com.ssmoker.smoker.domain.member.controller;
 
-import com.ssmoker.smoker.domain.DeactivateUsers.service.DeactivatedUsersService;
+import com.ssmoker.smoker.domain.blackList.service.BlackListService;
 import com.ssmoker.smoker.domain.member.dto.AuthRequestDTO;
 import com.ssmoker.smoker.domain.member.dto.AuthResponseDTO;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/auth")
 public class MemberController {
     private final MemberService memberService;
-    private final DeactivatedUsersService deactivatedUsersService;
+    private final BlackListService blackListService;
     private final MemberRepository memberRepository;
 
     @ResponseStatus(code = HttpStatus.OK)
@@ -48,10 +48,19 @@ public class MemberController {
     @Operation(
             summary = "회원 탈퇴 API",
             description = "회원 탈퇴를 진행합니다.")
-    @PostMapping("/deactivate")
+    @DeleteMapping("/deactivate")
     public ApiResponse<Void> memberDeactivate(@AuthUser Long memberId) {
-        deactivatedUsersService.addToDeactivateTable(memberId);
         memberService.deactivateMember(memberId);
         return ApiResponse.of(SuccessStatus.USER_DEACTIVATE_OK,null);
+    } // 회원 탈퇴
+
+    @ResponseStatus(code = HttpStatus.OK)
+    @Operation(
+            summary = "로그아웃 API",
+            description = "Access Token을 블랙리스트에 등록합니다.")
+    @PostMapping("/deactivate")
+    public ApiResponse<Void> Logout(@AuthUser Long memberId, String AccessToken) {
+        blackListService.addToBlackList(memberId, AccessToken);
+        return ApiResponse.of(SuccessStatus.USER_LOGOUT_OK,null);
     } // 회원 탈퇴
 }

@@ -1,4 +1,4 @@
-package com.ssmoker.smoker.domain.DeactivateUsers.domain;
+package com.ssmoker.smoker.domain.blackList.domain;
 
 import com.ssmoker.smoker.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -8,13 +8,13 @@ import lombok.*;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DeactivatedUsers extends BaseEntity {
+public class BlackList extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; //아이디
+    private Long id;
 
     @Column(nullable = false)
-    private Long deactiveUserId; //탈퇴 유저 ID
+    private String accessToken;
 
 }

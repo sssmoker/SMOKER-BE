@@ -23,6 +23,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final PrincipalDetailsService principalDetailsService;
+    private final CheckAccessTokenBlacklist checkAccessTokenBlacklist;
 
     @Override
     protected void doFilterInternal(
@@ -33,6 +34,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 String token = authorizationHeader.substring(7);
+
+                checkAccessTokenBlacklist.checkBlackList(token);
 
                 if (jwtTokenProvider.isTokenValid(token)) {
                     Long userId = jwtTokenProvider.getId(token);
