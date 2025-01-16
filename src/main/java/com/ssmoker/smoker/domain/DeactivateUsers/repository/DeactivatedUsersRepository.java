@@ -1,6 +1,6 @@
-package com.ssmoker.smoker.domain.inactivateUsers.repository;
+package com.ssmoker.smoker.domain.DeactivateUsers.repository;
 
-import com.ssmoker.smoker.domain.inactivateUsers.domain.DeactivatedUsers;
+import com.ssmoker.smoker.domain.DeactivateUsers.domain.DeactivatedUsers;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DeactivatedUsersRepository extends JpaRepository<DeactivatedUsers,Long> {

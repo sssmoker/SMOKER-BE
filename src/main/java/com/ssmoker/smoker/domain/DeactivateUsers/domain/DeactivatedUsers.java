@@ -1,4 +1,4 @@
-package com.ssmoker.smoker.domain.inactivateUsers.domain;
+package com.ssmoker.smoker.domain.DeactivateUsers.domain;
 
 import com.ssmoker.smoker.global.common.BaseEntity;
 import jakarta.persistence.*;

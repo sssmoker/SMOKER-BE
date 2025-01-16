@@ -1,7 +1,7 @@
-package com.ssmoker.smoker.domain.inactivateUsers.service;
+package com.ssmoker.smoker.domain.DeactivateUsers.service;
 
-import com.ssmoker.smoker.domain.inactivateUsers.domain.DeactivatedUsers;
-import com.ssmoker.smoker.domain.inactivateUsers.repository.DeactivatedUsersRepository;
+import com.ssmoker.smoker.domain.DeactivateUsers.domain.DeactivatedUsers;
+import com.ssmoker.smoker.domain.DeactivateUsers.repository.DeactivatedUsersRepository;
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
