@@ -2,11 +2,10 @@ package com.ssmoker.smoker.domain.review.service;
 
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.review.domain.Review;
-import com.ssmoker.smoker.domain.review.dto.ReviewRequestDTO;
+import com.ssmoker.smoker.domain.review.dto.ReviewRequest;
 import com.ssmoker.smoker.domain.review.repository.ReviewRepository;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaRepository;
-import com.ssmoker.smoker.domain.review.exception.InvalidReviewException;
 import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,28 +21,20 @@ public class ReviewService {
     private final SmokingAreaRepository smokingAreaRepository;
 
     @Transactional
-    public Long saveReview(Long smokingAreaId, ReviewRequestDTO reviewRequestDTO, Member member) {
+    public Long saveReview(Long smokingAreaId, ReviewRequest reviewRequest, Member member) {
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
                 .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
 
-        validateReviewData(reviewRequestDTO);
+        System.out.println("member:" + member.getId()+ " " + member.getNickName()+ " " + member.getEmail());
 
-        Review review = new Review(
-                null,
-                smokingArea,
-                reviewRequestDTO.getScore(),
-                reviewRequestDTO.getContent(),
-                reviewRequestDTO.getImageUrl(),
-                member
-        );
+        Review review = Review.builder()
+                .smokingArea(smokingArea)
+                .score(reviewRequest.score())
+                .content(reviewRequest.content())
+                .imageUrl(reviewRequest.imageUrl())
+                .member(member).build();
 
         Review savedReview = reviewRepository.save(review);
         return savedReview.getId();
-    }
-
-    private void validateReviewData(ReviewRequestDTO reviewRequestDTO) {
-        if (reviewRequestDTO.getContent().length() > 1000) {
-            throw new InvalidReviewException(REVIEW_CONTENT_EXCEED);
-        }
     }
 }

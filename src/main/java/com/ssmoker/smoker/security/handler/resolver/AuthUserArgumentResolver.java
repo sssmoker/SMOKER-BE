@@ -49,6 +49,7 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
         if (principal instanceof PrincipalDetails) {
             PrincipalDetails userDetails = (PrincipalDetails) principal;
             Long userId = userDetails.getId();
+            System.out.println("userId: " + userId);
             return memberService.findMemberById(userId);
         }
         throw new AuthException(ErrorStatus.USER_NOT_FOUND);

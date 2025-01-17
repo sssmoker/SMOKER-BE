@@ -1,7 +1,7 @@
 package com.ssmoker.smoker.domain.review.controller;
 
 import com.ssmoker.smoker.domain.member.domain.Member;
-import com.ssmoker.smoker.domain.review.dto.ReviewRequestDTO;
+import com.ssmoker.smoker.domain.review.dto.ReviewRequest;
 import com.ssmoker.smoker.domain.review.service.ReviewService;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.security.handler.annotation.AuthUser;
@@ -22,10 +22,10 @@ public class ReviewController {
     @Operation(summary = "흡연 구역 리뷰 작성")
     @PostMapping("/{smokingAreaId}")
     public ApiResponse<Long> createReview(@PathVariable Long smokingAreaId,
-                                          @RequestBody @Valid ReviewRequestDTO reviewRequestDTO,
+                                          @RequestBody @Valid ReviewRequest reviewRequest,
                                           @Parameter(name = "user", hidden = true) @AuthUser Member member) {
 
-        Long reviewId = reviewService.saveReview(smokingAreaId, reviewRequestDTO, member);
+        Long reviewId = reviewService.saveReview(smokingAreaId, reviewRequest, member);
         return ApiResponse.onSuccess(reviewId);
     }
 }
