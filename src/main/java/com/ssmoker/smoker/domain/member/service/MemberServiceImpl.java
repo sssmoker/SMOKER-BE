@@ -65,7 +65,7 @@ public class MemberServiceImpl implements MemberService {
             Member member = queryMember.get();
             String accessToken = jwtTokenProvider.createAccessToken(member.getId());
             String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
-            memberRepository.save(member);
+
             return AuthConverter.toOAuthResponse(accessToken, refreshToken, member);
         } else {
             Member member = memberRepository.save(AuthConverter.kakaoToMember(kakaoProfile));
@@ -104,12 +104,13 @@ public class MemberServiceImpl implements MemberService {
             Member member = queryMember.get();
             String accessToken = jwtTokenProvider.createAccessToken(member.getId());
             String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
-            memberRepository.save(member);
+
             return AuthConverter.toOAuthResponse(accessToken, refreshToken, member);
         } else {
             Member member = memberRepository.save(AuthConverter.googleToMember(googleProfile));
             String accessToken = jwtTokenProvider.createAccessToken(member.getId());
             String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
+
             memberRepository.save(member);
             return AuthConverter.toOAuthResponse(accessToken, refreshToken, member);
         }
