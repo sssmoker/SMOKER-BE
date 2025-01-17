@@ -1,6 +1,6 @@
-package com.ssmoker.smoker.security.provider;
+package com.ssmoker.smoker.global.security.provider;
 
-import com.ssmoker.smoker.security.exception.AuthException;
+import com.ssmoker.smoker.global.security.exception.AuthException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

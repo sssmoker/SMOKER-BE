@@ -3,22 +3,23 @@ package com.ssmoker.smoker.domain.member.service;
 import com.ssmoker.smoker.domain.member.dto.AuthResponseDTO;
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
-import com.ssmoker.smoker.security.exception.AuthException;
+import com.ssmoker.smoker.global.security.exception.AuthException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
-import com.ssmoker.smoker.security.authDTO.GoogleProfile;
-import com.ssmoker.smoker.security.authDTO.KakaoProfile;
-import com.ssmoker.smoker.security.authDTO.OAuthToken;
-import com.ssmoker.smoker.security.converter.AuthConverter;
-import com.ssmoker.smoker.security.provider.GoogleAuthProvider;
-import com.ssmoker.smoker.security.provider.JwtTokenProvider;
-import com.ssmoker.smoker.security.provider.KakaoAuthProvider;
+import com.ssmoker.smoker.global.security.authDTO.GoogleProfile;
+import com.ssmoker.smoker.global.security.authDTO.KakaoProfile;
+import com.ssmoker.smoker.global.security.authDTO.OAuthToken;
+import com.ssmoker.smoker.global.security.converter.AuthConverter;
+import com.ssmoker.smoker.global.security.provider.GoogleAuthProvider;
+import com.ssmoker.smoker.global.security.provider.JwtTokenProvider;
+import com.ssmoker.smoker.global.security.provider.KakaoAuthProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.Optional;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
@@ -30,6 +31,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member findMemberById(Long memberId) {
+        log.info("memberId: {}", memberId);
         return memberRepository
                 .findById(memberId)
                 .orElseThrow(() -> new AuthException(ErrorStatus.USER_NOT_FOUND));

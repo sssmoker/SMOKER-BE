@@ -1,8 +1,8 @@
-package com.ssmoker.smoker.security.filter;
+package com.ssmoker.smoker.global.security.filter;
 
-import com.ssmoker.smoker.security.exception.AuthException;
-import com.ssmoker.smoker.security.principal.PrincipalDetailsService;
-import com.ssmoker.smoker.security.provider.JwtTokenProvider;
+import com.ssmoker.smoker.global.security.principal.PrincipalDetailsService;
+import com.ssmoker.smoker.global.security.provider.JwtTokenProvider;
+import com.ssmoker.smoker.global.security.exception.AuthException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+            throws IOException {
         try {
             String authorizationHeader = request.getHeader("Authorization");
 

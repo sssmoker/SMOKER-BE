@@ -1,10 +1,11 @@
-package com.ssmoker.smoker.security.handler.resolver;
+package com.ssmoker.smoker.global.security.handler.resolver;
 
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.member.service.MemberService;
-import com.ssmoker.smoker.security.exception.AuthException;
+import com.ssmoker.smoker.global.security.exception.AuthException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
-import com.ssmoker.smoker.security.principal.PrincipalDetails;
+import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
+import com.ssmoker.smoker.global.security.principal.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
@@ -22,7 +23,7 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(Member.class);
+        return parameter.hasParameterAnnotation(AuthUser.class);
     }
 
     @Override
@@ -48,9 +49,7 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
 
         if (principal instanceof PrincipalDetails) {
             PrincipalDetails userDetails = (PrincipalDetails) principal;
-            Long userId = userDetails.getId();
-            System.out.println("userId: " + userId);
-            return memberService.findMemberById(userId);
+            return userDetails.getId();
         }
         throw new AuthException(ErrorStatus.USER_NOT_FOUND);
     }
