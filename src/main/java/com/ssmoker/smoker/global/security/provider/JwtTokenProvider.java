@@ -1,9 +1,13 @@
 package com.ssmoker.smoker.global.security.provider;
 
+import static com.ssmoker.smoker.global.exception.code.ErrorStatus.AUTH_EXTRACT_ERROR;
+import static com.ssmoker.smoker.global.exception.code.ErrorStatus.AUTH_EXTRACT_ERROR_TEST;
+
 import com.ssmoker.smoker.global.security.exception.AuthException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +23,10 @@ import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
+
+    private static final String HEADER_STRING = "Authorization";
+    private static final String HEADER_STRING_PREFIX = "Bearer ";
+
     private final SecretKey secretKey;
     private final long accessTokenValidityMilliseconds;
     private final long refreshTokenValidityMilliseconds;
@@ -30,6 +38,15 @@ public class JwtTokenProvider {
         this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         this.accessTokenValidityMilliseconds = accessTokenValidityMilliseconds;
         this.refreshTokenValidityMilliseconds = refreshTokenValidityMilliseconds;
+    }
+
+    public String extractToken (final HttpServletRequest request) {
+        String authorizationHeader = request.getHeader(HEADER_STRING);
+
+        if (authorizationHeader != null && authorizationHeader.startsWith(HEADER_STRING_PREFIX)) {
+            return authorizationHeader.substring(7);
+        }
+        throw new AuthException(AUTH_EXTRACT_ERROR_TEST);
     }
 
     public String createAccessToken(Long memberId) {
@@ -64,6 +81,7 @@ public class JwtTokenProvider {
             Jws<Claims> claims = getClaims(token);
             Date expiredDate = claims.getBody().getExpiration();
             Date now = new Date();
+
             return expiredDate.after(now);
         } catch (ExpiredJwtException e) {
             throw new AuthException(ErrorStatus.AUTH_EXPIRED_TOKEN);
@@ -79,6 +97,7 @@ public class JwtTokenProvider {
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
     }
 
+    // 인가
     public Authentication getAuthentication(String token) {
         try {
             Long memberId = getId(token); // Extract member ID from JWT
@@ -89,22 +108,4 @@ public class JwtTokenProvider {
         }
     }
 
-    public void validateToken(String token) {
-        try {
-            Jws<Claims> claims = getClaims(token);
-            Date expiration = claims.getBody().getExpiration();
-            Date now = new Date();
-
-            if (expiration.before(now)) {
-                throw new AuthException(ErrorStatus.AUTH_EXPIRED_TOKEN);
-            }
-        } catch (ExpiredJwtException e) {
-            throw new AuthException(ErrorStatus.AUTH_EXPIRED_TOKEN);
-        } catch (SecurityException
-                 | MalformedJwtException
-                 | UnsupportedJwtException
-                 | IllegalArgumentException e) {
-            throw new AuthException(ErrorStatus.AUTH_INVALID_TOKEN);
-        }
-    }
 }
