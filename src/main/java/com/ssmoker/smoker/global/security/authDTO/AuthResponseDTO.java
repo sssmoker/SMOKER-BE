@@ -1,4 +1,4 @@
-package com.ssmoker.smoker.domain.member.dto;
+package com.ssmoker.smoker.global.security.authDTO;
 
 import lombok.*;
 
@@ -17,7 +17,7 @@ public class AuthResponseDTO {
     @Builder
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class TokenRefreshResponse {
+    public static class TokenResponse {
         String accessToken;
         String refreshToken;
     }

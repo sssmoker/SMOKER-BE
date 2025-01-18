@@ -27,31 +27,37 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws IOException {
+            throws IOException, ServletException {
+
+        String path = request.getRequestURI();
+
+        // 1) 만약 Swagger, 로그인 등 "인증이 필요 없는 경로"이면 → 토큰 검증 스킵
+        if (isPermitAllPath(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
-            String authorizationHeader = request.getHeader("Authorization");
+            String token = jwtTokenProvider.extractToken(request);
 
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                String token = authorizationHeader.substring(7);
+            if (jwtTokenProvider.isTokenValid(token)) {
+                Long userId = jwtTokenProvider.getId(token);
+                UserDetails userDetails =
+                        principalDetailsService.loadUserByUsername(userId.toString());
 
-                if (jwtTokenProvider.isTokenValid(token)) {
-                    Long userId = jwtTokenProvider.getId(token);
-                    UserDetails userDetails =
-                            principalDetailsService.loadUserByUsername(userId.toString());
-
-                    if (userDetails != null) {
-                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                                new UsernamePasswordAuthenticationToken(
-                                        userDetails, "", userDetails.getAuthorities());
-                        SecurityContextHolder.getContext()
-                                .setAuthentication(usernamePasswordAuthenticationToken);
-                    } else { //유저 없음
-                        throw new AuthException(ErrorStatus.USER_NOT_FOUND);
-                    }
-                } else { //토큰이 유효하지 않음
-                    throw new AuthException(ErrorStatus.AUTH_INVALID_TOKEN);
+                if (userDetails != null) {
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails, "", userDetails.getAuthorities());
+                    SecurityContextHolder.getContext()
+                            .setAuthentication(usernamePasswordAuthenticationToken);
+                } else { //유저 없음
+                    throw new AuthException(ErrorStatus.USER_NOT_FOUND);
                 }
+            } else { //토큰이 유효하지 않음
+                throw new AuthException(ErrorStatus.AUTH_INVALID_TOKEN);
             }
+
             filterChain.doFilter(request, response);
         } catch (AuthException ex) {
             setJsonResponse(response, ex.getErrorReasonHttpStatus().getHttpStatus().value(),
@@ -69,7 +75,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             throws IOException {
         response.setStatus(statusCode);
         response.setContentType("application/json;charset=UTF-8");
-        String jsonResponse = String.format("{\"isSuccess\": false, \"code\": \"%s\", \"message\": \"%s\"}", code, message);
+        String jsonResponse = String.format("{\"isSuccess\": false, \"code\": \"%s\", \"message\": \"%s\"}", code,
+                message);
         response.getWriter().write(jsonResponse);
+    }
+
+    private boolean isPermitAllPath(String path) {
+        return path.startsWith("/swagger-ui")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-resources")
+                || path.startsWith("/webjars")
+                || path.equals("/swagger-ui.html")
+
+                // 로그인/토큰발급 등등
+                || path.startsWith("/api/auth/login/")
+                // 필요하다면 다른 permitAll 경로들도 추가
+                // ...
+                ;
     }
 }

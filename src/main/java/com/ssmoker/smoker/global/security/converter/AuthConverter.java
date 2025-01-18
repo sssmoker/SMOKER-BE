@@ -2,7 +2,8 @@ package com.ssmoker.smoker.global.security.converter;
 
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.member.domain.MemberStatus;
-import com.ssmoker.smoker.domain.member.dto.AuthResponseDTO;
+import com.ssmoker.smoker.global.security.authDTO.AuthResponseDTO;
+import com.ssmoker.smoker.global.security.authDTO.AuthResponseDTO.TokenResponse;
 import com.ssmoker.smoker.global.security.authDTO.GoogleProfile;
 import com.ssmoker.smoker.global.security.authDTO.KakaoProfile;
 
@@ -33,9 +34,9 @@ public class AuthConverter {
                 .build();
     }
 
-    public static AuthResponseDTO.TokenRefreshResponse toTokenRefreshResponse(
+    public static TokenResponse toTokenRefreshResponse(
             String accessToken, String refreshToken) {
-        return AuthResponseDTO.TokenRefreshResponse.builder()
+        return TokenResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
