@@ -128,7 +128,7 @@ public class SmokingAreaService {
             reviewCount = smokingAreaRepository.findReviewCountBySmokingAreaId(smokingAreaId);
 
             //saved Count
-
+            savedCount = smokingAreaRepository.findSavedCountBySmokingAreaId(smokingAreaId);
         }
 
         return new  MapResponse.MarkerResponse(distance,reviewCount,savedCount);
