@@ -102,6 +102,8 @@ public class SmokingAreaService {
         distance = dis * walkingFactor;
 
         //소수점 한자리까지
+        distance = Math.round(distance * 10)/10.0;
+
         return distance;
     }
 
