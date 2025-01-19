@@ -19,6 +19,9 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, Long> 
     int findReviewCountBySmokingAreaId(@Param("smokingAreaId") Long smokingAreaId);
 
     //null이 아닌 0을 반환하도록 함
-    @Query("select coalesce(count(r) , 0)" +
-            "from SmokingArea s left join ")
+    @Query("select coalesce(count(sa) , 0)" +
+            "from SmokingArea s left join SavedSmokingArea sa " +
+            "on sa.smokingArea.id = s.id " +
+            "where sa.id = :smokingAreaId Group by s")
+    int findSavedCountBySmokingAreaId(@Param("smokingAreaId") Long smokingAreaId);
 }
