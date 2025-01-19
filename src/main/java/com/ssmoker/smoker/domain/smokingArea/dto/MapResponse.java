@@ -33,6 +33,7 @@ public class MapResponse {
         private final String smokingAreaName;
         private final Double distance;
         private final Location location;
+        private final Double Rating;
         private final int reviewCount;
         private final int savedCount;
     }

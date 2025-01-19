@@ -141,7 +141,7 @@ public class SmokingAreaService {
     }
 
     private List<MapResponse.SmokingAreaInfoWithDistance> getSmokingAreaInfoWithDistance(
-            Double userLat, Double userLng){
+            Double userLat, Double userLng, String filter){
         //모든 Db 불러오기
         List<SmokingArea> smokingAreas =
                 smokingAreaRepository.findBySmokingAreaIdWithin1km(userLat, userLng);
@@ -165,15 +165,21 @@ public class SmokingAreaService {
                     reviewCount,
                     savedCount
             );
+        }).sorted((a,b) -> {
+            if("nearest".equals(filter)){
+                return Double.compare(a.getDistance(), b.getDistance()); //가까운 순
+            }else if("highestRated".equals(filter)){
+                return Integer.compare(b.getReviewCount(), a.getReviewCount());
+            }
         }).collect(Collectors.toList());
     }
 
     //db를 뒤져서 그에 맞는 smokingArea 구하기
     public MapResponse.SmokingAreaListResponse getSmokingAreaListResponse(
-            Double userLat, Double userLng
+            Double userLat, Double userLng, String filter
     ) {
         List<MapResponse.SmokingAreaInfoWithDistance> smokingLists =
-                getSmokingAreaInfoWithDistance(userLat, userLng);
+                getSmokingAreaInfoWithDistance(userLat, userLng, filter);
 
         return new MapResponse.SmokingAreaListResponse(smokingLists);
     }
