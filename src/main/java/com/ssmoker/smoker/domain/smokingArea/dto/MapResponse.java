@@ -1,5 +1,6 @@
 package com.ssmoker.smoker.domain.smokingArea.dto;
 
+import com.ssmoker.smoker.domain.smokingArea.domain.Location;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,18 @@ public class MapResponse {
     @AllArgsConstructor
     public static class MarkerResponse{
         private final double distance;
+        private final int reviewCount;
+        private final int savedCount;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class SmokingAreaInfoWithDistance{
+        private final Long smokingAreaId;
+        private final String smokingAreaName;
+        private final Double distance;
+        private final Location location;
         private final int reviewCount;
         private final int savedCount;
     }
