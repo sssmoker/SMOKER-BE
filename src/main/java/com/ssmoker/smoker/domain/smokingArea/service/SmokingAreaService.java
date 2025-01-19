@@ -139,4 +139,6 @@ public class SmokingAreaService {
 
         return new  MapResponse.MarkerResponse(distance,reviewCount,savedCount);
     }
+
+    //
 }

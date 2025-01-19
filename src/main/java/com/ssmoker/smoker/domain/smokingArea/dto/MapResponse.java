@@ -36,4 +36,11 @@ public class MapResponse {
         private final int reviewCount;
         private final int savedCount;
     }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class SmokingAreaListResponse{
+        private final List<SmokingAreaInfoWithDistance> smokingAreas;
+    }
 }
