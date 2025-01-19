@@ -46,4 +46,7 @@ public class SmokingArea extends BaseEntity {
 
     @OneToMany(mappedBy = "smokingArea", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UpdatedHistory> updatedHistories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "smokingArea", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SavedSmokingArea> savedSmokingAreas = new ArrayList<>();
 }

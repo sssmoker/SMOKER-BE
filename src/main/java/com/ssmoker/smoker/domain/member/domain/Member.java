@@ -1,6 +1,7 @@
 package com.ssmoker.smoker.domain.member.domain;
 
 import com.ssmoker.smoker.domain.review.domain.Review;
+import com.ssmoker.smoker.domain.smokingArea.domain.SavedSmokingArea;
 import com.ssmoker.smoker.domain.updatedHistory.domain.UpdatedHistory;
 import com.ssmoker.smoker.global.common.BaseEntity;
 import jakarta.persistence.CascadeType;
@@ -47,6 +48,9 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>(); // 작성 리뷰
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SavedSmokingArea> savedSmokingAreas = new ArrayList<>();
 
     @Override
     public String toString() {
