@@ -7,6 +7,7 @@ import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,7 @@ public class SmokingAreaController {
     @GetMapping("/{smokingAreaId}/reviews")
     public ApiResponse<ReviewResponses> getReviews(@PathVariable Long smokingAreaId,
                                                    @RequestParam @Min(0) @NotNull Integer pageNumber) {
-        ReviewResponses result = smokingAreaService.getReviews(smokingAreaId, pageNumber);
+        ReviewResponses result = smokingAreaService.getReviewsByAreaId(smokingAreaId, pageNumber);
 
         return ApiResponse.onSuccess(result);
     }
@@ -45,16 +46,33 @@ public class SmokingAreaController {
         return ApiResponse.of(SuccessStatus.MAP_INFO_OK, markers);
     }
 
-/*    @Operation(summary = "흡연 구역 마커 클릭(모달)",
+    @Operation(summary = "흡연 구역 마커 클릭(모달)",
     description = "흡연구역 마커 클릭 시 다른 작은 창으로 마커 정보 알려주는 역할")
-    @GetMapping("/{smokingAreaId}")
+    @GetMapping("/{smokingAreaId}/simple")
     public ApiResponse<MapResponse.MarkerResponse> getSmokingAreaMarker(
             @PathVariable(name = "smokingAreaId") Long smokingAreaId,
-            @RequestParam Double userLat,
-            @RequestParam Double userLng
+            @RequestParam(name = "userLat") Double userLat,
+            @RequestParam(name = "userLng") Double userLng
     ){
+        MapResponse.MarkerResponse marker = smokingAreaService.getMarkerResponse(
+                smokingAreaId, userLat, userLng);
 
-    }*/
+        return ApiResponse.of(SuccessStatus.MAP_MARKER_OK,marker);
+    }
+
+    @Operation(summary = "흡연 구역 목록",
+    description = "사용자 현재 위치에서 1km 반경 내에 있는 흡연 구역 목록 조회")
+    @GetMapping("/list")
+    public ApiResponse<MapResponse.SmokingAreaListResponse> getSmokingAreaList(
+            @RequestParam(name = "userLat") Double userLat,
+            @RequestParam(name = "userLng") Double userLng,
+            @RequestParam(name = "filter") String filter
+    ){
+        MapResponse.SmokingAreaListResponse result
+                = smokingAreaService.getSmokingAreaListResponse(userLat, userLng, filter);
+
+        return ApiResponse.of(SuccessStatus.MAP_LIST_OK, result);
+    }
 
     @Operation(summary = "상세정보 업데이트 화면")
     @GetMapping("/update/{smokingAreaId}/name")
@@ -71,5 +89,4 @@ public class SmokingAreaController {
         SmokingAreaUpdateRequest response = smokingAreaService.updateSmokingArea(smokingAreaId, request);
         return ApiResponse.onSuccess(response);
     }
-
 }

@@ -19,7 +19,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 @RequiredArgsConstructor
 public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
-    private final MemberService memberService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {

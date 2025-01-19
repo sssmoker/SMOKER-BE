@@ -24,8 +24,12 @@ public enum ErrorStatus implements BaseErrorCode {
     REVIEW_NOT_FOUND(HttpStatus.BAD_REQUEST, "REVIEW4003", "리뷰가 없습니다"),
     // SmokingArea
     SMOKING_AREA_NOT_FOUND(HttpStatus.BAD_REQUEST, "AREA4001", "흡연 구역이 없습니다."),
+    FILTER_NOT_FOUND(HttpStatus.BAD_REQUEST, "AREA4002", "올바르지 않은 필터입니다."),
 
     // Auth 관련
+    AUTH_EXTRACT_ERROR_TEST(HttpStatus.UNAUTHORIZED, "AUTH_000TSET", "토큰 추출에 실패했습니다TEST."),
+
+    AUTH_EXTRACT_ERROR(HttpStatus.UNAUTHORIZED, "AUTH_000", "토큰 추출에 실패했습니다."),
     AUTH_EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH_001", "토큰이 만료되었습니다."),
     AUTH_INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH_002", "토큰이 유효하지 않습니다."),
     INVALID_LOGIN_REQUEST(HttpStatus.UNAUTHORIZED, "AUTH_003", "올바른 아이디나 패스워드가 아닙니다."),

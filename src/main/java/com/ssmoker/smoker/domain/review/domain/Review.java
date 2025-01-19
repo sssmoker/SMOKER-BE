@@ -17,10 +17,6 @@ public class Review extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "smoking_area_id", nullable = false)
-    private SmokingArea smokingArea;
-
     @Column(nullable = false)
     private Double score;
 
@@ -28,6 +24,10 @@ public class Review extends BaseEntity {
     private String content;
 
     private String imageUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "smoking_area_id", nullable = false)
+    private SmokingArea smokingArea;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", nullable = false)

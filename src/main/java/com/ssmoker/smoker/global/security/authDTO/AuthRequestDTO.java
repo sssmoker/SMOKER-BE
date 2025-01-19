@@ -1,4 +1,4 @@
-package com.ssmoker.smoker.domain.member.dto;
+package com.ssmoker.smoker.global.security.authDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

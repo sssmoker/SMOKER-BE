@@ -25,18 +25,18 @@ public class SecurityConfig {
     private final JwtRequestFilter jwtRequestFilter;
 
     private static final String[] SECURITY_ALLOW_ARRAY  = { //인증 없이 접근 가능한 엔드 포인트
-            "api/auth/login/google", //구글 로그인
-            "api/auth/login/kakao", //카카오 로그인
-            "api/auth/refresh", //토큰 재발급
-            "api/member/notices", //공지사항
-            "api/smoking-area/{smokingAreaId}", //흡연 구역 상세 정보 조회
-            "api/smoking-area/{smokingAreaId}/reviews", // 흡연 구역 리뷰 조회
-            "api/updated_history/{smokingAreaId}", // 업데이트 히스토리 조회
-            "api/smoking-area/{smokingAreaId}/rating_info", //총 별점 & 별점 개수 조회
-            "api/smoking-area", //흡연구역 마커 보이기
-            "api/smoking-area/{smokingAreaIid}/simple", //흡연 구역 지도 마커 클릭했을 때 흡연 구역 정보 조회 (모달)
-            "api/smoking-area/list", //흡연구역 목록보기
-            "api/smoking-area/search", //흡연 구역 검색
+            "/api/auth/login/google", //구글 로그인
+            "/api/auth/login/kakao", //카카오 로그인
+            "/api/auth/refresh", //토큰 재발급
+            "/api/member/notices", //공지사항
+            "/api/smoking-area/{smokingAreaId}", //흡연 구역 상세 정보 조회
+            "/api/smoking-area/{smokingAreaId}/reviews", // 흡연 구역 리뷰 조회
+            "/api/updated_history/{smokingAreaId}", // 업데이트 히스토리 조회
+            "/api/smoking-area/{smokingAreaId}/rating_info", //총 별점 & 별점 개수 조회
+            "/api/smoking-area", //흡연구역 마커 보이기
+            "/api/smoking-area/{smokingAreaId}/simple", //흡연 구역 지도 마커 클릭했을 때 흡연 구역 정보 조회 (모달)
+            "/api/smoking-area/list", //흡연구역 목록보기
+            "/api/smoking-area/search", //흡연 구역 검색
             "/test/{status}", //테스트 컨트롤러
             //등등 추가 및 수정해주세요
             "/health",
@@ -44,13 +44,16 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/swagger-resources/**",
             "/v3/api-docs/**",
+            "/webjars/**",
+            "/swagger-ui.html",
             "/login",
             "/refresh",
             "/actuator/prometheus",
             "/ws/**",
             "/topic/**",
             "/api/post/**",
-            "/api/recommend/**"
+            "/api/recommend/**",
+            "/favicon.ico"
     };
 
     @Bean

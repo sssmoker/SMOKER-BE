@@ -38,3 +38,16 @@ jwt:
   secret: ${JWT_SECRET_KEY}
   access-token-validity: ${JWT_ACCESS_TOKEN_TIME}
   refresh-token-validity: ${JWT_REFRESH_TOKEN_TIME}
+
+cloud:
+  aws:
+    s3:
+      bucket: smoker-bucket
+      path:
+        review: review
+        smokingArea: area
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
