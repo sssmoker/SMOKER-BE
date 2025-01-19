@@ -9,6 +9,7 @@ import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,5 +64,19 @@ public class SmokingAreaController {
                 smokingAreaId, userLat, userLng);
 
         return ApiResponse.of(SuccessStatus.MAP_MARKER_OK,marker);
+    }
+
+    @Operation(summary = "흡연 구역 목록",
+    description = "사용자 현재 위치에서 1km 반경 내에 있는 흡연 구역 목록 조회")
+    @GetMapping("/list")
+    public ApiResponse<MapResponse.SmokingAreaListResponse> getSmokingAreaList(
+            @RequestParam(name = "userLat") Double userLat,
+            @RequestParam(name = "userLng") Double userLng,
+            @RequestParam(name = "filter") String filter
+    ){
+        MapResponse.SmokingAreaListResponse result
+                = smokingAreaService.getSmokingAreaListResponse(userLat, userLng, filter);
+
+        return ApiResponse.of(SuccessStatus.MAP_LIST_OK, result);
     }
 }

@@ -4,6 +4,7 @@ import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Formula;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,5 +24,4 @@ public class SavedSmokingArea extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "smoking_area_id", nullable = false)
     private SmokingArea smokingArea;
-
 }
