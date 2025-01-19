@@ -140,6 +140,41 @@ public class SmokingAreaService {
         return new  MapResponse.MarkerResponse(distance,reviewCount,savedCount);
     }
 
+    private List<MapResponse.SmokingAreaInfoWithDistance> getSmokingAreaInfoWithDistance(
+            Double userLat, Double userLng){
+        //모든 Db 불러오기
+        List<SmokingArea> smokingAreas =
+                smokingAreaRepository.findBySmokingAreaIdWithin1km(userLat, userLng);
+
+        //해당 db에 대한 모든 reviewCount와 savedCount 불러오기
+        return smokingAreas.stream().map(smokingArea -> {
+            Double distance = calculateHaversineDistance(userLat, userLng,
+                    smokingArea.getLocation().getLatitude(),
+                    smokingArea.getLocation().getLongitude());
+
+            int reviewCount = smokingAreaRepository.findReviewCountBySmokingAreaId(
+                    smokingArea.getId());
+
+            int savedCount = smokingAreaRepository.findSavedCountBySmokingAreaId(
+                    smokingArea.getId());
+
+            return new MapResponse.SmokingAreaInfoWithDistance(smokingArea.getId(),
+                    smokingArea.getSmokingAreaName(),
+                    distance,
+                    smokingArea.getLocation(),
+                    reviewCount,
+                    savedCount
+            );
+        }).collect(Collectors.toList());
+    }
+
     //db를 뒤져서 그에 맞는 smokingArea 구하기
-    //filter에 맞게 db 정렬하기
+    public MapResponse.SmokingAreaListResponse getSmokingAreaListResponse(
+            Double userLat, Double userLng
+    ) {
+        List<MapResponse.SmokingAreaInfoWithDistance> smokingLists =
+                getSmokingAreaInfoWithDistance(userLat, userLng);
+
+        return new MapResponse.SmokingAreaListResponse(smokingLists);
+    }
 }
