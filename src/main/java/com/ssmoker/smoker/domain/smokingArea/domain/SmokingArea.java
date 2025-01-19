@@ -17,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -40,6 +41,13 @@ public class SmokingArea extends BaseEntity {
     private String imageUrl;
     /*@Column(nullable = false)
     private Boolean isApproved;*/
+
+    //가상 데이터
+    @Formula("(select sa.location_latitude from smoking_area sa where sa.id = id)")
+    private Double latitude;
+
+    @Formula("(select sa.location_longitude from smoking_area sa where sa.id = id)")
+    private Double longitude;
 
     @OneToMany(mappedBy = "smokingArea", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
