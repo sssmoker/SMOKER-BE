@@ -1,15 +1,14 @@
 package com.ssmoker.smoker.domain.token.controller;
 
+import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
 import com.ssmoker.smoker.global.security.authDTO.AuthResponseDTO.TokenResponse;
 import com.ssmoker.smoker.domain.token.service.TokenService;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,10 +25,13 @@ public class TokenController {
         TokenResponse tokenResponse = tokenService.reissueToken(request);
 
         return ApiResponse.onSuccess(tokenResponse);
-    }
+    } // Access Token 재발급
 
+    @Operation(
+            summary = "로그아웃 API",
+            description = "Refresh Token을 삭제합니다.")
     @GetMapping("/logout")
     public void logout(final HttpServletRequest request) {
         tokenService.deleteToken(request);
-    }
+    } // 로그아웃
 }
