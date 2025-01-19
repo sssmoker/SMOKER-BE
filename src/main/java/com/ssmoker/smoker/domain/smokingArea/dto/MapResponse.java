@@ -19,7 +19,7 @@ public class MapResponse {
     @Setter
     @AllArgsConstructor
     public static class MarkerResponse{
-        private final Double distance;
+        private final double distance;
         private final int reviewCount;
         private final int savedCount;
     }

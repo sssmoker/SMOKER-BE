@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -73,9 +74,35 @@ public class SmokingAreaService {
     }
 
     //거리 계산하는 함수
-    private Double calculateDistance(Double userLat, Double userLng,
+    //latitude = 위도, longitude = 경도
+    private double calculateHaversineDistance(Double userLat, Double userLng,
                                      Double destLat,Double destLng) {
+        double distance;
+        double earthRad = 6371000;
 
+        double latRad1 = Math.toRadians(userLat);
+        double latRad2 = Math.toRadians(destLat);
+
+        double deltaLat = Math.toRadians(destLat - userLat); //위도 차
+        double deltaLng = Math.toRadians(destLng - userLng); //경도 차
+
+        //공식 적용
+        double haver = Math.pow(Math.sin(deltaLat / 2), 2) +
+                Math.cos(latRad1) * Math.cos(latRad2) * Math.pow(
+                        Math.sin(deltaLng / 2), 2);
+
+        double haversin = 2 * Math.atan2(Math.sqrt(haver),
+                Math.sqrt(1 - haver));
+
+        //단위 m
+        double dis = earthRad * haversin;
+
+        //도보 거리 보정
+        //임의로 해둠
+        double walkingFactor = 1.3;
+        distance = dis * walkingFactor;
+
+        return distance;
     }
 
     //marker 간단한 정보 보여주기 (모달)
@@ -85,13 +112,24 @@ public class SmokingAreaService {
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
                 .orElse(null);
 
+        double distance;
+        int reviewCount;
+        int savedCount;
+
         //smoking area 예외처리
         if(smokingArea == null){
             throw new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND);
         }else{
+            //거리 계산
+            distance = calculateHaversineDistance(userLat, userLng,
+                    smokingArea.getLocation().getLatitude(), smokingArea.getLocation().getLongitude());
+
+            //review Count
+
+            //saved Count
 
         }
 
-        return
+        return new  MapResponse.MarkerResponse(distance,reviewCount,savedCount);
     }
 }
