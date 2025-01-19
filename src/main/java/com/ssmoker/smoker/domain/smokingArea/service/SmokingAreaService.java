@@ -158,10 +158,13 @@ public class SmokingAreaService {
             int savedCount = smokingAreaRepository.findSavedCountBySmokingAreaId(
                     smokingArea.getId());
 
+            Double avgRating = reviewRepository.findAvgScore(smokingArea.getId());
+
             return new MapResponse.SmokingAreaInfoWithDistance(smokingArea.getId(),
                     smokingArea.getSmokingAreaName(),
                     distance,
                     smokingArea.getLocation(),
+                    avgRating,
                     reviewCount,
                     savedCount
             );
@@ -169,7 +172,9 @@ public class SmokingAreaService {
             if("nearest".equals(filter)){
                 return Double.compare(a.getDistance(), b.getDistance()); //가까운 순
             }else if("highestRated".equals(filter)){
-                return Integer.compare(b.getReviewCount(), a.getReviewCount());
+                return Double.compare(b.getRating(), a.getRating()); //별점 높은 순
+            }else{
+                throw new
             }
         }).collect(Collectors.toList());
     }
