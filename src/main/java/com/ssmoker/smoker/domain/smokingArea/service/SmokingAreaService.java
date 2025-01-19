@@ -144,6 +144,7 @@ public class SmokingAreaService {
         return new  MapResponse.MarkerResponse(distance,reviewCount,savedCount);
     }
 
+    //정렬 코드는 개선 가능함. 나중에 시간이 되면 개선해야겠음
     private List<MapResponse.SmokingAreaInfoWithDistance> getSmokingAreaInfoWithDistance(
             Double userLat, Double userLng, String filter){
         //모든 Db 불러오기
