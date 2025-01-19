@@ -125,6 +125,7 @@ public class SmokingAreaService {
                     smokingArea.getLocation().getLatitude(), smokingArea.getLocation().getLongitude());
 
             //review Count
+            reviewCount = smokingAreaRepository.findReviewCountBySmokingAreaId(smokingAreaId);
 
             //saved Count
 
