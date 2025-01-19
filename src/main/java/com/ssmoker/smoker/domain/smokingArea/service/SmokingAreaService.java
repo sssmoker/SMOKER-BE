@@ -12,6 +12,7 @@ import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
 import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaRepository;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
+import com.ssmoker.smoker.global.exception.SmokerBadRequestException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import java.util.List;
 import java.util.Optional;
@@ -174,7 +175,7 @@ public class SmokingAreaService {
             }else if("highestRated".equals(filter)){
                 return Double.compare(b.getRating(), a.getRating()); //별점 높은 순
             }else{
-                throw new
+                throw new SmokerBadRequestException(ErrorStatus.FILTER_NOT_FOUND);
             }
         }).collect(Collectors.toList());
     }
