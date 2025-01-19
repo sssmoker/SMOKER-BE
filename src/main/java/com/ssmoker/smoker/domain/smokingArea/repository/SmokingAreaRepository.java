@@ -30,9 +30,9 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, Long> 
     //1km 반경 내의 모든 db를 출력하도록 하기
     @Query(value = """
             select *
-            from SmokingArea s 
+            from smoking_area s 
             where ST_Distance_Sphere(
-            Point(s.location.longitude, s.location.latitude),
+            Point(s.location_longitude, s.location_latitude),
             Point(:userLng, :userLat)
                   ) <= 1000""", nativeQuery = true)
     List<SmokingArea> findBySmokingAreaIdWithIn1km(

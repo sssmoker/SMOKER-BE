@@ -42,7 +42,7 @@ public class SmokingArea extends BaseEntity {
     /*@Column(nullable = false)
     private Boolean isApproved;*/
 
-    //가상 데이터
+    //가상 필드
     @Formula("(select sa.location_latitude from smoking_area sa where sa.id = id)")
     private Double latitude;
 
