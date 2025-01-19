@@ -15,6 +15,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     )
     Page<Review> findReviewsWithMemberById(@Param("smokingAreaId") Long smokingAreaId, PageRequest pageRequest);
 
-    @Query("SELECT avg(r.score) FROM Review r WHERE r.smokingArea.id = :smokingAreaId")
+    @Query("SELECT coalesce(avg(r.score), 0) FROM Review r WHERE r.smokingArea.id = :smokingAreaId")
     Double findAvgScore(@Param("smokingAreaId") Long smokingAreaId);
 }
