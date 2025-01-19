@@ -37,6 +37,7 @@ public class SmokingArea extends BaseEntity {
     @Embedded
     private Feature feature;
 
+    private String imageUrl;
     /*@Column(nullable = false)
     private Boolean isApproved;*/
 

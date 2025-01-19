@@ -89,6 +89,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
                 // 로그인/토큰발급 등등
                 || path.startsWith("/api/auth/login/")
+                || path.startsWith("/test")
                 // 필요하다면 다른 permitAll 경로들도 추가
                 // ...
                 ;

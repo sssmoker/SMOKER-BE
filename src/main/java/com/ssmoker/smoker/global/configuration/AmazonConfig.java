@@ -28,6 +28,15 @@ public class AmazonConfig {
     @Value("${cloud.aws.region.static}")
     private String region;
 
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
+    @Value("${cloud.aws.s3.path.review}")
+    private String reviewPath;
+
+    @Value("${cloud.aws.s3.path.smokingArea}")
+    private String smokingAreaPath;
+
     @PostConstruct
     public void init() {
         this.awsCredentials = new BasicAWSCredentials(accessKey, secretKey);

@@ -4,13 +4,12 @@ import static com.ssmoker.smoker.global.exception.code.ErrorStatus.REVIEW_BAD_RE
 import static com.ssmoker.smoker.global.exception.code.ErrorStatus.SMOKING_AREA_NOT_FOUND;
 
 import com.ssmoker.smoker.domain.review.domain.Review;
+import com.ssmoker.smoker.domain.review.exception.ReviewPageNumberException;
 import com.ssmoker.smoker.domain.review.repository.ReviewRepository;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.dto.*;
-import com.ssmoker.smoker.domain.smokingArea.exception.ReviewPageNumberException;
 import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
 import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaRepository;
-import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,16 +35,19 @@ public class SmokingAreaService {
         throw new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND);
     }
 
-    public ReviewResponses getReviews(Long id, int pageNumber) {
+    public ReviewResponses getReviewsByAreaId(Long id, int pageNumber) {
+        if (pageNumber < 0) {
+            throw new ReviewPageNumberException(REVIEW_BAD_REQUEST);
+        }
         Page<Review> reviewPage = reviewRepository.findReviewsWithMemberById(id,
                 PageRequest.of(pageNumber, REVIEW_PAGE_SIZE));
 
-        ReviewResponses reviewResponses = ReviewResponses.of(getReviewResponses(reviewPage), reviewPage.isLast(),
+        ReviewResponses reviewResponses = ReviewResponses.of(getReviewResponsesByAreaId(reviewPage), reviewPage.isLast(),
                 reviewPage.getNumber());
         return reviewResponses;
     }
 
-    private List<ReviewResponse> getReviewResponses(Page<Review> reviewPage) {
+    private List<ReviewResponse> getReviewResponsesByAreaId(Page<Review> reviewPage) {
         return reviewPage.getContent().stream()
                 .map(this::getReviewResponse)
                 .collect(Collectors.toList());
