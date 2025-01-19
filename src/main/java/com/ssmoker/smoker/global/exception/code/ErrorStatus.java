@@ -21,6 +21,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // Review
     REVIEW_BAD_REQUEST(HttpStatus.BAD_REQUEST, "REVIEW4001", "페이지 넘버는 0 이상이어야 합니다."),
     REVIEW_CONTENT_EXCEED(HttpStatus.BAD_REQUEST, "REVIEW4002", "리뷰 내용은 1000자 이내여야 합니다." ),
+    REVIEW_NOT_FOUND(HttpStatus.BAD_REQUEST, "REVIEW4003", "리뷰가 없습니다"),
     // SmokingArea
     SMOKING_AREA_NOT_FOUND(HttpStatus.BAD_REQUEST, "AREA4001", "흡연 구역이 없습니다."),
 

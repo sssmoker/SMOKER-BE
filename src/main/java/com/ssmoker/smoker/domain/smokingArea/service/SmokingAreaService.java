@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -77,4 +78,26 @@ public class SmokingAreaService {
         SmokingArea smokingArea = smokingAreaRepository.findById(smokinAreaId)
                 .orElse(throw new );
     }*/
+
+    public SmokingAreaUpdateRequest updateSmokingArea(Long smokingAreaId, SmokingAreaUpdateRequest request) {
+        SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
+                .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
+
+        smokingArea.getFeature().setHasAirConditioning(request.hasAirConditioning());
+        smokingArea.getFeature().setHasChair(request.hasChair());
+        smokingArea.getFeature().setHasTrashBin(request.hasTrashBin());
+        smokingArea.getFeature().setIsEnclosedSmokingArea(request.isEnclosedSmokingArea());
+
+        smokingArea = smokingAreaRepository.save(smokingArea);
+
+        return SmokingAreaUpdateRequest.of(smokingArea);
+    }
+
+    public SmokingAreaNameResponse getSmokingAreaName(Long smokingAreaId) {
+        SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
+                .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
+
+        return SmokingAreaNameResponse.of(smokingArea);
+    }
+
 }

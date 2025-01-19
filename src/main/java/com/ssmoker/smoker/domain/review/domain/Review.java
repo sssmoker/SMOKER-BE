@@ -32,4 +32,5 @@ public class Review extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", nullable = false)
     private Member member;
+
 }

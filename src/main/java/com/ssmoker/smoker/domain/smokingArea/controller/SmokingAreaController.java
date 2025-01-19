@@ -1,21 +1,14 @@
 package com.ssmoker.smoker.domain.smokingArea.controller;
 
-import com.ssmoker.smoker.domain.smokingArea.dto.MapResponse;
-import com.ssmoker.smoker.domain.smokingArea.dto.ReviewResponses;
-import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaMarkersResponse;
+import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.service.SmokingAreaService;
-import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaInfoResponse;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -62,4 +55,21 @@ public class SmokingAreaController {
     ){
 
     }*/
+
+    @Operation(summary = "상세정보 업데이트 화면")
+    @GetMapping("/update/{smokingAreaId}/name")
+    public ApiResponse<SmokingAreaNameResponse> getSmokingAreaName(@PathVariable Long smokingAreaId) {
+        SmokingAreaNameResponse response = smokingAreaService.getSmokingAreaName(smokingAreaId);
+        return ApiResponse.onSuccess(response);
+    }
+
+    @Operation(summary = "흡연 구역 상세 정보 업데이트")
+    @PatchMapping("/update/{smokingAreaId}")
+    public ApiResponse<SmokingAreaUpdateRequest> updateSmokingArea(@PathVariable Long smokingAreaId,
+                                                                   @RequestBody SmokingAreaUpdateRequest request) {
+        System.out.println("PATCH 요청 데이터: " + request);
+        SmokingAreaUpdateRequest response = smokingAreaService.updateSmokingArea(smokingAreaId, request);
+        return ApiResponse.onSuccess(response);
+    }
+
 }
