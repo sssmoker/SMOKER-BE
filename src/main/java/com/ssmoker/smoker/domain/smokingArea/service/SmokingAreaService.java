@@ -1,7 +1,7 @@
 package com.ssmoker.smoker.domain.smokingArea.service;
 
-import static com.ssmoker.smoker.global.exception.code.ErrorStatus.REVIEW_BAD_REQUEST;
 import static com.ssmoker.smoker.global.exception.code.ErrorStatus.SMOKING_AREA_NOT_FOUND;
+import static com.ssmoker.smoker.global.exception.code.ErrorStatus._BAD_REQUEST;
 
 import com.ssmoker.smoker.domain.review.domain.Review;
 import com.ssmoker.smoker.domain.review.repository.ReviewRepository;
@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -75,27 +74,27 @@ public class SmokingAreaService {
 
     //거리 계산하는 함수
     //latitude = 위도, longitude = 경도
-    private double calculateHaversineDistance(Double userLat, Double userLng,
+    private Double calculateHaversineDistance(Double userLat, Double userLng,
                                      Double destLat,Double destLng) {
-        double distance;
+        Double distance;
         double earthRad = 6371000;
 
-        double latRad1 = Math.toRadians(userLat);
-        double latRad2 = Math.toRadians(destLat);
+        Double latRad1 = Math.toRadians(userLat);
+        Double latRad2 = Math.toRadians(destLat);
 
-        double deltaLat = Math.toRadians(destLat - userLat); //위도 차
-        double deltaLng = Math.toRadians(destLng - userLng); //경도 차
+        Double deltaLat = Math.toRadians(destLat - userLat); //위도 차
+        Double deltaLng = Math.toRadians(destLng - userLng); //경도 차
 
         //공식 적용
-        double haver = Math.pow(Math.sin(deltaLat / 2), 2) +
+        Double haver = Math.pow(Math.sin(deltaLat / 2), 2) +
                 Math.cos(latRad1) * Math.cos(latRad2) * Math.pow(
                         Math.sin(deltaLng / 2), 2);
 
-        double haversin = 2 * Math.atan2(Math.sqrt(haver),
+        Double haversin = 2 * Math.atan2(Math.sqrt(haver),
                 Math.sqrt(1 - haver));
 
         //단위 m
-        double dis = earthRad * haversin;
+        Double dis = earthRad * haversin;
 
         //도보 거리 보정
         //임의로 해둠

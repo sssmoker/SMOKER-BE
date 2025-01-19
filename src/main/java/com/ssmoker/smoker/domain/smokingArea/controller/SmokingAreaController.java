@@ -57,10 +57,11 @@ public class SmokingAreaController {
     @GetMapping("/{smokingAreaId}/simple")
     public ApiResponse<MapResponse.MarkerResponse> getSmokingAreaMarker(
             @PathVariable(name = "smokingAreaId") Long smokingAreaId,
-            @RequestParam Double userLat,
-            @RequestParam Double userLng
+            @RequestParam(name = "userLat") Double userLat,
+            @RequestParam(name = "userLng") Double userLng
     ){
-        MapResponse.MarkerResponse marker = smokingAreaService.getMarkerResponse(smokingAreaId, userLat, userLng);
+        MapResponse.MarkerResponse marker = smokingAreaService.getMarkerResponse(
+                smokingAreaId, userLat, userLng);
 
         return ApiResponse.of(SuccessStatus.MAP_MARKER_OK,marker);
     }
