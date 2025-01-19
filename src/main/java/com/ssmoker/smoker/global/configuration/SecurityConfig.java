@@ -34,7 +34,7 @@ public class SecurityConfig {
             "/api/updated_history/{smokingAreaId}", // 업데이트 히스토리 조회
             "/api/smoking-area/{smokingAreaId}/rating_info", //총 별점 & 별점 개수 조회
             "/api/smoking-area", //흡연구역 마커 보이기
-            "/api/smoking-area/{smokingAreaIid}/simple", //흡연 구역 지도 마커 클릭했을 때 흡연 구역 정보 조회 (모달)
+            "/api/smoking-area/{smokingAreaId}/simple", //흡연 구역 지도 마커 클릭했을 때 흡연 구역 정보 조회 (모달)
             "/api/smoking-area/list", //흡연구역 목록보기
             "/api/smoking-area/search", //흡연 구역 검색
             "/test/{status}", //테스트 컨트롤러
