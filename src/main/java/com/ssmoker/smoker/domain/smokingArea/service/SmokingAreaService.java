@@ -101,6 +101,7 @@ public class SmokingAreaService {
         double walkingFactor = 1.3;
         distance = dis * walkingFactor;
 
+        //소수점 한자리까지
         return distance;
     }
 
