@@ -2,7 +2,6 @@ package com.ssmoker.smoker.domain.smokingArea.controller;
 
 import com.ssmoker.smoker.domain.smokingArea.dto.MapResponse;
 import com.ssmoker.smoker.domain.smokingArea.dto.ReviewResponses;
-import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaMarkersResponse;
 import com.ssmoker.smoker.domain.smokingArea.service.SmokingAreaService;
 import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaInfoResponse;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
@@ -37,7 +36,7 @@ public class SmokingAreaController {
     @GetMapping("/{smokingAreaId}/reviews")
     public ApiResponse<ReviewResponses> getReviews(@PathVariable Long smokingAreaId,
                                                    @RequestParam @Min(0) @NotNull Integer pageNumber) {
-        ReviewResponses result = smokingAreaService.getReviews(smokingAreaId, pageNumber);
+        ReviewResponses result = smokingAreaService.getReviewsByAreaId(smokingAreaId, pageNumber);
 
         return ApiResponse.onSuccess(result);
     }
