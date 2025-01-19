@@ -21,7 +21,11 @@ public enum SuccessStatus implements BaseCode {
     MAP_INFO_OK(HttpStatus.OK, "MAP2001", "마커를 위한 흡연 구역 모두를 불러왔습니다."),
     MAP_MARKER_OK(HttpStatus.OK, "MAP2002", "거리 계산을 했습니다."),
     MAP_LIST_OK(HttpStatus.OK, "MAP2003", "목록을 불러왔습니다."),
-    MAP_SEARCH_OK(HttpStatus.OK, "MAP2004", "검색이 완료되었습니다.");
+    MAP_SEARCH_OK(HttpStatus.OK, "MAP2004", "검색이 완료되었습니다."),
+
+    // Profile 관련
+    NICKNAME_OK(HttpStatus.OK, "NICKNAME2001", "닉네임 변경이 완료되었습니다."),
+    ;
 
     private final HttpStatus httpStatus;
     private final String code;
