@@ -32,7 +32,7 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, Long> 
             select *
             from smoking_area s 
             where ST_Distance_Sphere(
-            Point(s.location_longitude, s.location_latitude),
+            Point(s.longitude, s.latitude),
             Point(:userLng, :userLat)
                   ) <= 1000""", nativeQuery = true)
     List<SmokingArea> findBySmokingAreaIdWithin1km(
