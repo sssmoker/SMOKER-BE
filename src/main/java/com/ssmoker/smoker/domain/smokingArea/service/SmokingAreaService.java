@@ -14,7 +14,10 @@ import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaRepository;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.exception.SmokerBadRequestException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
+
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -173,7 +176,10 @@ public class SmokingAreaService {
             if("nearest".equals(filter)){
                 return Double.compare(a.getDistance(), b.getDistance()); //가까운 순
             }else if("highestRated".equals(filter)){
-                return Double.compare(b.getRating(), a.getRating()); //별점 높은 순
+                return Comparator.comparing(MapResponse.SmokingAreaInfoWithDistance::getRating,
+                        Comparator.reverseOrder())//별점 높은 순
+                        .thenComparing(MapResponse.SmokingAreaInfoWithDistance::getDistance) //같으면 가까운 순
+                        .compare(a,b);
             }else{
                 throw new SmokerBadRequestException(ErrorStatus.FILTER_NOT_FOUND);
             }
