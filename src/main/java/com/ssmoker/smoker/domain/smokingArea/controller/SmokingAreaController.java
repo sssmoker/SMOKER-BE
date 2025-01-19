@@ -51,14 +51,17 @@ public class SmokingAreaController {
         return ApiResponse.of(SuccessStatus.MAP_INFO_OK, markers);
     }
 
-/*    @Operation(summary = "흡연 구역 마커 클릭(모달)",
+    @Operation(summary = "흡연 구역 마커 클릭(모달)",
     description = "흡연구역 마커 클릭 시 다른 작은 창으로 마커 정보 알려주는 역할")
-    @GetMapping("/{smokingAreaId}")
+    @GetMapping("/{smokingAreaId}/simple")
     public ApiResponse<MapResponse.MarkerResponse> getSmokingAreaMarker(
             @PathVariable(name = "smokingAreaId") Long smokingAreaId,
-            @RequestParam Double userLat,
-            @RequestParam Double userLng
+            @RequestParam(name = "userLat") Double userLat,
+            @RequestParam(name = "userLng") Double userLng
     ){
+        MapResponse.MarkerResponse marker = smokingAreaService.getMarkerResponse(
+                smokingAreaId, userLat, userLng);
 
-    }*/
+        return ApiResponse.of(SuccessStatus.MAP_MARKER_OK,marker);
+    }
 }
