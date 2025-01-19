@@ -140,5 +140,6 @@ public class SmokingAreaService {
         return new  MapResponse.MarkerResponse(distance,reviewCount,savedCount);
     }
 
-    //
+    //db를 뒤져서 그에 맞는 smokingArea 구하기
+    //filter에 맞게 db 정렬하기
 }
