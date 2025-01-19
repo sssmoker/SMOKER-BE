@@ -9,5 +9,4 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/member")
 public class MemberController {
     private final MemberService memberService;
-
 }

@@ -1,4 +1,4 @@
-package com.ssmoker.smoker.domain.smokingArea.exception;
+package com.ssmoker.smoker.domain.review.exception;
 
 import com.ssmoker.smoker.global.exception.SmokerBadRequestException;
 import com.ssmoker.smoker.global.exception.code.BaseErrorCode;
