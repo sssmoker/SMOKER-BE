@@ -1,15 +1,11 @@
 package com.ssmoker.smoker.domain.smokingArea.controller;
 
 import com.ssmoker.smoker.domain.smokingArea.dto.MapResponse;
-import com.ssmoker.smoker.domain.smokingArea.dto.ReviewResponses;
 import com.ssmoker.smoker.domain.smokingArea.service.SmokingAreaService;
 import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaInfoResponse;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,15 +25,6 @@ public class SmokingAreaController {
     @GetMapping("/{smokingAreaId}")
     public ApiResponse<SmokingAreaInfoResponse> getSmokingArea(@PathVariable Long smokingAreaId) {
         SmokingAreaInfoResponse result = smokingAreaService.getSmokingAreaInfo(smokingAreaId);
-
-        return ApiResponse.onSuccess(result);
-    }
-
-    @Operation(summary = "흡연 구역 리뷰 조회(최신순)", description = "쿼리 스트링으로 원하는 페이지를 넘겨주시면 됩니다.")
-    @GetMapping("/{smokingAreaId}/reviews")
-    public ApiResponse<ReviewResponses> getReviews(@PathVariable Long smokingAreaId,
-                                                   @RequestParam @Min(0) @NotNull Integer pageNumber) {
-        ReviewResponses result = smokingAreaService.getReviewsByAreaId(smokingAreaId, pageNumber);
 
         return ApiResponse.onSuccess(result);
     }
@@ -78,5 +65,13 @@ public class SmokingAreaController {
                 = smokingAreaService.getSmokingAreaListResponse(userLat, userLng, filter);
 
         return ApiResponse.of(SuccessStatus.MAP_LIST_OK, result);
+    }
+
+    @Operation(summary = " 총 별점 및 별점 개수 조회",
+    description = "흡연 구역 별 별점 평균 및 전체 별점 조회")
+    @GetMapping("/{smokingAreaId}/stars")
+    public ApiResponse<String> getSmokingAreaStarInfo(@PathVariable Long smokingAreaId){
+
+        return ApiResponse.onSuccess(null);
     }
 }
