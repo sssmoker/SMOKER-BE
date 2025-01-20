@@ -39,8 +39,6 @@ public class SmokingArea extends BaseEntity {
     private Feature feature;
 
     private String imageUrl;
-    /*@Column(nullable = false)
-    private Boolean isApproved;*/
 
     @OneToMany(mappedBy = "smokingArea", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
