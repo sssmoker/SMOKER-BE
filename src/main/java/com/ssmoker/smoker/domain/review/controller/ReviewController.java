@@ -31,8 +31,8 @@ public class ReviewController {
     }
 
     @Operation(summary = "흡연 구역 상세 페이지 - 총 별점 및 별점 개수 조회",
-            description = "흡연 구역 별 별점 평균 및 전체 별점 조회")
-    @GetMapping("/{smokingAreaId}/stars")
+            description = "흡연 구역 별 별점 평균 및 전체 별점 조회입니다. 전체 별점은 리스트로 1->5 점으로 개수가 반환됩니다.")
+    @GetMapping("/{smokingAreaId}/starInfo")
     public ApiResponse<ReviewStarsInfoResponse> getSmokingAreaStarInfo(@PathVariable Long smokingAreaId) {
         ReviewStarsInfoResponse result = reviewService.getStarsInfoBySmokingAreaId(smokingAreaId);
 

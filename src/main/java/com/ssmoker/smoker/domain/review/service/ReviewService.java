@@ -8,7 +8,10 @@ import com.ssmoker.smoker.domain.review.exception.ReviewPageNumberException;
 import com.ssmoker.smoker.domain.review.repository.ReviewRepository;
 import com.ssmoker.smoker.domain.review.dto.ReviewResponse;
 import com.ssmoker.smoker.domain.review.dto.ReviewResponses;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,7 +35,8 @@ public class ReviewService {
         Page<Review> reviewPage = reviewRepository.findReviewsWithMemberBySmokingAreaId(id,
                 PageRequest.of(pageNumber, REVIEW_PAGE_SIZE));
 
-        ReviewResponses reviewResponses = ReviewResponses.of(getReviewResponsesByAreaId(reviewPage), reviewPage.isLast(),
+        ReviewResponses reviewResponses = ReviewResponses.of(getReviewResponsesByAreaId(reviewPage),
+                reviewPage.isLast(),
                 reviewPage.getNumber());
         return reviewResponses;
     }
@@ -48,6 +52,29 @@ public class ReviewService {
     }
 
     public ReviewStarsInfoResponse getStarsInfoBySmokingAreaId(Long smokingAreaId) {
-        return reviewRepository.findStarsInfoBySmokingAreaId(smokingAreaId);
+        List<Double> scores = reviewRepository.findScoresBySmokingAreaId(smokingAreaId);
+        double avg = scores.stream()
+                .mapToDouble(Double::doubleValue)
+                .average()
+                .orElse(0.0);
+        int size = scores.size();
+        List<Integer> counts = getCountsGroupByStars(scores);
+
+        return new ReviewStarsInfoResponse(counts, avg, size);
+    }
+
+    private static List<Integer> getCountsGroupByStars(List<Double> scores) {
+        // 점수별 개수 세기 (내림 처리)
+        Map<Double, Long> scoreCounts = scores.stream()
+                .map(score -> Math.floor(score))  // 내림하여 정수 부분만 가져오기
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        // 1점부터 5점까지의 점수에 대해 개수 값을 0으로 채우기
+        List<Integer> counts = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            counts.add(scoreCounts.getOrDefault((double) i, 0L).intValue());
+        }
+
+        return counts;
     }
 }
