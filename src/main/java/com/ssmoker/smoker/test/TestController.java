@@ -24,6 +24,11 @@ public class TestController {
     private final AmazonS3Manager amazonS3Manager;
     private final TestRepository testRepository;
 
+    @GetMapping("/test/sqlException/{testId}")
+    public ApiResponse<Integer> testSqlException(@PathVariable Integer testId) {
+        return ApiResponse.onSuccess(testRepository.testQuery(testId));
+    }
+
     @GetMapping("/test/{status}")
     public ApiResponse<String> test(@PathVariable String status) {
         if (status.equals("error")) {
