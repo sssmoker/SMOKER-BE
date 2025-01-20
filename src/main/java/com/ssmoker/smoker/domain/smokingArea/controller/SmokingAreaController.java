@@ -66,12 +66,4 @@ public class SmokingAreaController {
 
         return ApiResponse.of(SuccessStatus.MAP_LIST_OK, result);
     }
-
-    @Operation(summary = " 총 별점 및 별점 개수 조회",
-    description = "흡연 구역 별 별점 평균 및 전체 별점 조회")
-    @GetMapping("/{smokingAreaId}/stars")
-    public ApiResponse<String> getSmokingAreaStarInfo(@PathVariable Long smokingAreaId){
-
-        return ApiResponse.onSuccess(null);
-    }
 }
