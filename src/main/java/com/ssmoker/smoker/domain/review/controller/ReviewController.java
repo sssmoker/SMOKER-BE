@@ -7,7 +7,6 @@ import com.ssmoker.smoker.domain.review.dto.ReviewGetResponse;
 import com.ssmoker.smoker.domain.review.dto.ReviewRequest;
 import com.ssmoker.smoker.domain.review.service.ReviewService;
 import com.ssmoker.smoker.domain.review.dto.ReviewResponses;
-import com.ssmoker.smoker.domain.smokingArea.dto.ReviewResponse;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
