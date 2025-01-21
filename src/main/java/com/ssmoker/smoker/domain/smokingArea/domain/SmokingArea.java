@@ -17,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -38,12 +39,13 @@ public class SmokingArea extends BaseEntity {
     private Feature feature;
 
     private String imageUrl;
-    /*@Column(nullable = false)
-    private Boolean isApproved;*/
 
     @OneToMany(mappedBy = "smokingArea", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "smokingArea", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UpdatedHistory> updatedHistories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "smokingArea", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SavedSmokingArea> savedSmokingAreas = new ArrayList<>();
 }

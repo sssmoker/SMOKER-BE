@@ -44,7 +44,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
         e.getBindingResult().getFieldErrors().stream()
                 .forEach(fieldError -> {
-                    String fieldName = fieldError.getField();
+                    String fieldName =  fieldError.getField();
                     String errorMessage = Optional.ofNullable(fieldError.getDefaultMessage()).orElse("");
                     errors.merge(fieldName, errorMessage,
                             (existingErrorMessage, newErrorMessage) -> existingErrorMessage + ", " + newErrorMessage);
