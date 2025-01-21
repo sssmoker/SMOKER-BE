@@ -24,7 +24,8 @@ public enum SuccessStatus implements BaseCode {
     MAP_SEARCH_OK(HttpStatus.OK, "MAP2004", "검색이 완료되었습니다."),
 
     // Profile 관련
-    NICKNAME_OK(HttpStatus.OK, "NICKNAME2001", "닉네임 변경이 완료되었습니다."),
+    NICKNAME_OK(HttpStatus.OK, "PROFILE2001", "닉네임 변경이 완료되었습니다."),
+    PROFILE_IMAGE_OK(HttpStatus.OK, "PROFILE2002", "프로필 이미지 변경이 완료되었습니다.")
     ;
 
     private final HttpStatus httpStatus;

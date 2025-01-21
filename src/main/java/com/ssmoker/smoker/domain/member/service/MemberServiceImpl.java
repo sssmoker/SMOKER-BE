@@ -1,15 +1,21 @@
 package com.ssmoker.smoker.domain.member.service;
 
 import com.ssmoker.smoker.domain.member.domain.Member;
+import com.ssmoker.smoker.domain.member.dto.MemberRequestDTO;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
+import com.ssmoker.smoker.global.aws.s3.AmazonS3Manager;
 import com.ssmoker.smoker.global.exception.GeneralException;
 import com.ssmoker.smoker.global.exception.SmokerBadRequestException;
 import com.ssmoker.smoker.global.security.exception.AuthException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
+import io.jsonwebtoken.io.IOException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -17,6 +23,7 @@ import org.springframework.stereotype.Service;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final AmazonS3Manager amazonS3Manager;
 
     @Override
     public Member findMemberById(Long memberId) {
@@ -24,7 +31,7 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository
                 .findById(memberId)
                 .orElseThrow(() -> new AuthException(ErrorStatus.USER_NOT_FOUND));
-    } // 유저 찾기
+    }
 
     @Override
     @Transactional
@@ -40,6 +47,21 @@ public class MemberServiceImpl implements MemberService {
             throw new SmokerBadRequestException(ErrorStatus.DUPLICATE_NICKNAME);
         }
         member.setNickName(nickname);
-    } // 닉네임 변경
+    }
 
+    @Override
+    @Transactional
+    public String updateProfileImage(Long memberId ,MemberRequestDTO.updateProfileImageRequestDTO request){
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        try{
+            final String uuid = UUID.randomUUID().toString();
+            final String keyName = amazonS3Manager.generateReviewKeyName(uuid);
+            final String imageUrl = amazonS3Manager.uploadFile(keyName, request.getMultipartFile());
+            member.setProfileImageUrl(imageUrl);
+            memberRepository.save(member);
+            return imageUrl;
+        } catch (IOException e) {
+            throw new RuntimeException("파일 업로드 오류입니다.");
+        }
+    }
 }
