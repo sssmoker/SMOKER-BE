@@ -88,6 +88,7 @@ public class ReviewService {
         return counts;
     }
 
+    @Transactional
     public Long saveReview(Long smokingAreaId, ReviewRequest reviewRequest, Member member) {
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
                 .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));

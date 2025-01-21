@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/reviews/")
+@RequestMapping("/api/reviews")
 public class ReviewController {
 
     private final ReviewService reviewService;
@@ -49,7 +49,7 @@ public class ReviewController {
     }
 
     @Operation(summary = "흡연 구역 리뷰 작성")
-    @PostMapping("/{smokingAreaId}")
+    @PostMapping("/write/{smokingAreaId}")
     public ApiResponse<Long> createReview(@PathVariable Long smokingAreaId,
                                           @RequestBody @Valid ReviewRequest reviewRequest,
                                           @AuthUser Long memberId) {
