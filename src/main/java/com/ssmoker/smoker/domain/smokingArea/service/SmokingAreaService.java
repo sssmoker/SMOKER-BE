@@ -196,4 +196,6 @@ public class SmokingAreaService {
 
         return new MapResponse.SmokingAreaListResponse(smokingLists);
     }
+
+
 }
