@@ -55,7 +55,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
         try{
             final String uuid = UUID.randomUUID().toString();
-            final String keyName = amazonS3Manager.generateReviewKeyName(uuid);
+            final String keyName = amazonS3Manager.generateProfileKeyName(uuid);
             final String imageUrl = amazonS3Manager.uploadFile(keyName, request.getMultipartFile());
             member.setProfileImageUrl(imageUrl);
             memberRepository.save(member);
