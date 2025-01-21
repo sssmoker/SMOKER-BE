@@ -1,35 +1,25 @@
 package com.ssmoker.smoker.domain.smokingArea.service;
 
-import static com.ssmoker.smoker.global.exception.code.ErrorStatus.REVIEW_BAD_REQUEST;
 import static com.ssmoker.smoker.global.exception.code.ErrorStatus.SMOKING_AREA_NOT_FOUND;
-import static com.ssmoker.smoker.global.exception.code.ErrorStatus._BAD_REQUEST;
 
-import com.ssmoker.smoker.domain.review.domain.Review;
-import com.ssmoker.smoker.domain.review.exception.ReviewPageNumberException;
 import com.ssmoker.smoker.domain.review.repository.ReviewRepository;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
 import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaRepository;
-import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.exception.SmokerBadRequestException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class SmokingAreaService {
-
-    private static final int REVIEW_PAGE_SIZE = 5;
 
     private final SmokingAreaRepository smokingAreaRepository;
     private final ReviewRepository reviewRepository;
@@ -42,27 +32,6 @@ public class SmokingAreaService {
         throw new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND);
     }
 
-    public ReviewResponses getReviewsByAreaId(Long id, int pageNumber) {
-        if (pageNumber < 0) {
-            throw new ReviewPageNumberException(REVIEW_BAD_REQUEST);
-        }
-        Page<Review> reviewPage = reviewRepository.findReviewsWithMemberById(id,
-                PageRequest.of(pageNumber, REVIEW_PAGE_SIZE));
-
-        ReviewResponses reviewResponses = ReviewResponses.of(getReviewResponsesByAreaId(reviewPage), reviewPage.isLast(),
-                reviewPage.getNumber());
-        return reviewResponses;
-    }
-
-    private List<ReviewResponse> getReviewResponsesByAreaId(Page<Review> reviewPage) {
-        return reviewPage.getContent().stream()
-                .map(this::getReviewResponse)
-                .collect(Collectors.toList());
-    }
-
-    private ReviewResponse getReviewResponse(Review review) {
-        return ReviewResponse.of(review, review.getMember().getNickName());
-    }
 
     //marker를 위한 모든 db 보내기
     public MapResponse.SmokingMarkersResponse getSmokingMarkersResponse() {
@@ -162,7 +131,7 @@ public class SmokingAreaService {
             int savedCount = smokingAreaRepository.findSavedCountBySmokingAreaId(
                     smokingArea.getId());
 
-            Double avgRating = reviewRepository.findAvgScore(smokingArea.getId());
+            Double avgRating = reviewRepository.findAvgScoreBySmokingId(smokingArea.getId());
 
             return new MapResponse.SmokingAreaInfoWithDistance(smokingArea.getId(),
                     smokingArea.getSmokingAreaName(),
