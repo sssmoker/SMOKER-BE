@@ -1,8 +1,11 @@
 package com.ssmoker.smoker.domain.smokingArea.service;
 
+import static com.ssmoker.smoker.global.exception.code.ErrorStatus.MEMBER_NOT_FOUND;
 import static com.ssmoker.smoker.global.exception.code.ErrorStatus.SMOKING_AREA_NOT_FOUND;
 
+import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.review.repository.ReviewRepository;
+import com.ssmoker.smoker.domain.member.repository.MemberRepository;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
@@ -23,6 +26,7 @@ public class SmokingAreaService {
 
     private final SmokingAreaRepository smokingAreaRepository;
     private final ReviewRepository reviewRepository;
+    private final MemberRepository memberRepository;
 
     public SmokingAreaInfoResponse getSmokingAreaInfo(Long id) {
         Optional<SmokingArea> smokingArea = smokingAreaRepository.findById(id);
@@ -165,7 +169,7 @@ public class SmokingAreaService {
         return new MapResponse.SmokingAreaListResponse(smokingLists);
     }
 
-    public SmokingAreaUpdateRequest updateSmokingArea(Long smokingAreaId, SmokingAreaUpdateRequest request) {
+    public SmokingAreaUpdateRequest updateSmokingArea(Long smokingAreaId, SmokingAreaUpdateRequest request, Long memberId) { //상세정보 업데이트
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
                 .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
 
@@ -175,6 +179,12 @@ public class SmokingAreaService {
         smokingArea.getFeature().setIsEnclosedSmokingArea(request.isEnclosedSmokingArea());
 
         smokingArea = smokingAreaRepository.save(smokingArea);
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new SmokingAreaNotFoundException(MEMBER_NOT_FOUND));
+
+        member.setUpdateCount(member.getUpdateCount() + 1);
+        memberRepository.save(member);
 
         return SmokingAreaUpdateRequest.of(smokingArea);
     }

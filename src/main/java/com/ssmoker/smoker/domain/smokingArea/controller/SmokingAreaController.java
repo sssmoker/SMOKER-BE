@@ -5,6 +5,7 @@ import com.ssmoker.smoker.domain.smokingArea.dto.MapResponse;
 import com.ssmoker.smoker.domain.smokingArea.service.SmokingAreaService;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
+import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -73,9 +74,9 @@ public class SmokingAreaController {
     @Operation(summary = "흡연 구역 상세 정보 업데이트")
     @PatchMapping("/update/{smokingAreaId}")
     public ApiResponse<SmokingAreaUpdateRequest> updateSmokingArea(@PathVariable Long smokingAreaId,
-                                                                   @RequestBody SmokingAreaUpdateRequest request) {
-        System.out.println("PATCH 요청 데이터: " + request);
-        SmokingAreaUpdateRequest response = smokingAreaService.updateSmokingArea(smokingAreaId, request);
+                                                                   @RequestBody SmokingAreaUpdateRequest request,
+                                                                   @AuthUser Long memberId) {
+        SmokingAreaUpdateRequest response = smokingAreaService.updateSmokingArea(smokingAreaId, request, memberId);
         return ApiResponse.onSuccess(response);
     }
 }
