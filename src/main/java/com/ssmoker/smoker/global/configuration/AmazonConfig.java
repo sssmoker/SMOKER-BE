@@ -34,6 +34,9 @@ public class AmazonConfig {
     @Value("${cloud.aws.s3.path.review}")
     private String reviewPath;
 
+    @Value("${cloud.aws.s3.path.profile}")
+    private String profilePath;
+
     @Value("${cloud.aws.s3.path.smokingArea}")
     private String smokingAreaPath;
 
