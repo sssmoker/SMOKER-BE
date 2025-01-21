@@ -17,7 +17,6 @@ import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -145,7 +144,7 @@ public class SmokingAreaService {
     }
 
     //정렬 코드는 개선 가능함. 나중에 시간이 되면 개선해야겠음
-    private List<MapResponse.SmokingAreaInfoWithDistance> getSmokingAreaInfoWithDistance(
+    private List<MapResponse.SmokingAreaInfoWithRequest> getSmokingAreaInfoWithDistance(
             Double userLat, Double userLng, String filter){
         //모든 Db 불러오기
         List<SmokingArea> smokingAreas =
@@ -165,7 +164,7 @@ public class SmokingAreaService {
 
             Double avgRating = reviewRepository.findAvgScore(smokingArea.getId());
 
-            return new MapResponse.SmokingAreaInfoWithDistance(smokingArea.getId(),
+            return new MapResponse.SmokingAreaInfoWithRequest(smokingArea.getId(),
                     smokingArea.getSmokingAreaName(),
                     distance,
                     smokingArea.getLocation(),
@@ -177,9 +176,9 @@ public class SmokingAreaService {
             if("nearest".equals(filter)){
                 return Double.compare(a.getDistance(), b.getDistance()); //가까운 순
             }else if("highestRated".equals(filter)){
-                return Comparator.comparing(MapResponse.SmokingAreaInfoWithDistance::getRating,
+                return Comparator.comparing(MapResponse.SmokingAreaInfoWithRequest::getRating,
                         Comparator.reverseOrder())//별점 높은 순
-                        .thenComparing(MapResponse.SmokingAreaInfoWithDistance::getDistance) //같으면 가까운 순
+                        .thenComparing(MapResponse.SmokingAreaInfoWithRequest::getDistance) //같으면 가까운 순
                         .compare(a,b);
             }else{
                 throw new SmokerBadRequestException(ErrorStatus.FILTER_NOT_FOUND);
@@ -191,11 +190,17 @@ public class SmokingAreaService {
     public MapResponse.SmokingAreaListResponse getSmokingAreaListResponse(
             Double userLat, Double userLng, String filter
     ) {
-        List<MapResponse.SmokingAreaInfoWithDistance> smokingLists =
+        List<MapResponse.SmokingAreaInfoWithRequest> smokingLists =
                 getSmokingAreaInfoWithDistance(userLat, userLng, filter);
 
         return new MapResponse.SmokingAreaListResponse(smokingLists);
     }
 
-
+    //db로 검색어 찾기
+    private List<MapResponse.SmokingAreaInfoWithRequest>
+    public MapResponse.SmokingAreaListResponse getSearchingAreaListResponse(
+           SmokingAreaRequest.SearchRequest searchRequest
+    ){
+        List<>
+    }
 }

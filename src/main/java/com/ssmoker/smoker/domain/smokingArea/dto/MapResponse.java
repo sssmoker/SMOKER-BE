@@ -28,7 +28,7 @@ public class MapResponse {
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class SmokingAreaInfoWithDistance{
+    public static class SmokingAreaInfoWithRequest{
         private final Long smokingAreaId;
         private final String smokingAreaName;
         private final Double distance;
@@ -42,6 +42,6 @@ public class MapResponse {
     @Setter
     @AllArgsConstructor
     public static class SmokingAreaListResponse{
-        private final List<SmokingAreaInfoWithDistance> smokingAreas;
+        private final List<SmokingAreaInfoWithRequest> smokingAreas;
     }
 }
