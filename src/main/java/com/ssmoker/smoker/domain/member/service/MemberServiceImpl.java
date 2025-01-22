@@ -2,6 +2,7 @@ package com.ssmoker.smoker.domain.member.service;
 
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.member.dto.MemberRequestDTO;
+import com.ssmoker.smoker.domain.member.dto.MemberResponseDTO;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
 import com.ssmoker.smoker.global.aws.s3.AmazonS3Manager;
 import com.ssmoker.smoker.global.exception.GeneralException;
@@ -63,5 +64,12 @@ public class MemberServiceImpl implements MemberService {
         } catch (IOException e) {
             throw new RuntimeException("파일 업로드 오류입니다.");
         }
+    }
+
+    @Override
+    @Transactional
+    public MemberResponseDTO.MemberProfileDTO viewProfile(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        return new MemberResponseDTO.MemberProfileDTO(memberId,member.getNickName(),member.getProfileImageUrl());
     }
 }
