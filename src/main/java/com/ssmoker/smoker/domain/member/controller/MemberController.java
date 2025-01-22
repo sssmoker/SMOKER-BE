@@ -1,11 +1,11 @@
 package com.ssmoker.smoker.domain.member.controller;
 
 import com.ssmoker.smoker.domain.member.dto.MemberRequestDTO;
+import com.ssmoker.smoker.domain.member.dto.MemberResponseDTO;
 import com.ssmoker.smoker.domain.member.service.MemberService;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
 import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
-import com.ssmoker.smoker.test.TestRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -30,5 +30,12 @@ public class MemberController {
     public ApiResponse<String> updateProfileImage(@AuthUser Long memberId, @ModelAttribute MemberRequestDTO.updateProfileImageRequestDTO request) {
         String imageUrl = memberService.updateProfileImage(memberId, request);
         return ApiResponse.of(SuccessStatus.PROFILE_IMAGE_OK,imageUrl);
+    }
+
+    @Operation(summary = "프로필(프로필 사진 url, 닉네임) 조회 API", description = "사용자 프로필을 조회합니다.")
+    @GetMapping(value = "/")
+    public ApiResponse<MemberResponseDTO.MemberProfileDTO> getProfile(@AuthUser Long memberId) {
+        MemberResponseDTO.MemberProfileDTO result = memberService.viewProfile(memberId);
+        return ApiResponse.of(SuccessStatus.PROFILE_OK,result);
     }
 }
