@@ -44,6 +44,9 @@ public class SmokingArea extends BaseEntity {
     @NotNull
     private String areaType;
 
+    // 공공기관 데이터와 사용자 데이터를 분리 (수정 가능)
+    private Boolean isOpenData;
+
     @OneToMany(mappedBy = "smokingArea", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
