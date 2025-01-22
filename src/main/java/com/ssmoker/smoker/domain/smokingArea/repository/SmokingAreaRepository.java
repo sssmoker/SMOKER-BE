@@ -38,4 +38,7 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, Long> 
     List<SmokingArea> findBySmokingAreaIdWithin1km(
             @Param("userLat") Double userLat,
             @Param("userLng") Double userLng);
+
+    /*@Query
+    List<SmokingArea>*/
 }

@@ -197,10 +197,19 @@ public class SmokingAreaService {
     }
 
     //db로 검색어 찾기
-    private List<MapResponse.SmokingAreaInfoWithRequest>
-    public MapResponse.SmokingAreaListResponse getSearchingAreaListResponse(
+    /*private List<MapResponse.SmokingAreaInfoWithRequest> getSmokingAreaWithSearching(
+            SmokingAreaRequest.SearchRequest searchRequest
+    ){
+        //검색어로 찾기
+
+    }*/
+
+    /*public MapResponse.SmokingAreaListResponse getSearchingAreaListResponse(
            SmokingAreaRequest.SearchRequest searchRequest
     ){
-        List<>
-    }
+        List<MapResponse.SmokingAreaInfoWithRequest> smokingLists =
+                getSmokingAreaWithSearching(searchRequest);
+
+        return new MapResponse.SmokingAreaListResponse(smokingLists);
+    }*/
 }
