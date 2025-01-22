@@ -4,15 +4,13 @@ import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Setter
 public class UpdatedHistory extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +23,10 @@ public class UpdatedHistory extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "smoking_area_id", nullable = false)
     private SmokingArea smokingArea;
+
+    public UpdatedHistory(Member member, SmokingArea smokingArea) {
+        this.member = member;
+        this.smokingArea = smokingArea;
+    }
+
 }
