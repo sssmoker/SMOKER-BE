@@ -28,8 +28,10 @@ public class SecurityConfig {
     private static final String ALLOW_REVIEW_URL = "/api/reviews/**";
     private static final String ALLOW_SMOKING_AREA_URL = "/api/smoking-area/**";
     private static final String ALLOW_AUTH_URL = "/api/auth/**";
+    private static final String ALLOW_OPEN_API = "/api/open-api/**";
 
     private static final String[] SECURITY_ALLOW_ARRAY = { //인증 없이 접근 가능한 엔드 포인트
+            ALLOW_OPEN_API,
             ALLOW_AUTH_URL,
             ALLOW_SMOKING_AREA_URL,
             ALLOW_REVIEW_URL,
@@ -48,8 +50,6 @@ public class SecurityConfig {
             "/actuator/prometheus",
             "/ws/**",
             "/topic/**",
-            "/api/post/**",
-            "/api/recommend/**",
             "/favicon.ico"
     };
 

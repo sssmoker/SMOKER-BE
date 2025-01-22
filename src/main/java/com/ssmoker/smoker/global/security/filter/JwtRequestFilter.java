@@ -100,6 +100,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 //Review
                 || path.startsWith("/api/reviews/{smokingAreaId}")
                 || path.startsWith("/api/reviews/{smokingAreaId}/starInfo")
+
+                //Open-API
+                || path.startsWith("/api/open-api")
                 // 필요하다면 다른 permitAll 경로들도 추가
                 // ...
                 ;
