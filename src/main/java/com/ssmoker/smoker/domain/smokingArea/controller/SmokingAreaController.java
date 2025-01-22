@@ -79,4 +79,11 @@ public class SmokingAreaController {
         SmokingAreaUpdateRequest response = smokingAreaService.updateSmokingArea(smokingAreaId, request, memberId);
         return ApiResponse.onSuccess(response);
     }
+
+    @Operation(summary = "흡연 구역 상세 정보 수정 완료, 수정 횟수 조회")
+    @GetMapping("/update/complete/{smokingAreaId}")
+    public ApiResponse<SmokingAreaDetailResponse> getSmokingAreaDetails(@PathVariable Long smokingAreaId) {
+        SmokingAreaDetailResponse response = smokingAreaService.getSmokingAreaDetails(smokingAreaId);
+        return ApiResponse.onSuccess(response);
+    }
 }

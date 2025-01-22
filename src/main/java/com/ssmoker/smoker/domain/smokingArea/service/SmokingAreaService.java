@@ -10,7 +10,10 @@ import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
 import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaRepository;
+import com.ssmoker.smoker.domain.updatedHistory.domain.UpdatedHistory;
+import com.ssmoker.smoker.domain.updatedHistory.repository.UpdatedHistoryRepository;
 import com.ssmoker.smoker.global.exception.SmokerBadRequestException;
+import com.ssmoker.smoker.global.exception.SmokerNotFoundException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 
 import java.util.Comparator;
@@ -19,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +31,7 @@ public class SmokingAreaService {
     private final SmokingAreaRepository smokingAreaRepository;
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
+    private final UpdatedHistoryRepository updatedHistoryRepository;
 
     public SmokingAreaInfoResponse getSmokingAreaInfo(Long id) {
         Optional<SmokingArea> smokingArea = smokingAreaRepository.findById(id);
@@ -181,12 +186,16 @@ public class SmokingAreaService {
         smokingArea = smokingAreaRepository.save(smokingArea);
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new SmokingAreaNotFoundException(MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new SmokerNotFoundException(MEMBER_NOT_FOUND));
 
         member.setUpdateCount(member.getUpdateCount() + 1);
         memberRepository.save(member);
 
+        UpdatedHistory history = new UpdatedHistory(member, smokingArea);
+        updatedHistoryRepository.save(history);
+
         return SmokingAreaUpdateRequest.of(smokingArea);
+
     }
 
     public SmokingAreaNameResponse getSmokingAreaName(Long smokingAreaId) {
@@ -194,6 +203,26 @@ public class SmokingAreaService {
                 .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
 
         return SmokingAreaNameResponse.of(smokingArea);
+    }
+
+    @Transactional(readOnly = true)
+    public SmokingAreaDetailResponse getSmokingAreaDetails(Long smokingAreaId) {
+
+        int updateCount = updatedHistoryRepository.countBySmokingAreaId(smokingAreaId);
+
+        SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
+                .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
+
+        return new SmokingAreaDetailResponse(
+                updateCount,
+                smokingArea.getSmokingAreaName(),
+                smokingArea.getLocation().getAddress(),
+                smokingArea.getImageUrl(),
+                smokingArea.getFeature().getHasAirConditioning(),
+                smokingArea.getFeature().getHasChair(),
+                smokingArea.getFeature().getHasTrashBin(),
+                smokingArea.getFeature().getIsEnclosedSmokingArea()
+        );
     }
 
 }
