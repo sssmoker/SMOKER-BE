@@ -35,13 +35,12 @@ public class OpenApiController {
     @GetMapping("/test")
     public String test() throws MalformedURLException {
         // 이미 인코딩된 키
-        String preEncodedKey = "인코딩키";
+        String preEncodedKey = "okGJqIurNnpycH45vUmNlCpt3NKWsn%2B43siD3bRSzRNhAAePOoPKsaDBcU5hC7Itw4gZ23EgPkaBfOoZwt7Oww%3D%3D";
 
         String apiUrl = BASE_URL +
                 "?page=1" +
-                "&perPage=10&serviceKey="+
+                "&perPage=10&serviceKey=" +
                 preEncodedKey;
-        log.info("API 요청 URL: {}", apiUrl);
 
         try {
             // 헤더 설정 (필요 시 추가)
@@ -51,7 +50,7 @@ public class OpenApiController {
             // HttpEntity 생성
             HttpEntity<?> entity = new HttpEntity<>(headers);
 
-            // RestTemplate을 사용하여 GET 요청
+            // RestTemplate 을 사용하여 GET 요청
             ResponseEntity<Map> response = restTemplate.exchange(
                     new URI(apiUrl),
                     HttpMethod.GET,
@@ -62,15 +61,15 @@ public class OpenApiController {
             // 응답 상태 코드 확인
             if (response.getStatusCode().is2xxSuccessful()) {
                 Map<String, Object> responseBody = response.getBody();
-                log.info("API 호출 성공: {}", responseBody);
-                return responseBody != null ? responseBody.toString() : "응답이 비어있습니다.";
+                System.out.println("responseBody = " + responseBody.get("data"));
+
+
+                return responseBody.toString();
             } else {
-                log.error("API 호출 실패: 상태 코드 {}", response.getStatusCode());
                 return "API 호출 실패: 상태 코드 " + response.getStatusCode();
             }
         } catch (Exception e) {
             log.error("API 호출 실패: {}", e.getMessage());
-            log.info("apiUrl: {}", apiUrl);
             return "API 호출 실패: " + e.getMessage();
         }
     }
