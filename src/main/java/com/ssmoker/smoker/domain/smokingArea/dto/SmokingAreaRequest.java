@@ -9,7 +9,7 @@ public class SmokingAreaRequest {
     @Setter
     @AllArgsConstructor
     public static class SearchRequest{
-        private final String location;
+        private final String search;
         private final Double userLat;
         private final Double userLng;
         private final String filter;

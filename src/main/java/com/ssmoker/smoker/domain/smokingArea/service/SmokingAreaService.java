@@ -143,6 +143,48 @@ public class SmokingAreaService {
         return new  MapResponse.MarkerResponse(distance,reviewCount,savedCount);
     }
 
+    //distance, avgReview, reviewCont, saveCount 계산 함수
+    private MapResponse.SmokingAreaInfoWithRequest getDtoElement
+    (Double userLat, Double userLng, SmokingArea smokingArea){
+        Double distance = calculateHaversineDistance(userLat, userLng,
+                smokingArea.getLocation().getLatitude(),
+                smokingArea.getLocation().getLongitude());
+
+        Double avgRating
+                = reviewRepository.findAvgScore(smokingArea.getId());
+
+        int reviewCount
+                = smokingAreaRepository.findReviewCountBySmokingAreaId(
+                smokingArea.getId());
+
+        int savedCount
+                = smokingAreaRepository.findSavedCountBySmokingAreaId(
+                smokingArea.getId());
+
+        return new MapResponse.SmokingAreaInfoWithRequest(
+                smokingArea.getId(),
+                smokingArea.getSmokingAreaName(),
+                distance,
+                smokingArea.getLocation(),
+                avgRating,
+                reviewCount,
+                savedCount
+        );
+    }
+
+    //정렬(filter)
+    private Comparator<MapResponse.SmokingAreaInfoWithRequest> sorting(String filter){
+        if("nearest".equals(filter)){
+            return Comparator.comparing(MapResponse.SmokingAreaInfoWithRequest::getDistance); //가까운 순
+        } else if("highestRated".equals(filter)){
+            return Comparator.comparing(MapResponse.SmokingAreaInfoWithRequest::getRating,
+                            Comparator.reverseOrder())//별점 높은 순
+                    .thenComparing(MapResponse.SmokingAreaInfoWithRequest::getDistance); //같으면 가까운 순
+        }else{
+            throw new SmokerBadRequestException(ErrorStatus.FILTER_NOT_FOUND);
+        }
+    }
+
     //정렬 코드는 개선 가능함. 나중에 시간이 되면 개선해야겠음
     private List<MapResponse.SmokingAreaInfoWithRequest> getSmokingAreaInfoWithDistance(
             Double userLat, Double userLng, String filter){
@@ -151,39 +193,10 @@ public class SmokingAreaService {
                 smokingAreaRepository.findBySmokingAreaIdWithin1km(userLat, userLng);
 
         //해당 db에 대한 모든 reviewCount와 savedCount 불러오기
-        return smokingAreas.stream().map(smokingArea -> {
-            Double distance = calculateHaversineDistance(userLat, userLng,
-                    smokingArea.getLocation().getLatitude(),
-                    smokingArea.getLocation().getLongitude());
-
-            int reviewCount = smokingAreaRepository.findReviewCountBySmokingAreaId(
-                    smokingArea.getId());
-
-            int savedCount = smokingAreaRepository.findSavedCountBySmokingAreaId(
-                    smokingArea.getId());
-
-            Double avgRating = reviewRepository.findAvgScore(smokingArea.getId());
-
-            return new MapResponse.SmokingAreaInfoWithRequest(smokingArea.getId(),
-                    smokingArea.getSmokingAreaName(),
-                    distance,
-                    smokingArea.getLocation(),
-                    avgRating,
-                    reviewCount,
-                    savedCount
-            );
-        }).sorted((a,b) -> {
-            if("nearest".equals(filter)){
-                return Double.compare(a.getDistance(), b.getDistance()); //가까운 순
-            }else if("highestRated".equals(filter)){
-                return Comparator.comparing(MapResponse.SmokingAreaInfoWithRequest::getRating,
-                        Comparator.reverseOrder())//별점 높은 순
-                        .thenComparing(MapResponse.SmokingAreaInfoWithRequest::getDistance) //같으면 가까운 순
-                        .compare(a,b);
-            }else{
-                throw new SmokerBadRequestException(ErrorStatus.FILTER_NOT_FOUND);
-            }
-        }).collect(Collectors.toList());
+        return smokingAreas.stream().map(
+                smokingArea -> getDtoElement(userLat,userLng,smokingArea)
+                ).sorted(sorting(filter))
+                .collect(Collectors.toList());
     }
 
     //db를 뒤져서 그에 맞는 smokingArea 구하기
@@ -201,51 +214,19 @@ public class SmokingAreaService {
             SmokingAreaRequest.SearchRequest searchRequest
     ){
         //검색어로 찾기
-        List<SmokingArea> smokingAreas = smokingAreaRepository.findBySearch(searchRequest.getLocation());
+        List<SmokingArea> smokingAreas
+                = smokingAreaRepository.findBySearch(searchRequest.getSearch());
 
         //SmokingAreaInfoWithRequest dto에 넣기
-        return smokingAreas.stream().map(smokingArea -> {
-           Double distance = calculateHaversineDistance(searchRequest.getUserLat(),
-                   searchRequest.getUserLng(),
-                   smokingArea.getLocation().getLatitude(),
-                   smokingArea.getLocation().getLongitude());
-
-           Double avgRating = reviewRepository.findAvgScore(smokingArea.getId());
-
-           int reviewCount =
-                   smokingAreaRepository.findReviewCountBySmokingAreaId(
-                           smokingArea.getId());
-
-           int savedCount
-                   = smokingAreaRepository.findSavedCountBySmokingAreaId(
-                    smokingArea.getId());
-
-           return new MapResponse.SmokingAreaInfoWithRequest(
-                   smokingArea.getId(),
-                   smokingArea.getSmokingAreaName(),
-                   distance,
-                   smokingArea.getLocation(),
-                   avgRating,
-                   reviewCount,
-                   savedCount
-           );
-        }).sorted((a,b) -> {
-            if ("nearest".equals(searchRequest.getFilter())) {
-                return Double.compare(a.getDistance(), b.getDistance()); //가까운 순
-            } else if ("highestRated".equals(searchRequest.getFilter())) {
-                return Comparator.comparing(MapResponse.SmokingAreaInfoWithRequest::getRating,
-                                Comparator.reverseOrder())//별점 높은 순
-                        .thenComparing(MapResponse.SmokingAreaInfoWithRequest::getDistance) //같으면 가까운 순
-                        .compare(a, b);
-            } else {
-                throw new SmokerBadRequestException(ErrorStatus.FILTER_NOT_FOUND);
-            }
-        }).collect(Collectors.toList());
+        return smokingAreas.stream().map(smokingArea ->
+           getDtoElement(searchRequest.getUserLat(), searchRequest.getUserLng(),
+                   smokingArea)
+        ).sorted(sorting(searchRequest.getFilter()))
+        .collect(Collectors.toList());
     }
 
-    public MapResponse.SmokingAreaListResponse getSearchingAreaListResponse(
-           SmokingAreaRequest.SearchRequest searchRequest
-    ){
+    public MapResponse.SmokingAreaListResponse getSearchingAreaListResponse
+            (SmokingAreaRequest.SearchRequest searchRequest) {
         List<MapResponse.SmokingAreaInfoWithRequest> smokingLists =
                 getSmokingAreaWithSearching(searchRequest);
 
