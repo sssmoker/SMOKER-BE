@@ -39,6 +39,9 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, Long> 
             @Param("userLat") Double userLat,
             @Param("userLng") Double userLng);
 
-    /*@Query
-    List<SmokingArea>*/
+    @Query(value = """
+    SELECT * FROM smoking_area
+    WEHRE MATCH(address) AGAINST(:search IN NATURAL LANGUAGE MODE)"""
+    , nativeQuery = true)
+    List<SmokingArea>findBySearch(@Param("search") String search);
 }
