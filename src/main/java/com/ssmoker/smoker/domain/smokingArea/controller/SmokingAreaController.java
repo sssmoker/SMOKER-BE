@@ -8,6 +8,7 @@ import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
 import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -85,5 +86,17 @@ public class SmokingAreaController {
     public ApiResponse<SmokingAreaDetailResponse> getSmokingAreaDetails(@PathVariable Long smokingAreaId) {
         SmokingAreaDetailResponse response = smokingAreaService.getSmokingAreaDetails(smokingAreaId);
         return ApiResponse.onSuccess(response);
+    }
+
+    @Operation(summary = "흡연 구역 위치 정보 저장")
+    @PostMapping("/register")
+    public ApiResponse<Long> registerSmokingArea(
+            @RequestParam Double latitude,
+            @RequestParam Double longitude,
+            @RequestParam String address
+    ) {
+        SmokingAreaLocationRequest request = new SmokingAreaLocationRequest(latitude, longitude, address);
+        Long smokingAreaId = smokingAreaService.registerSmokingArea(request);
+        return ApiResponse.onSuccess(smokingAreaId);
     }
 }

@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor  // ✅ 모든 필드 값을 받는 생성자 자동 생성
+@AllArgsConstructor
 public class SmokingAreaDetailResponse {
     private int updateCount;
     private String smokingAreaName;

@@ -29,7 +29,7 @@ public class SmokingArea extends BaseEntity {
     private Long id;
 
     @Column(nullable = false, length = 20)
-    private String smokingAreaName;
+    private String smokingAreaName = "미지정";
 
     @Embedded
     private Location location;
@@ -38,6 +38,11 @@ public class SmokingArea extends BaseEntity {
     private Feature feature;
 
     private String imageUrl;
+
+    public SmokingArea(Location location) {
+        this.location = location;
+        this.feature = new Feature(false, false, false, false);  // null 방지
+    }
 
     @OneToMany(mappedBy = "smokingArea", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
