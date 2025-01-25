@@ -1,9 +1,12 @@
 package com.ssmoker.smoker.domain.member.service;
 
+import com.ssmoker.smoker.domain.member.converter.MemberConverter;
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.member.dto.MemberRequestDTO;
 import com.ssmoker.smoker.domain.member.dto.MemberResponseDTO;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
+import com.ssmoker.smoker.domain.review.domain.Review;
+import com.ssmoker.smoker.domain.review.repository.ReviewRepository;
 import com.ssmoker.smoker.global.aws.s3.AmazonS3Manager;
 import com.ssmoker.smoker.global.exception.GeneralException;
 import com.ssmoker.smoker.global.exception.SmokerBadRequestException;
@@ -13,6 +16,8 @@ import io.jsonwebtoken.io.IOException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 
@@ -24,6 +29,7 @@ import java.util.UUID;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final ReviewRepository reviewRepository;
     private final AmazonS3Manager amazonS3Manager;
 
     @Override
@@ -71,5 +77,17 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponseDTO.MemberProfileDTO viewProfile(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
         return new MemberResponseDTO.MemberProfileDTO(memberId,member.getNickName(),member.getProfileImageUrl());
+    }
+
+    @Override
+    @Transactional
+    public MemberResponseDTO.MemberReviewListDTO viewMemberReviews(Long memberId, Integer page){
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        PageRequest pageRequest = PageRequest.of(page - 1, 5);
+
+        Page<Review> reviewPage = reviewRepository.findAllByMember(member,pageRequest);
+        MemberResponseDTO.MemberReviewListDTO memberReviewList = MemberConverter.toMemberReviewListDTO(reviewPage);
+
+        return memberReviewList;
     }
 }

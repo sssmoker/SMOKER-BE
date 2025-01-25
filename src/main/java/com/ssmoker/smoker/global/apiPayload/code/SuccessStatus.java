@@ -26,7 +26,8 @@ public enum SuccessStatus implements BaseCode {
     // Profile 관련
     NICKNAME_OK(HttpStatus.OK, "PROFILE2001", "닉네임 변경이 완료되었습니다."),
     PROFILE_IMAGE_OK(HttpStatus.OK, "PROFILE2002", "프로필 이미지 변경이 완료되었습니다."),
-    PROFILE_OK(HttpStatus.OK, "PROFILE2003", "프로필 조회 성공")
+    PROFILE_OK(HttpStatus.OK, "PROFILE2003", "프로필 조회 성공"),
+    PROFILE_REVIEWS_OK(HttpStatus.OK, "PROFILE2004", "내가 쓴 리뷰 조회 성공")
     ;
 
     private final HttpStatus httpStatus;
