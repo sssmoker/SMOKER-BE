@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -208,8 +209,6 @@ public class SmokingAreaService {
 
         return new MapResponse.SmokingAreaListResponse(smokingLists);
     }
-
-    //지역 중심 또는 검색어 위치를 구하기 위해 카카오 api를 사용
 
     //db로 검색어 찾기
     private List<MapResponse.SmokingAreaInfoWithRequest> getSmokingAreaWithSearching(
