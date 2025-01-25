@@ -222,7 +222,10 @@ public class SmokingAreaService {
 
         //검색어로 찾기
         List<SmokingArea> smokingAreas
-                = smokingAreaRepository.findBySearch(searchRequest.getSearch());
+                = smokingAreaRepository.findBySearch(
+                        searchRequest.getSearch(),
+                center.getLatitude(),
+                center.getLongitude());
 
         //SmokingAreaInfoWithRequest dto에 넣기
         return smokingAreas.stream().map(smokingArea ->
