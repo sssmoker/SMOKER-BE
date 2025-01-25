@@ -13,16 +13,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Feature {
-    @Column(nullable = false)
-    private Boolean isEnclosedSmokingArea;
 
-    @Column(nullable = false)
-    private Boolean hasChair;
+    private Boolean isEnclosedSmokingArea = false;
 
-    @Column(nullable = false)
-    private Boolean hasTrashBin;
+    private Boolean hasChair = false;
 
-    @Column(nullable = false)
-    private Boolean hasAirConditioning;
+    private Boolean hasTrashBin = false;
 
+    private Boolean hasAirConditioning = false;
 }
