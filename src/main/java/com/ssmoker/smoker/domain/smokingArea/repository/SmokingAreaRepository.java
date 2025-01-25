@@ -41,7 +41,8 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, Long> 
 
     @Query(value = """
     SELECT * FROM smoking_area
-    WEHRE MATCH(address) AGAINST(:search IN NATURAL LANGUAGE MODE)"""
+    WHERE MATCH(address) AGAINST(:search IN NATURAL LANGUAGE MODE)
+    OR address LIKE CONCAT('%', :search, '%')"""
     , nativeQuery = true)
     List<SmokingArea>findBySearch(@Param("search") String search);
 }

@@ -209,6 +209,8 @@ public class SmokingAreaService {
         return new MapResponse.SmokingAreaListResponse(smokingLists);
     }
 
+    //지역 중심 또는 검색어 위치를 구하기 위해 카카오 api를 사용
+
     //db로 검색어 찾기
     private List<MapResponse.SmokingAreaInfoWithRequest> getSmokingAreaWithSearching(
             SmokingAreaRequest.SearchRequest searchRequest
