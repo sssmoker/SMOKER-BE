@@ -7,6 +7,8 @@ import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
 import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -37,5 +39,12 @@ public class MemberController {
     public ApiResponse<MemberResponseDTO.MemberProfileDTO> getProfile(@AuthUser Long memberId) {
         MemberResponseDTO.MemberProfileDTO result = memberService.viewProfile(memberId);
         return ApiResponse.of(SuccessStatus.PROFILE_OK,result);
+    }
+
+    @Operation(summary = "마이페이지 내가 쓴 리뷰 조회 API", description = "마이페이지 리뷰탭 내가 쓴 리뷰를 5개씩 조회합니다. 쿼리스트링으로 pageNumber를 넘겨주세요. 1부터 시작됩니다.")
+    @GetMapping(value = "/reviews")
+    public ApiResponse<MemberResponseDTO.MemberReviewListDTO> getMemberReview(@AuthUser Long memberId, @RequestParam("pageNumber") @Min(0) @NotNull Integer pageNumber) {
+        MemberResponseDTO.MemberReviewListDTO result = memberService.viewMemberReviews(memberId,pageNumber);
+        return ApiResponse.of(SuccessStatus.PROFILE_REVIEWS_OK,result);
     }
 }

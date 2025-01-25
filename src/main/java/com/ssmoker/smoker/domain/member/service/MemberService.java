@@ -10,4 +10,5 @@ public interface MemberService {
     void updateNickname(Long memberId, String nickname);
     String updateProfileImage(Long memberId, MemberRequestDTO.updateProfileImageRequestDTO request);
     MemberResponseDTO.MemberProfileDTO viewProfile(Long memberId);
+    MemberResponseDTO.MemberReviewListDTO viewMemberReviews(Long memberId, Integer page);
 }

@@ -1,5 +1,6 @@
 package com.ssmoker.smoker.domain.review.repository;
 
+import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.review.domain.Review;
 import com.ssmoker.smoker.domain.review.dto.ReviewStarsInfoResponse;
 import java.util.List;
@@ -23,4 +24,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("SELECT r.score " +
             "FROM Review r WHERE r.smokingArea.id = :smokingAreaId")
     List<Double> findScoresBySmokingAreaId(Long smokingAreaId);
+
+    Page<Review> findAllByMember(Member member,PageRequest pageRequest);
 }
