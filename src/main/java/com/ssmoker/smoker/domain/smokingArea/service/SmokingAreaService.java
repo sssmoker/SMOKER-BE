@@ -33,6 +33,7 @@ public class SmokingAreaService {
 
     private final SmokingAreaRepository smokingAreaRepository;
     private final ReviewRepository reviewRepository;
+    private final KaKaoApiService kakaoApiService;
 
     public SmokingAreaInfoResponse getSmokingAreaInfo(Long id) {
         Optional<SmokingArea> smokingArea = smokingAreaRepository.findById(id);
@@ -214,6 +215,11 @@ public class SmokingAreaService {
     private List<MapResponse.SmokingAreaInfoWithRequest> getSmokingAreaWithSearching(
             SmokingAreaRequest.SearchRequest searchRequest
     ){
+        //카카오 api 를 통해 키워드의 중심 좌표 찾기
+        KaKaoApiResponse.KaKaoResponse center
+                = kakaoApiService.getCenterLocationFromKakao
+                (searchRequest.getSearch());
+
         //검색어로 찾기
         List<SmokingArea> smokingAreas
                 = smokingAreaRepository.findBySearch(searchRequest.getSearch());

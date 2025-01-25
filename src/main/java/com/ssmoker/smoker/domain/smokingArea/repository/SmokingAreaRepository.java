@@ -40,9 +40,16 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, Long> 
             @Param("userLng") Double userLng);
 
     @Query(value = """
-    SELECT * FROM smoking_area
-    WHERE MATCH(address) AGAINST(:search IN NATURAL LANGUAGE MODE)
-    OR address LIKE CONCAT('%', :search, '%')"""
+    SELECT * 
+    FROM smoking_area s
+    WHERE ST_Distance_Sphere(
+          Point(s.longitude, s.latitude),
+          Point(:centerLng, :centerLat)
+    ) <= (1000 / 1.3) 
+    AND address LIKE CONCAT('%', :search, '%')"""
     , nativeQuery = true)
-    List<SmokingArea>findBySearch(@Param("search") String search);
+    List<SmokingArea>findBySearch(
+            @Param("search") String search,
+            @Param("centerLat") Double centerLat,
+            @Param("centerLng") Double centerLng);
 }
