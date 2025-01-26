@@ -16,9 +16,11 @@ public class UpdatedHistory extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer updateCount;
+    @Column(nullable = false)
+    private Integer updateCount=0;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Action action;
 
     @ManyToOne(fetch = FetchType.LAZY)
