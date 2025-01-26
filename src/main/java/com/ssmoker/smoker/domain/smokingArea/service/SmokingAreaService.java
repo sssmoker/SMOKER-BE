@@ -10,6 +10,7 @@ import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
 import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaRepository;
+import com.ssmoker.smoker.domain.updatedHistory.domain.Action;
 import com.ssmoker.smoker.domain.updatedHistory.domain.UpdatedHistory;
 import com.ssmoker.smoker.domain.updatedHistory.repository.UpdatedHistoryRepository;
 import com.ssmoker.smoker.global.exception.SmokerBadRequestException;
@@ -191,7 +192,10 @@ public class SmokingAreaService {
         member.setUpdateCount(member.getUpdateCount() + 1);
         memberRepository.save(member);
 
-        UpdatedHistory history = new UpdatedHistory(member, smokingArea);
+        int updateCount = updatedHistoryRepository.countBySmokingAreaId(smokingAreaId)+1;
+        Action action = Action.UPDATE;
+
+        UpdatedHistory history = new UpdatedHistory(updateCount,action,member, smokingArea);
         updatedHistoryRepository.save(history);
 
         return SmokingAreaUpdateRequest.of(smokingArea);
