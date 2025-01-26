@@ -11,4 +11,5 @@ public interface MemberService {
     String updateProfileImage(Long memberId, MemberRequestDTO.updateProfileImageRequestDTO request);
     MemberResponseDTO.MemberProfileDTO viewProfile(Long memberId);
     MemberResponseDTO.MemberReviewListDTO viewMemberReviews(Long memberId, Integer page);
+    MemberResponseDTO.MemberUpdateListDTO viewMemberUpdateHistory(Long memberId, Integer page);
 }
