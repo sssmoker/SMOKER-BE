@@ -29,7 +29,7 @@ public class SmokingAreaController {
    //지도 api
     @Operation(summary = "흡연 구역 지도_마커표시 위함",
     description = "프론트가 지도에 마커표시를 할 수 있도록 흡연구역 db를 보내주는 역할")
-    @GetMapping
+    @GetMapping("/marker")
     public ApiResponse<MapResponse.SmokingMarkersResponse> getSmokingAreaMakersInfo(){
         MapResponse.SmokingMarkersResponse markers = smokingAreaService.getSmokingMarkersResponse();
 

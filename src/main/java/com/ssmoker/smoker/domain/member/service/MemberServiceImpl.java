@@ -7,6 +7,8 @@ import com.ssmoker.smoker.domain.member.dto.MemberResponseDTO;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
 import com.ssmoker.smoker.domain.review.domain.Review;
 import com.ssmoker.smoker.domain.review.repository.ReviewRepository;
+import com.ssmoker.smoker.domain.updatedHistory.domain.UpdatedHistory;
+import com.ssmoker.smoker.domain.updatedHistory.repository.UpdatedHistoryRepository;
 import com.ssmoker.smoker.global.aws.s3.AmazonS3Manager;
 import com.ssmoker.smoker.global.exception.GeneralException;
 import com.ssmoker.smoker.global.exception.SmokerBadRequestException;
@@ -30,6 +32,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final ReviewRepository reviewRepository;
+    private final UpdatedHistoryRepository updatedHistoryRepository;
     private final AmazonS3Manager amazonS3Manager;
 
     @Override
@@ -89,5 +92,17 @@ public class MemberServiceImpl implements MemberService {
         MemberResponseDTO.MemberReviewListDTO memberReviewList = MemberConverter.toMemberReviewListDTO(reviewPage);
 
         return memberReviewList;
+    }
+
+    @Override
+    @Transactional
+    public MemberResponseDTO.MemberUpdateListDTO viewMemberUpdateHistory(Long memberId, Integer page) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        PageRequest pageRequest = PageRequest.of(page - 1, 5);
+
+        Page<UpdatedHistory> updatedHistoryPage = updatedHistoryRepository.findAllByMember(pageRequest,member);
+        MemberResponseDTO.MemberUpdateListDTO memberUpdateList = MemberConverter.toMemberUpdateListDTO(updatedHistoryPage);
+
+        return memberUpdateList;
     }
 }

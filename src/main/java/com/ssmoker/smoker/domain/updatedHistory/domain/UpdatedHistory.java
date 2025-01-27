@@ -16,6 +16,13 @@ public class UpdatedHistory extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private Integer updateCount=0;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Action action;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -24,7 +31,9 @@ public class UpdatedHistory extends BaseEntity {
     @JoinColumn(name = "smoking_area_id", nullable = false)
     private SmokingArea smokingArea;
 
-    public UpdatedHistory(Member member, SmokingArea smokingArea) {
+    public UpdatedHistory(Integer updateCount, Action action, Member member, SmokingArea smokingArea) {
+        this.updateCount = updateCount;
+        this.action = action;
         this.member = member;
         this.smokingArea = smokingArea;
     }

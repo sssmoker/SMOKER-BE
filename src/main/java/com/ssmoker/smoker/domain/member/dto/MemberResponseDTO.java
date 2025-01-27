@@ -34,4 +34,20 @@ public class MemberResponseDTO {
         private List<MemberReviewDTO> MemberReviewList;
         private Integer totalPage;
     }
+
+    @Builder
+    @Getter
+    public static class MemberUpdateDTO{
+        private Long updateHistoryId;
+        private String smokingAreaName;
+        private LocalDateTime createdAt;
+        private String content;
+    }
+
+    @Builder
+    @Getter
+    public static class MemberUpdateListDTO{
+        private List<MemberUpdateDTO> MemberUpdateList;
+        private Integer totalPage;
+    }
 }
