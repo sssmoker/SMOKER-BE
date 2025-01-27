@@ -4,6 +4,7 @@ import static com.ssmoker.smoker.global.exception.code.ErrorStatus.REVIEW_BAD_RE
 import static com.ssmoker.smoker.global.exception.code.ErrorStatus.SMOKING_AREA_NOT_FOUND;
 import static com.ssmoker.smoker.global.exception.code.ErrorStatus._BAD_REQUEST;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ssmoker.smoker.domain.review.domain.Review;
 import com.ssmoker.smoker.domain.review.exception.ReviewPageNumberException;
 import com.ssmoker.smoker.domain.review.repository.ReviewRepository;

@@ -32,7 +32,7 @@ public class SmokingAreaController {
 
     @Operation(summary = "흡연 구역 리뷰 조회(최신순)", description = "쿼리 스트링으로 원하는 페이지를 넘겨주시면 됩니다.")
     @GetMapping("/{smokingAreaId}/reviews")
-    public ApiResponse<ReviewResponses> getReviews(@PathVariable Long smokingAreaId,
+    public ApiResponse<ReviewResponses> getReviews(@PathVariable(name = "smokingAreaId") Long smokingAreaId,
                                                    @RequestParam @Min(0) @NotNull Integer pageNumber) {
         ReviewResponses result = smokingAreaService.getReviewsByAreaId(smokingAreaId, pageNumber);
 
