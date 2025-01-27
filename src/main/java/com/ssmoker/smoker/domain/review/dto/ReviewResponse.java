@@ -1,4 +1,4 @@
-package com.ssmoker.smoker.domain.smokingArea.dto;
+package com.ssmoker.smoker.domain.review.dto;
 
 import com.ssmoker.smoker.domain.review.domain.Review;
 import java.time.LocalDateTime;

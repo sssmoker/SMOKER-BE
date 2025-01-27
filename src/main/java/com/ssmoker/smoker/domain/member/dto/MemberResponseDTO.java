@@ -2,15 +2,52 @@ package com.ssmoker.smoker.domain.member.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public class MemberResponseDTO {
+
+    @Setter
     @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class MemberProfileDTO {
+        private Long memberId;
+        private String nickName;
+        private String ProfileImageUrl;
+    }
+
     @Builder
-    @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class MyPageResponse {
-        Long memberId;
-        String nickname;
-        String email;
-        Float categories;
+    @Getter
+    public static class MemberReviewDTO{
+        private Long reviewId;
+        private LocalDateTime createdAt;
+        private String smokingArea;
+        private Double reviewScore;
+        private String imgUrl;
+        private String content;
+    }
+
+    @Builder
+    @Getter
+    public static class MemberReviewListDTO{
+        private List<MemberReviewDTO> MemberReviewList;
+        private Integer totalPage;
+    }
+
+    @Builder
+    @Getter
+    public static class MemberUpdateDTO{
+        private Long updateHistoryId;
+        private String smokingAreaName;
+        private LocalDateTime createdAt;
+        private String content;
+    }
+
+    @Builder
+    @Getter
+    public static class MemberUpdateListDTO{
+        private List<MemberUpdateDTO> MemberUpdateList;
+        private Integer totalPage;
     }
 }

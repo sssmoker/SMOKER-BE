@@ -1,5 +1,6 @@
 package com.ssmoker.smoker.domain.updatedHistory.repository;
 
+import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.updatedHistory.domain.UpdatedHistory;
 import com.ssmoker.smoker.domain.updatedHistory.dto.UpdatedHistoryResponse;
 import org.springframework.data.domain.Page;
@@ -27,4 +28,10 @@ public interface UpdatedHistoryRepository extends JpaRepository<UpdatedHistory, 
             "WHERE m.id = :memberId",
             countQuery = "SELECT COUNT(uh) FROM UpdatedHistory uh JOIN uh.member m WHERE m.id = :memberId")
     Page<UpdatedHistoryResponse> findUpdatedHistoriesByMemberId(@Param("memberId") Long memberId, PageRequest pageRequest);
+
+    @Query("SELECT COUNT(uh) FROM UpdatedHistory uh WHERE uh.smokingArea.id = :smokingAreaId")
+    int countBySmokingAreaId(@Param("smokingAreaId") Long smokingAreaId);
+
+    Page<UpdatedHistory> findAllByMember(PageRequest pageRequest, Member member);
+
 }

@@ -21,23 +21,20 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    /**
+     * 가독성을 위해 api 요청중에서 로그인이 필요없는 것 url 많은 api 들은 일단 전부 허용되게 처리해뒀고(/**)
+     * 해당 api 에서 로그인이 필요한 것이 있으면 configureAuthorization 에 해당 url 추가하시면 됩니다.
+     */
+    private static final String ALLOW_REVIEW_URL = "/api/reviews/**";
+    private static final String ALLOW_SMOKING_AREA_URL = "/api/smoking-area/**";
+    private static final String ALLOW_AUTH_URL = "/api/auth/**";
 
-    private final JwtRequestFilter jwtRequestFilter;
-
-    private static final String[] SECURITY_ALLOW_ARRAY  = { //인증 없이 접근 가능한 엔드 포인트
-            "/api/auth/login/google", //구글 로그인
-            "/api/auth/login/kakao", //카카오 로그인
-            "/api/auth/refresh", //토큰 재발급
+    private static final String[] SECURITY_ALLOW_ARRAY = { //인증 없이 접근 가능한 엔드 포인트
+            ALLOW_AUTH_URL,
+            ALLOW_SMOKING_AREA_URL,
+            ALLOW_REVIEW_URL,
             "/api/member/notices", //공지사항
-            "/api/smoking-area/{smokingAreaId}", //흡연 구역 상세 정보 조회
-            "/api/smoking-area/{smokingAreaId}/reviews", // 흡연 구역 리뷰 조회
-            "/api/updated_history/{smokingAreaId}", // 업데이트 히스토리 조회
-            "/api/smoking-area/{smokingAreaId}/rating_info", //총 별점 & 별점 개수 조회
-            "/api/smoking-area", //흡연구역 마커 보이기
-            "/api/smoking-area/{smokingAreaId}/simple", //흡연 구역 지도 마커 클릭했을 때 흡연 구역 정보 조회 (모달)
-            "/api/smoking-area/list", //흡연구역 목록보기
-            "/api/smoking-area/search", //흡연 구역 검색
-            "/test/{status}", //테스트 컨트롤러
+            "/test/**",
             //등등 추가 및 수정해주세요
             "/health",
             "/error",
@@ -55,6 +52,8 @@ public class SecurityConfig {
             "/api/recommend/**",
             "/favicon.ico"
     };
+
+    private final JwtRequestFilter jwtRequestFilter;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -101,7 +100,8 @@ public class SecurityConfig {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("{ \"error\": \"Access Denied\", \"message\": \"권한이 없습니다.\", \"path\": \"" + request.getRequestURI() + "\" }");
+            response.getWriter().write("{ \"error\": \"Access Denied\", \"message\": \"권한이 없습니다.\", \"path\": \""
+                    + request.getRequestURI() + "\" }");
         };
     }
 

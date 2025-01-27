@@ -36,7 +36,8 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String email; //이메일
 
-    private Integer updateCount = 0; //업데이트 횟수
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private Integer updateCount;
 
     private LocalDateTime deactivationDate; // 비활성화 일수
 

@@ -1,16 +1,15 @@
 package com.ssmoker.smoker.domain.smokingArea.controller;
 
+import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.dto.MapResponse;
-import com.ssmoker.smoker.domain.smokingArea.dto.ReviewResponses;
+//import com.ssmoker.smoker.domain.smokingArea.dto.ReviewResponses;
 import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaRequest;
 import com.ssmoker.smoker.domain.smokingArea.service.SmokingAreaService;
 import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaInfoResponse;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
+import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,19 +29,10 @@ public class SmokingAreaController {
         return ApiResponse.onSuccess(result);
     }
 
-    @Operation(summary = "흡연 구역 리뷰 조회(최신순)", description = "쿼리 스트링으로 원하는 페이지를 넘겨주시면 됩니다.")
-    @GetMapping("/{smokingAreaId}/reviews")
-    public ApiResponse<ReviewResponses> getReviews(@PathVariable(name = "smokingAreaId") Long smokingAreaId,
-                                                   @RequestParam @Min(0) @NotNull Integer pageNumber) {
-        ReviewResponses result = smokingAreaService.getReviewsByAreaId(smokingAreaId, pageNumber);
-
-        return ApiResponse.onSuccess(result);
-    }
-
    //지도 api
     @Operation(summary = "흡연 구역 지도_마커표시 위함",
     description = "프론트가 지도에 마커표시를 할 수 있도록 흡연구역 db를 보내주는 역할")
-    @GetMapping
+    @GetMapping("/marker")
     public ApiResponse<MapResponse.SmokingMarkersResponse> getSmokingAreaMakersInfo(){
         MapResponse.SmokingMarkersResponse markers = smokingAreaService.getSmokingMarkersResponse();
 
@@ -86,5 +76,28 @@ public class SmokingAreaController {
                 = smokingAreaService.getSearchingAreaListResponse(request);
 
         return ApiResponse.of(SuccessStatus.MAP_SEARCH_OK, result);
+    }
+
+    @Operation(summary = "상세정보 업데이트 화면")
+    @GetMapping("/update/{smokingAreaId}/name")
+    public ApiResponse<SmokingAreaNameResponse> getSmokingAreaName(@PathVariable Long smokingAreaId) {
+        SmokingAreaNameResponse response = smokingAreaService.getSmokingAreaName(smokingAreaId);
+        return ApiResponse.onSuccess(response);
+    }
+
+    @Operation(summary = "흡연 구역 상세 정보 업데이트")
+    @PatchMapping("/update/{smokingAreaId}")
+    public ApiResponse<SmokingAreaUpdateRequest> updateSmokingArea(@PathVariable Long smokingAreaId,
+                                                                   @RequestBody SmokingAreaUpdateRequest request,
+                                                                   @AuthUser Long memberId) {
+        SmokingAreaUpdateRequest response = smokingAreaService.updateSmokingArea(smokingAreaId, request, memberId);
+        return ApiResponse.onSuccess(response);
+    }
+
+    @Operation(summary = "흡연 구역 상세 정보 수정 완료, 수정 횟수 조회")
+    @GetMapping("/update/complete/{smokingAreaId}")
+    public ApiResponse<SmokingAreaDetailResponse> getSmokingAreaDetails(@PathVariable Long smokingAreaId) {
+        SmokingAreaDetailResponse response = smokingAreaService.getSmokingAreaDetails(smokingAreaId);
+        return ApiResponse.onSuccess(response);
     }
 }

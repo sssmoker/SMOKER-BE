@@ -1,10 +1,10 @@
 package com.ssmoker.smoker.domain.smokingArea.repository;
 
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
+import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaDetailResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, Long> 
             "where s.id = :smokingAreaId")
     int findReviewCountBySmokingAreaId(@Param("smokingAreaId") Long smokingAreaId);
 
-    //null이 아닌 0을 반환하도록 함
+    //null 이 아닌 0을 반환하도록 함
     @Query("select coalesce(count(sa), 0)" +
             "from SmokingArea s left join SavedSmokingArea sa " +
             "on sa.smokingArea.id = s.id " +

@@ -1,4 +1,4 @@
-package com.ssmoker.smoker.domain.smokingArea.dto;
+package com.ssmoker.smoker.domain.review.dto;
 
 import java.util.List;
 

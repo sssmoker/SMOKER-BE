@@ -4,15 +4,13 @@ import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Builder
 public class Review extends BaseEntity {
 
     @Id
@@ -34,4 +32,5 @@ public class Review extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", nullable = false)
     private Member member;
+
 }
