@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +36,7 @@ public class SmokingAreaService {
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
     private final UpdatedHistoryRepository updatedHistoryRepository;
+    private final KaKaoApiService kakaoApiService;
 
     public SmokingAreaInfoResponse getSmokingAreaInfo(Long id) {
         Optional<SmokingArea> smokingArea = smokingAreaRepository.findById(id);
@@ -123,54 +127,100 @@ public class SmokingAreaService {
         return new  MapResponse.MarkerResponse(distance,reviewCount,savedCount);
     }
 
-    private List<MapResponse.SmokingAreaInfoWithDistance> getSmokingAreaInfoWithDistance(
+    //distance, avgReview, reviewCont, saveCount 계산 함수
+    private MapResponse.SmokingAreaInfoWithRequest getDtoElement
+    (Double userLat, Double userLng, SmokingArea smokingArea){
+        Double distance = calculateHaversineDistance(userLat, userLng,
+                smokingArea.getLocation().getLatitude(),
+                smokingArea.getLocation().getLongitude());
+
+        Double avgRating
+                = reviewRepository.findAvgScoreBySmokingId(smokingArea.getId());
+
+        int reviewCount
+                = smokingAreaRepository.findReviewCountBySmokingAreaId(
+                smokingArea.getId());
+
+        int savedCount
+                = smokingAreaRepository.findSavedCountBySmokingAreaId(
+                smokingArea.getId());
+
+        return new MapResponse.SmokingAreaInfoWithRequest(
+                smokingArea.getId(),
+                smokingArea.getSmokingAreaName(),
+                distance,
+                smokingArea.getLocation(),
+                avgRating,
+                reviewCount,
+                savedCount
+        );
+    }
+
+    //정렬(filter)
+    private Comparator<MapResponse.SmokingAreaInfoWithRequest> sorting(String filter){
+        if("nearest".equals(filter)){
+            return Comparator.comparing(MapResponse.SmokingAreaInfoWithRequest::getDistance); //가까운 순
+        } else if("highestRated".equals(filter)){
+            return Comparator.comparing(MapResponse.SmokingAreaInfoWithRequest::getRating,
+                            Comparator.reverseOrder())//별점 높은 순
+                    .thenComparing(MapResponse.SmokingAreaInfoWithRequest::getDistance); //같으면 가까운 순
+        }else{
+            throw new SmokerBadRequestException(ErrorStatus.FILTER_NOT_FOUND);
+        }
+    }
+
+    //정렬 코드는 개선 가능함. 나중에 시간이 되면 개선해야겠음
+    private List<MapResponse.SmokingAreaInfoWithRequest> getSmokingAreaInfoWithDistance(
             Double userLat, Double userLng, String filter){
         //모든 Db 불러오기
         List<SmokingArea> smokingAreas =
                 smokingAreaRepository.findBySmokingAreaIdWithin1km(userLat, userLng);
 
         //해당 db에 대한 모든 reviewCount와 savedCount 불러오기
-        return smokingAreas.stream().map(smokingArea -> {
-            Double distance = calculateHaversineDistance(userLat, userLng,
-                    smokingArea.getLocation().getLatitude(),
-                    smokingArea.getLocation().getLongitude());
-
-            int reviewCount = smokingAreaRepository.findReviewCountBySmokingAreaId(
-                    smokingArea.getId());
-
-            int savedCount = smokingAreaRepository.findSavedCountBySmokingAreaId(
-                    smokingArea.getId());
-
-            Double avgRating = reviewRepository.findAvgScoreBySmokingId(smokingArea.getId());
-
-            return new MapResponse.SmokingAreaInfoWithDistance(smokingArea.getId(),
-                    smokingArea.getSmokingAreaName(),
-                    distance,
-                    smokingArea.getLocation(),
-                    avgRating,
-                    reviewCount,
-                    savedCount
-            );
-        }).sorted((a,b) -> {
-            if("nearest".equals(filter)){
-                return Double.compare(a.getDistance(), b.getDistance()); //가까운 순
-            }else if("highestRated".equals(filter)){
-                return Comparator.comparing(MapResponse.SmokingAreaInfoWithDistance::getRating,
-                                Comparator.reverseOrder())//별점 높은 순
-                        .thenComparing(MapResponse.SmokingAreaInfoWithDistance::getDistance) //같으면 가까운 순
-                        .compare(a,b);
-            }else{
-                throw new SmokerBadRequestException(ErrorStatus.FILTER_NOT_FOUND);
-            }
-        }).collect(Collectors.toList());
+        return smokingAreas.stream().map(
+                smokingArea -> getDtoElement(userLat,userLng,smokingArea)
+                ).sorted(sorting(filter))
+                .collect(Collectors.toList());
     }
 
     //db를 뒤져서 그에 맞는 smokingArea 구하기
     public MapResponse.SmokingAreaListResponse getSmokingAreaListResponse(
             Double userLat, Double userLng, String filter
     ) {
-        List<MapResponse.SmokingAreaInfoWithDistance> smokingLists =
+        List<MapResponse.SmokingAreaInfoWithRequest> smokingLists =
                 getSmokingAreaInfoWithDistance(userLat, userLng, filter);
+
+        return new MapResponse.SmokingAreaListResponse(smokingLists);
+    }
+
+    //db로 검색어 찾기
+    private List<MapResponse.SmokingAreaInfoWithRequest> getSmokingAreaWithSearching(
+            SmokingAreaRequest.SearchRequest searchRequest
+    ){
+        //카카오 api 를 통해 키워드의 중심 좌표 찾기
+        KaKaoApiResponse.KaKaoResponse center
+                = kakaoApiService.getCenterLocationFromKakao
+                (searchRequest.getSearch());
+
+        //검색어로 찾기
+        List<SmokingArea> smokingAreas
+                = smokingAreaRepository.findBySearch(
+                        searchRequest.getSearch(),
+                center.getLatitude(),
+                center.getLongitude());
+
+        //SmokingAreaInfoWithRequest dto에 넣기
+        return smokingAreas.stream().map(smokingArea ->
+           getDtoElement(searchRequest.getUserLat(), searchRequest.getUserLng(),
+                   smokingArea)
+        ).sorted(sorting(searchRequest.getFilter()))
+        .collect(Collectors.toList());
+    }
+
+    public MapResponse.SmokingAreaListResponse getSearchingAreaListResponse
+            (SmokingAreaRequest.SearchRequest searchRequest) {
+        List<MapResponse.SmokingAreaInfoWithRequest> smokingLists =
+                getSmokingAreaWithSearching(searchRequest);
 
         return new MapResponse.SmokingAreaListResponse(smokingLists);
     }

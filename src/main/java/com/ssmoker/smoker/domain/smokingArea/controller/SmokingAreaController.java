@@ -2,7 +2,10 @@ package com.ssmoker.smoker.domain.smokingArea.controller;
 
 import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.dto.MapResponse;
+//import com.ssmoker.smoker.domain.smokingArea.dto.ReviewResponses;
+import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaRequest;
 import com.ssmoker.smoker.domain.smokingArea.service.SmokingAreaService;
+import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaInfoResponse;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
 import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
@@ -62,6 +65,17 @@ public class SmokingAreaController {
                 = smokingAreaService.getSmokingAreaListResponse(userLat, userLng, filter);
 
         return ApiResponse.of(SuccessStatus.MAP_LIST_OK, result);
+    }
+
+    @Operation(summary = "흡연 구역 검색 목록",
+    description = "검색어와 현재 유저의 위치를 request로 받고 흡연 구역 목록 조회")
+    @PostMapping("/search")
+    public ApiResponse<MapResponse.SmokingAreaListResponse> getSearchAreaList(
+            @RequestBody SmokingAreaRequest.SearchRequest request){
+        MapResponse.SmokingAreaListResponse result
+                = smokingAreaService.getSearchingAreaListResponse(request);
+
+        return ApiResponse.of(SuccessStatus.MAP_SEARCH_OK, result);
     }
 
     @Operation(summary = "상세정보 업데이트 화면")
