@@ -29,6 +29,7 @@ public class NoticeResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class NoticeViewResponse{
+        public Long noticeId;
         public String title;
         public String content;
         public LocalDateTime updatedAt;
