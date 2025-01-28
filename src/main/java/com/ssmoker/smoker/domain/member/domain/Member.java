@@ -36,10 +36,8 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String email; //이메일
 
-    @Column(nullable = false, columnDefinition = "int default 0")
+    @Column(nullable = false)
     private Integer updateCount;
-
-    private LocalDateTime deactivationDate; // 비활성화 일수
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "VARCHAR(15) DEFAULT 'ACTIVE'")
@@ -60,7 +58,6 @@ public class Member extends BaseEntity {
                 ", nickName='" + nickName + '\'' +
                 ", email='" + email + '\'' +
                 ", updateCount=" + updateCount +
-                ", deactivationDate=" + deactivationDate +
                 ", status=" + status +
                 ", profileImageUrl='" + profileImageUrl + '\'' +
                 ", reviews=" + reviews +
