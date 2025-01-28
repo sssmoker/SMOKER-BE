@@ -230,24 +230,15 @@ public class SmokingAreaService {
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
                 .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
 
-        // 새로운 Feature 객체 생성 후 업데이트
-        Feature updatedFeature = new Feature(
-                request.hasVentilationSystem(),
-                request.isClean(),
-                request.hasTrashBin(),
-                request.hasChair(),
-                request.isAccessible(),
-                request.hasAirConditioning(),
-                request.isOutdoor()
-        );
+        Feature updatedFeature = getFeature(request);
         smokingArea.updateFeature(updatedFeature);
 
         smokingArea = smokingAreaRepository.save(smokingArea);
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new SmokerNotFoundException(MEMBER_NOT_FOUND));
-
         member.setUpdateCount(member.getUpdateCount() + 1);
+
         memberRepository.save(member);
 
         int updateCount = updatedHistoryRepository.countBySmokingAreaId(smokingAreaId)+1;
@@ -258,6 +249,26 @@ public class SmokingAreaService {
 
         return SmokingAreaUpdateRequest.of(smokingArea);
 
+    }
+
+    private Feature getFeature(SmokingAreaUpdateRequest request) {
+        Feature updatedFeature = new Feature(
+                request.hasAirPurifier(),        // 공기 청정 기능
+                request.hasAirConditioning(),    // 냉난방 기능
+                request.hasChair(),              // 의자 제공
+                request.hasTrashBin(),           // 쓰레기통
+                request.hasVentilationSystem(),  // 환기 시스템
+                request.isAccessible(),          // 휠체어 진입 가능 여부
+                request.hasCCTV(),               // CCTV 설치 여부
+                request.hasEmergencyButton(),    // 비상 버튼
+                request.hasVoiceGuidance(),      // 음성 안내 시스템
+                request.hasFireExtinguisher(),   // 소화기 비치 여부
+                request.isRegularlyCleaned(),    // 정기적인 청소 여부
+                request.hasCigaretteDisposal(),  // 담배꽁초 처리함 제공 여부
+                request.hasSunshade(),           // 햇빛 차단 시설
+                request.hasRainProtection()      // 비바람 차단 시설
+        );
+        return updatedFeature;
     }
 
     public SmokingAreaNameResponse getSmokingAreaName(Long smokingAreaId) {
