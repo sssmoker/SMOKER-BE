@@ -35,4 +35,15 @@ public class Feature {
     @Column(nullable = false)
     private Boolean isOutdoor; // 야외에 있어요
 
+    public Feature update(Feature updatedFeature) {
+        return new Feature(
+                updatedFeature.hasVentilationSystem,
+                updatedFeature.isClean,
+                updatedFeature.hasTrashBin,
+                updatedFeature.hasChair,
+                updatedFeature.isAccessible,
+                updatedFeature.hasAirConditioning,
+                updatedFeature.isOutdoor
+        );
+    }
 }

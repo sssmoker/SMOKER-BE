@@ -6,6 +6,7 @@ import static com.ssmoker.smoker.global.exception.code.ErrorStatus.SMOKING_AREA_
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.review.repository.ReviewRepository;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
+import com.ssmoker.smoker.domain.smokingArea.domain.Feature;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
@@ -229,10 +230,17 @@ public class SmokingAreaService {
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
                 .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
 
-        smokingArea.getFeature().setHasAirConditioning(request.hasAirConditioning());
-        smokingArea.getFeature().setHasChair(request.hasChair());
-        smokingArea.getFeature().setHasTrashBin(request.hasTrashBin());
-        smokingArea.getFeature().setIsEnclosedSmokingArea(request.isEnclosedSmokingArea());
+        // 새로운 Feature 객체 생성 후 업데이트
+        Feature updatedFeature = new Feature(
+                request.hasVentilationSystem(),
+                request.isClean(),
+                request.hasTrashBin(),
+                request.hasChair(),
+                request.isAccessible(),
+                request.hasAirConditioning(),
+                request.isOutdoor()
+        );
+        smokingArea.updateFeature(updatedFeature);
 
         smokingArea = smokingAreaRepository.save(smokingArea);
 
