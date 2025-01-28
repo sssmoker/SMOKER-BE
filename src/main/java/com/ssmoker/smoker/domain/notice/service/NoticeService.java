@@ -53,6 +53,7 @@ public class NoticeService {
     }
 
     public NoticeResponse.NoticeDetailResponse getNotice(Long id) {
+        System.out.println("log1");
         //repository에서 가져오기
         Notice notice =
                 noticeRepository.findById(id)

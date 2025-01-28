@@ -102,8 +102,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 || path.startsWith("/api/reviews/{smokingAreaId}/starInfo")
 
                 //Notice
-                ||path.startsWith("/api/member/notices")
-                ||path.startsWith("/api/member/notices/detail/{noticeId}")
+                || path.startsWith("/api/member/notices")
+                || path.startsWith("/api/member/notices/detail/{noticeId}")
+
                 // 필요하다면 다른 permitAll 경로들도 추가
                 // ...
                 ;
