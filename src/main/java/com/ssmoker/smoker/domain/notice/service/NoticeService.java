@@ -38,7 +38,6 @@ public class NoticeService {
                 = notices.stream().map(notice
                 -> new NoticeResponse.NoticeViewResponse(notice.getId(),
                 notice.getTitle(),
-                notice.getContent(),
                 notice.getUpdatedAt()))
                 .collect(Collectors.toList());
 

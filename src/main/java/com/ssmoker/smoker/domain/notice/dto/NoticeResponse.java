@@ -31,7 +31,6 @@ public class NoticeResponse {
     public static class NoticeViewResponse{
         public Long noticeId;
         public String title;
-        public String content;
         public LocalDateTime updatedAt;
     }
 }
