@@ -29,7 +29,8 @@ public class NoticeService {
         }
 
         Pageable pageable
-                = PageRequest.of(page - 1, 7, Sort.by("updatedAt").descending());
+                = PageRequest.of(page - 1, 7,
+                Sort.by("updatedAt").descending());
 
         Page<Notice> notices
                 = noticeRepository.findAll(pageable);
