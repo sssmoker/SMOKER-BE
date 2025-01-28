@@ -2,7 +2,9 @@ package com.ssmoker.smoker.domain.notice.service;
 
 import com.ssmoker.smoker.domain.notice.domain.Notice;
 import com.ssmoker.smoker.domain.notice.dto.NoticeResponse;
+import com.ssmoker.smoker.domain.notice.exception.NoticeNotFoundException;
 import com.ssmoker.smoker.domain.notice.repository.NoticeRepository;
+import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,10 +25,11 @@ public class NoticeService {
         //정렬은 최신순(desc)
         //size는 7
         if(page == null || page < 1) {
-            throw new
+            throw new NoticeNotFoundException(ErrorStatus.NOTICE_BAD_REQUEST);
         }
+
         Pageable pageable
-                = PageRequest.of(page, 7, Sort.by("updatedAt").descending());
+                = PageRequest.of(page - 1, 7, Sort.by("updatedAt").descending());
 
         Page<Notice> notices
                 = noticeRepository.findAll(pageable);
