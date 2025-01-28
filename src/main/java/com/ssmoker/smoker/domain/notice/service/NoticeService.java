@@ -54,6 +54,16 @@ public class NoticeService {
 
     public NoticeResponse.NoticeDetailResponse getNotice(Long id) {
         //repository에서 가져오기
+        Notice notice =
+                noticeRepository.findById(id)
+                        .orElseThrow(() ->
+                                new NoticeNotFoundException(ErrorStatus.NOTICE_NOT_FOUND));
 
+        return new NoticeResponse.NoticeDetailResponse(
+                notice.getId(),
+                notice.getTitle(),
+                notice.getContent(),
+                notice.getUpdatedAt()
+        );
     }
 }

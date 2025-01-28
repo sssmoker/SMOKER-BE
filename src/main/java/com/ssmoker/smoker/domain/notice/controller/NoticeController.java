@@ -29,7 +29,7 @@ public class NoticeController {
     @Operation(summary = "공지사항 세부사항 조회")
     @GetMapping("/detail/{noticeId}")
     public ApiResponse<NoticeResponse.NoticeDetailResponse> getNotice
-            (@PathVariable Long noticeId){
+            (@PathVariable(name = "noticeId") Long noticeId){
         NoticeResponse.NoticeDetailResponse result
                 = noticeService.getNotice(noticeId);
 

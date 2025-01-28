@@ -103,6 +103,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
                 //Notice
                 ||path.startsWith("/api/member/notices")
+                ||path.startsWith("/api/member/notices/detail/{noticeId}")
                 // 필요하다면 다른 permitAll 경로들도 추가
                 // ...
                 ;
