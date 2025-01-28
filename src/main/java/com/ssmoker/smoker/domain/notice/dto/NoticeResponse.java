@@ -17,6 +17,11 @@ public class NoticeResponse {
     @NoArgsConstructor
     public static class NoticeListResponse{
         List<NoticeViewResponse> notices;
+        Integer size;
+        Integer totalPage;
+        Integer totalElements;
+        Boolean isFirst;
+        Boolean isLast;
     }
 
     @Getter
