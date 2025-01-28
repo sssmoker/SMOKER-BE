@@ -1,15 +1,10 @@
 package com.ssmoker.smoker.domain.smokingArea.controller;
 
-import static com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat.URI;
-
-import com.ssmoker.smoker.domain.smokingArea.domain.Feature;
 import com.ssmoker.smoker.domain.smokingArea.domain.Location;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaRepository;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -18,12 +13,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpEntity;
 
@@ -41,11 +34,14 @@ public class OpenApiController {
     private final RestTemplate restTemplate;
     private final SmokingAreaRepository smokingAreaRepository;
     // 디코딩된 API 키 사용 (포털에서 제공된 Decoding Key)
-
+    /*
+    todo 지오코딩추가 (클래스 분리해서 메서드 제공하는 식으로하는게 좋을듯) , 예외 처리 , case 분리 방식
+     */
     @GetMapping("/test")
     public String test() throws MalformedURLException {
         // 이미 인코딩된 키
-
+        String preEncodedKey = "";
+        String perEncodeKey2 = "";
 
         boolean hasNextPage = true;
 
