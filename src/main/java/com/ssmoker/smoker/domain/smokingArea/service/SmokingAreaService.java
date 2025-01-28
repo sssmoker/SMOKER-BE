@@ -6,6 +6,7 @@ import static com.ssmoker.smoker.global.exception.code.ErrorStatus.SMOKING_AREA_
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.review.repository.ReviewRepository;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
+import com.ssmoker.smoker.domain.smokingArea.domain.Feature;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
@@ -229,17 +230,15 @@ public class SmokingAreaService {
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
                 .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
 
-        smokingArea.getFeature().setHasAirConditioning(request.hasAirConditioning());
-        smokingArea.getFeature().setHasChair(request.hasChair());
-        smokingArea.getFeature().setHasTrashBin(request.hasTrashBin());
-        smokingArea.getFeature().setIsEnclosedSmokingArea(request.isEnclosedSmokingArea());
+        Feature updatedFeature = getFeature(request);
+        smokingArea.updateFeature(updatedFeature);
 
         smokingArea = smokingAreaRepository.save(smokingArea);
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new SmokerNotFoundException(MEMBER_NOT_FOUND));
-
         member.setUpdateCount(member.getUpdateCount() + 1);
+
         memberRepository.save(member);
 
         int updateCount = updatedHistoryRepository.countBySmokingAreaId(smokingAreaId)+1;
@@ -272,10 +271,27 @@ public class SmokingAreaService {
                 smokingArea.getSmokingAreaName(),
                 smokingArea.getLocation().getAddress(),
                 smokingArea.getImageUrl(),
-                smokingArea.getFeature().getHasAirConditioning(),
-                smokingArea.getFeature().getHasChair(),
-                smokingArea.getFeature().getHasTrashBin(),
-                smokingArea.getFeature().getIsEnclosedSmokingArea()
+                smokingArea.getAreaType(),
+                smokingArea.getFeature()
+                );
+    }
+
+    private Feature getFeature(SmokingAreaUpdateRequest request) {
+        return new Feature(
+                request.hasAirPurifier(),        // 공기 청정 기능
+                request.hasAirConditioning(),    // 냉난방 기능
+                request.hasChair(),              // 의자 제공
+                request.hasTrashBin(),           // 쓰레기통
+                request.hasVentilationSystem(),  // 환기 시스템
+                request.isAccessible(),          // 휠체어 진입 가능 여부
+                request.hasCCTV(),               // CCTV 설치 여부
+                request.hasEmergencyButton(),    // 비상 버튼
+                request.hasVoiceGuidance(),      // 음성 안내 시스템
+                request.hasFireExtinguisher(),   // 소화기 비치 여부
+                request.isRegularlyCleaned(),    // 정기적인 청소 여부
+                request.hasCigaretteDisposal(),  // 담배꽁초 처리함 제공 여부
+                request.hasSunshade(),           // 햇빛 차단 시설
+                request.hasRainProtection()      // 비바람 차단 시설
         );
     }
 
