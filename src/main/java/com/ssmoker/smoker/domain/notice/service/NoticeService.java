@@ -50,6 +50,10 @@ public class NoticeService {
                 notices.isFirst(),
                 notices.isLast()
         );
+    }
+
+    public NoticeResponse.NoticeDetailResponse getNotice(Long id) {
+        //repository에서 가져오기
 
     }
 }
