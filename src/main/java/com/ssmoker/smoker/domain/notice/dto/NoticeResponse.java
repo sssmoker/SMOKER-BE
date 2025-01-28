@@ -5,6 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
+
 public class NoticeResponse {
 
     @Getter
@@ -12,7 +16,7 @@ public class NoticeResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class NoticeListResponse{
-        List<>
+        List<NoticeViewResponse> notices;
     }
 
     @Getter
@@ -20,6 +24,8 @@ public class NoticeResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class NoticeViewResponse{
-
+        public String title;
+        public String content;
+        public LocalDateTime updatedAt;
     }
 }
