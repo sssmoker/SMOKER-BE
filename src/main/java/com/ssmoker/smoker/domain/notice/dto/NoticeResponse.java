@@ -19,7 +19,7 @@ public class NoticeResponse {
         List<NoticeViewResponse> notices;
         Integer size;
         Integer totalPage;
-        Integer totalElements;
+        Long totalElements;
         Boolean isFirst;
         Boolean isLast;
     }

@@ -28,6 +28,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
     //Notice
     NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTICE4001", "공지사항이 존재하지 않습니다."),
+    NOTICE_BAD_REQUEST(HttpStatus.BAD_REQUEST, "NOTICE4002", "페이지 넘버는 0 이상이어야 합니다."),
+
     // Auth 관련
     AUTH_EXTRACT_ERROR_TEST(HttpStatus.UNAUTHORIZED, "AUTH_000TSET", "토큰 추출에 실패했습니다TEST."),
 

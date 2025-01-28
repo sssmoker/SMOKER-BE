@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,9 @@ public class NoticeService {
         //paging number는 1부터 되도록 하기
         //정렬은 최신순(desc)
         //size는 7
+        if(page == null || page < 1) {
+            throw new
+        }
         Pageable pageable
                 = PageRequest.of(page, 7, Sort.by("updatedAt").descending());
 
@@ -28,8 +32,21 @@ public class NoticeService {
                 = noticeRepository.findAll(pageable);
 
         List<NoticeResponse.NoticeViewResponse> noticeViewList
-                = notices.stream().map(notice ->
-                NoticeResponse.NoticeViewResponse());
+                = notices.stream().map(notice
+                -> new NoticeResponse.NoticeViewResponse(notice.getId(),
+                notice.getTitle(),
+                notice.getContent(),
+                notice.getUpdatedAt()))
+                .collect(Collectors.toList());
+
+        return new NoticeResponse.NoticeListResponse(
+                noticeViewList,
+                notices.getSize(),
+                notices.getTotalPages(),
+                notices.getTotalElements(),
+                notices.isFirst(),
+                notices.isLast()
+        );
 
     }
 }
