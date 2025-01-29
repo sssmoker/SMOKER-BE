@@ -1,4 +1,4 @@
-name: playground ci/cd
+name: SMOKER CI/CD
 
 on:
   pull_request:
@@ -48,8 +48,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID_BEANSTALK }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY_BEANSTALK }}
-          application_name: heehun-playground
-          environment_name: Heehun-playground-env
+          application_name: smoker-env
+          environment_name: Smoker-env
           version_label: github_action-${{ steps.current-time.outputs.formattedTime }}
           region: ap-northeast-2
           deployment_package: deploy/deploy.zip
