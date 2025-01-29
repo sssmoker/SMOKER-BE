@@ -29,7 +29,8 @@ public class NoticeService {
         }
 
         Pageable pageable
-                = PageRequest.of(page - 1, 7, Sort.by("updatedAt").descending());
+                = PageRequest.of(page - 1, 7,
+                Sort.by("updatedAt").descending());
 
         Page<Notice> notices
                 = noticeRepository.findAll(pageable);
@@ -49,6 +50,21 @@ public class NoticeService {
                 notices.isFirst(),
                 notices.isLast()
         );
+    }
 
+    public NoticeResponse.NoticeDetailResponse getNotice(Long id) {
+        System.out.println("log1");
+        //repository에서 가져오기
+        Notice notice =
+                noticeRepository.findById(id)
+                        .orElseThrow(() ->
+                                new NoticeNotFoundException(ErrorStatus.NOTICE_NOT_FOUND));
+
+        return new NoticeResponse.NoticeDetailResponse(
+                notice.getId(),
+                notice.getTitle(),
+                notice.getContent(),
+                notice.getUpdatedAt()
+        );
     }
 }

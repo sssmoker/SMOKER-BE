@@ -33,4 +33,15 @@ public class NoticeResponse {
         public String title;
         public LocalDateTime updatedAt;
     }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class NoticeDetailResponse{
+        public Long noticeId;
+        public String title;
+        public String content;
+        public LocalDateTime updatedAt;
+    }
 }
