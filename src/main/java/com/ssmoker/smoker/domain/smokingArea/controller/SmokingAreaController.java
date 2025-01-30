@@ -2,7 +2,10 @@ package com.ssmoker.smoker.domain.smokingArea.controller;
 
 import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.dto.MapResponse;
+//import com.ssmoker.smoker.domain.smokingArea.dto.ReviewResponses;
+import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaRequest;
 import com.ssmoker.smoker.domain.smokingArea.service.SmokingAreaService;
+import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaInfoResponse;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
 import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
@@ -26,42 +29,53 @@ public class SmokingAreaController {
         return ApiResponse.onSuccess(result);
     }
 
-   //지도 api
+    //지도 api
     @Operation(summary = "흡연 구역 지도_마커표시 위함",
-    description = "프론트가 지도에 마커표시를 할 수 있도록 흡연구역 db를 보내주는 역할")
-    @GetMapping
-    public ApiResponse<MapResponse.SmokingMarkersResponse> getSmokingAreaMakersInfo(){
+            description = "프론트가 지도에 마커표시를 할 수 있도록 흡연구역 db를 보내주는 역할")
+    @GetMapping("/marker")
+    public ApiResponse<MapResponse.SmokingMarkersResponse> getSmokingAreaMakersInfo() {
         MapResponse.SmokingMarkersResponse markers = smokingAreaService.getSmokingMarkersResponse();
 
         return ApiResponse.of(SuccessStatus.MAP_INFO_OK, markers);
     }
 
     @Operation(summary = "흡연 구역 마커 클릭(모달)",
-    description = "흡연구역 마커 클릭 시 다른 작은 창으로 마커 정보 알려주는 역할")
+            description = "흡연구역 마커 클릭 시 다른 작은 창으로 마커 정보 알려주는 역할")
     @GetMapping("/{smokingAreaId}/simple")
     public ApiResponse<MapResponse.MarkerResponse> getSmokingAreaMarker(
             @PathVariable(name = "smokingAreaId") Long smokingAreaId,
             @RequestParam(name = "userLat") Double userLat,
             @RequestParam(name = "userLng") Double userLng
-    ){
+    ) {
         MapResponse.MarkerResponse marker = smokingAreaService.getMarkerResponse(
                 smokingAreaId, userLat, userLng);
 
-        return ApiResponse.of(SuccessStatus.MAP_MARKER_OK,marker);
+        return ApiResponse.of(SuccessStatus.MAP_MARKER_OK, marker);
     }
 
     @Operation(summary = "흡연 구역 목록",
-    description = "사용자 현재 위치에서 1km 반경 내에 있는 흡연 구역 목록 조회")
+            description = "사용자 현재 위치에서 1km 반경 내에 있는 흡연 구역 목록 조회")
     @GetMapping("/list")
     public ApiResponse<MapResponse.SmokingAreaListResponse> getSmokingAreaList(
             @RequestParam(name = "userLat") Double userLat,
             @RequestParam(name = "userLng") Double userLng,
             @RequestParam(name = "filter") String filter
-    ){
+    ) {
         MapResponse.SmokingAreaListResponse result
                 = smokingAreaService.getSmokingAreaListResponse(userLat, userLng, filter);
 
         return ApiResponse.of(SuccessStatus.MAP_LIST_OK, result);
+    }
+
+    @Operation(summary = "흡연 구역 검색 목록",
+            description = "검색어와 현재 유저의 위치를 request로 받고 흡연 구역 목록 조회")
+    @PostMapping("/search")
+    public ApiResponse<MapResponse.SmokingAreaListResponse> getSearchAreaList(
+            @RequestBody SmokingAreaRequest.SearchRequest request) {
+        MapResponse.SmokingAreaListResponse result
+                = smokingAreaService.getSearchingAreaListResponse(request);
+
+        return ApiResponse.of(SuccessStatus.MAP_SEARCH_OK, result);
     }
 
     @Operation(summary = "상세정보 업데이트 화면")

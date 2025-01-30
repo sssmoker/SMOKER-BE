@@ -6,6 +6,7 @@ import com.ssmoker.smoker.global.security.authDTO.AuthResponseDTO;
 import com.ssmoker.smoker.global.security.authDTO.AuthResponseDTO.TokenResponse;
 import com.ssmoker.smoker.global.security.authDTO.GoogleProfile;
 import com.ssmoker.smoker.global.security.authDTO.KakaoProfile;
+import lombok.Value;
 
 public class AuthConverter {
 
@@ -13,6 +14,8 @@ public class AuthConverter {
         return Member.builder()
                 .nickName(kakaoProfile.getKakaoNickname().getNickname())
                 .email(kakaoProfile.getKakaoAccount().getEmail())
+                .updateCount(0)
+                .profileImageUrl("https://smoker-bucket.s3.ap-northeast-2.amazonaws.com/profile/595395fe-e76c-4c23-9c02-fb223723214b")
                 .status(MemberStatus.ACTIVE)
                 .build();
     }
@@ -21,6 +24,8 @@ public class AuthConverter {
         return Member.builder()
                 .nickName(googleProfile.getNickName())
                 .email(googleProfile.getEmail())
+                .updateCount(0)
+                .profileImageUrl("https://smoker-bucket.s3.ap-northeast-2.amazonaws.com/profile/595395fe-e76c-4c23-9c02-fb223723214b")
                 .status(MemberStatus.ACTIVE)
                 .build();
     }

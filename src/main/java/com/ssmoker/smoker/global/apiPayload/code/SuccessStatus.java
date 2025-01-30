@@ -23,11 +23,15 @@ public enum SuccessStatus implements BaseCode {
     MAP_LIST_OK(HttpStatus.OK, "MAP2003", "목록을 불러왔습니다."),
     MAP_SEARCH_OK(HttpStatus.OK, "MAP2004", "검색이 완료되었습니다."),
 
+    //notice 관련
+    NOTICES_OK(HttpStatus.OK, "NOTICE2001", "공지사항 조회가 완료되었습니다."),
+    NOTICE_DETAIL_OK(HttpStatus.OK, "NOTICE2002", "공지사항 세부 조회가 완료되었습니다."),
     // Profile 관련
     NICKNAME_OK(HttpStatus.OK, "PROFILE2001", "닉네임 변경이 완료되었습니다."),
     PROFILE_IMAGE_OK(HttpStatus.OK, "PROFILE2002", "프로필 이미지 변경이 완료되었습니다."),
     PROFILE_OK(HttpStatus.OK, "PROFILE2003", "프로필 조회 성공"),
-    PROFILE_REVIEWS_OK(HttpStatus.OK, "PROFILE2004", "내가 쓴 리뷰 조회 성공")
+    PROFILE_REVIEWS_OK(HttpStatus.OK, "PROFILE2004", "내가 쓴 리뷰 조회 성공"),
+    PROFILE_UPDATE_OK(HttpStatus.OK, "PROFILE2005", "나의 업데이트 히스토리 조회 성공")
     ;
 
     private final HttpStatus httpStatus;

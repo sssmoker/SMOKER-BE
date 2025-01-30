@@ -47,4 +47,11 @@ public class MemberController {
         MemberResponseDTO.MemberReviewListDTO result = memberService.viewMemberReviews(memberId,pageNumber);
         return ApiResponse.of(SuccessStatus.PROFILE_REVIEWS_OK,result);
     }
+
+    @Operation(summary = "마이페이지 나의 업데이트 히스토리 조회 API", description = "마이페이지 상세탭 나의 업데이트 히스토리를 5개씩 조회합니다. 쿼리스트링으로 pageNumber를 넘겨주세요. 1부터 시작됩니다.")
+    @GetMapping(value = "/update")
+    public ApiResponse<MemberResponseDTO.MemberUpdateListDTO> getMemberUpdate(@AuthUser Long memberId, @RequestParam("pageNumber") @Min(0) @NotNull Integer pageNumber) {
+        MemberResponseDTO.MemberUpdateListDTO result = memberService.viewMemberUpdateHistory(memberId,pageNumber);
+        return ApiResponse.of(SuccessStatus.PROFILE_UPDATE_OK,result);
+    }
 }
