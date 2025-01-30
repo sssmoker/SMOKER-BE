@@ -9,6 +9,8 @@ import com.ssmoker.smoker.domain.smokingArea.service.SmokingAreaService;
 import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaInfoResponse;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
+import com.ssmoker.smoker.global.exception.GeneralException;
+import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -107,8 +109,12 @@ public class SmokingAreaController {
     }
 
     @Operation(summary = "구글 OCR 검증 및 S3 이미지 저장")
-    @PostMapping("/ocr")
+    @PostMapping("/verify")
     public ApiResponse<?> verifySmokingAreaOCR(@RequestParam("file") MultipartFile file) throws IOException {
-        return ApiResponse.onSuccess(googleVisionOCRService.detectText(file));
+        if(googleVisionOCRService.isSmokingArea(googleVisionOCRService.detectText(file))) {
+            return ApiResponse.onSuccess(googleVisionOCRService.uploadSmokingAreaImage(file));
+        } else {
+          throw new GeneralException(ErrorStatus.SMOKING_KEYWORD_NOT_FOUND);
+        }
     }
 }
