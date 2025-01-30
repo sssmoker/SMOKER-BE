@@ -112,7 +112,7 @@ public class SmokingAreaController {
     @PostMapping("/verify")
     public ApiResponse<?> verifySmokingAreaOCR(@RequestParam("file") MultipartFile file) throws IOException {
         if(googleVisionOCRService.isSmokingArea(googleVisionOCRService.detectText(file))) {
-            return ApiResponse.onSuccess(googleVisionOCRService.uploadSmokingAreaImage(file));
+            return ApiResponse.of(SuccessStatus.OCR_VERIFY_OK, googleVisionOCRService.uploadSmokingAreaImage(file));
         } else {
           throw new GeneralException(ErrorStatus.SMOKING_KEYWORD_NOT_FOUND);
         }
