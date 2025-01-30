@@ -4,6 +4,7 @@ import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.dto.MapResponse;
 //import com.ssmoker.smoker.domain.smokingArea.dto.ReviewResponses;
 import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaRequest;
+import com.ssmoker.smoker.domain.smokingArea.service.GoogleVisionOCRService;
 import com.ssmoker.smoker.domain.smokingArea.service.SmokingAreaService;
 import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaInfoResponse;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
@@ -12,6 +13,9 @@ import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class SmokingAreaController {
 
     private final SmokingAreaService smokingAreaService;
+    private final GoogleVisionOCRService googleVisionOCRService;
 
     //Swagger 를 어디까지 적어야할 지
     @Operation(summary = "흡연 구역 상세 조회")
@@ -99,5 +104,11 @@ public class SmokingAreaController {
     public ApiResponse<SmokingAreaDetailResponse> getSmokingAreaDetails(@PathVariable Long smokingAreaId) {
         SmokingAreaDetailResponse response = smokingAreaService.getSmokingAreaDetails(smokingAreaId);
         return ApiResponse.onSuccess(response);
+    }
+
+    @Operation(summary = "구글 OCR 검증 및 S3 이미지 저장")
+    @PostMapping("/ocr")
+    public ApiResponse<?> verifySmokingAreaOCR(@RequestParam("file") MultipartFile file) throws IOException {
+        return ApiResponse.onSuccess(googleVisionOCRService.detectText(file));
     }
 }
