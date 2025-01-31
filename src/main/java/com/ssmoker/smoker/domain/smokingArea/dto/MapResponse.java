@@ -20,6 +20,8 @@ public class MapResponse {
     @Setter
     @AllArgsConstructor
     public static class MarkerResponse{
+        private final String imageUrl;
+        private final double Rating;
         private final double distance;
         private final int reviewCount;
         private final int savedCount;

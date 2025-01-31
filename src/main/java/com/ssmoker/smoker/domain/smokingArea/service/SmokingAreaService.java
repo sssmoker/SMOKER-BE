@@ -107,6 +107,7 @@ public class SmokingAreaService {
                 .orElse(null);
 
         double distance;
+        double rating;
         int reviewCount;
         int savedCount;
 
@@ -117,6 +118,9 @@ public class SmokingAreaService {
             //거리 계산
             distance = calculateHaversineDistance(userLat, userLng,
                     smokingArea.getLocation().getLatitude(), smokingArea.getLocation().getLongitude());
+
+            //rating
+            rating = reviewRepository.findAvgScoreBySmokingId(smokingArea.getId());
 
             //review Count
             reviewCount = smokingAreaRepository.findReviewCountBySmokingAreaId(smokingAreaId);
