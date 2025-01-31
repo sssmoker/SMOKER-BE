@@ -20,6 +20,8 @@ public class MapResponse {
     @Setter
     @AllArgsConstructor
     public static class MarkerResponse{
+        private final String imageUrl;
+        private final double Rating;
         private final double distance;
         private final int reviewCount;
         private final int savedCount;
@@ -31,6 +33,7 @@ public class MapResponse {
     public static class SmokingAreaInfoWithRequest{
         private final Long smokingAreaId;
         private final String smokingAreaName;
+        private final String imageUrl;
         private final Double distance;
         private final Location location;
         private final Double Rating;

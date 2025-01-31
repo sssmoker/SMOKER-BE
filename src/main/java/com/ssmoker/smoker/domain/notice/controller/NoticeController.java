@@ -25,4 +25,14 @@ public class NoticeController {
 
         return ApiResponse.of(SuccessStatus.NOTICES_OK, result);
     }
+
+    @Operation(summary = "공지사항 세부사항 조회")
+    @GetMapping("/detail/{noticeId}")
+    public ApiResponse<NoticeResponse.NoticeDetailResponse> getNotice
+            (@PathVariable(name = "noticeId") Long noticeId){
+        NoticeResponse.NoticeDetailResponse result
+                = noticeService.getNotice(noticeId);
+
+        return ApiResponse.of(SuccessStatus.NOTICE_DETAIL_OK, result);
+    }
 }

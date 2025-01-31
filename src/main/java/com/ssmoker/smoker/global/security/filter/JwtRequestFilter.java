@@ -86,7 +86,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 || path.startsWith("/swagger-resources")
                 || path.startsWith("/webjars")
                 || path.equals("/swagger-ui.html")
-
+                // eb health check 용 API
+                || path.equals("/health")
                 // 로그인/토큰발급 등등
                 || path.startsWith("/api/auth/login/")
                 || path.startsWith("/test")
@@ -102,7 +103,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 || path.startsWith("/api/reviews/{smokingAreaId}/starInfo")
 
                 //Notice
-                ||path.startsWith("/api/member/notices")
+                || path.startsWith("/api/member/notices")
+                || path.startsWith("/api/member/notices/detail/{noticeId}")
+
                 // 필요하다면 다른 permitAll 경로들도 추가
                 // ...
                 ;
