@@ -178,7 +178,7 @@ public class SmokingAreaService {
         }
     }
 
-    //정렬 코드는 개선 가능함. 나중에 시간이 되면 개선해야겠음
+    //목록 리스트의 개별 내용
     private List<MapResponse.SmokingAreaInfoWithRequest> getSmokingAreaInfoWithDistance(
             Double userLat, Double userLng, String filter){
         //모든 Db 불러오기
@@ -192,7 +192,7 @@ public class SmokingAreaService {
                 .collect(Collectors.toList());
     }
 
-    //db를 뒤져서 그에 맞는 smokingArea 구하기
+    //smokingarea 목록 조회하기
     public MapResponse.SmokingAreaListResponse getSmokingAreaListResponse(
             Double userLat, Double userLng, String filter
     ) {
@@ -226,6 +226,7 @@ public class SmokingAreaService {
         .collect(Collectors.toList());
     }
 
+    //검색으로 목록 조회하기
     public MapResponse.SmokingAreaListResponse getSearchingAreaListResponse
             (SmokingAreaRequest.SearchRequest searchRequest) {
         List<MapResponse.SmokingAreaInfoWithRequest> smokingLists =
