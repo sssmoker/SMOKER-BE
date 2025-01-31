@@ -53,11 +53,11 @@ public class GoogleVisionOCRService {
 
         String lowerText = text.toLowerCase();
 
-        Pattern noSmokingPattern = Pattern.compile("\\bno\\s+smoking\\b|\\bno\\s+smoking\\s+zone\\b", Pattern.CASE_INSENSITIVE);
+        Pattern noSmokingPattern = Pattern.compile("\\bno\\s+smoking\\b|\\bno\\s+smoking\\s+zone\\b|\\b금연\\b|\\b흡연\\s*금지\\b", Pattern.CASE_INSENSITIVE);
         Matcher noSmokingMatcher = noSmokingPattern.matcher(lowerText);
         if (noSmokingMatcher.find()) return false;
 
-        Pattern smokingPattern = Pattern.compile("\\b흡연\\b|\\bsmoking\\s+area\\b|\\bsmoking\\s+zone\\b", Pattern.CASE_INSENSITIVE);
+        Pattern smokingPattern = Pattern.compile("\\b흡연\\s*구역\\b|\\b흡연\\s*가능\\b|\\bsmoking\\s+area\\b|\\bsmoking\\s+zone\\b", Pattern.CASE_INSENSITIVE);
         Matcher smokingMatcher = smokingPattern.matcher(lowerText);
         return smokingMatcher.find();
     }
@@ -66,7 +66,7 @@ public class GoogleVisionOCRService {
     // S3에 이미지 업로드
     public String uploadSmokingAreaImage(MultipartFile file) {
         final String uuid = UUID.randomUUID().toString();
-        final String keyName = amazonS3Manager.generateSmokingAreaKeyName("예시 이름", uuid);
+        final String keyName = amazonS3Manager.generateSmokingAreaKeyName(uuid);
 
         return amazonS3Manager.uploadFile(keyName, file);
     }
