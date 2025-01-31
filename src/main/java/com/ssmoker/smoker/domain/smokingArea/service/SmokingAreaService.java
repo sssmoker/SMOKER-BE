@@ -157,6 +157,7 @@ public class SmokingAreaService {
         return new MapResponse.SmokingAreaInfoWithRequest(
                 smokingArea.getId(),
                 smokingArea.getSmokingAreaName(),
+                smokingArea.getImageUrl(),
                 distance,
                 smokingArea.getLocation(),
                 avgRating,

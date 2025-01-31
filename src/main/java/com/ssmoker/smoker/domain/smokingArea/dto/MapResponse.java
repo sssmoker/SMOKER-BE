@@ -33,6 +33,7 @@ public class MapResponse {
     public static class SmokingAreaInfoWithRequest{
         private final Long smokingAreaId;
         private final String smokingAreaName;
+        private final String imageUrl;
         private final Double distance;
         private final Location location;
         private final Double Rating;
