@@ -52,9 +52,11 @@ public class SmokingArea extends BaseEntity {
     @OneToMany(mappedBy = "smokingArea", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SavedSmokingArea> savedSmokingAreas = new ArrayList<>();
 
-    public SmokingArea(String addressName, Location location) {
+    public SmokingArea(String addressName, Location location, Feature feature) {
         this.smokingAreaName = addressName;
         this.location = location;
+        this.feature = feature;
+        this.areaType = "임시";
     }
 
     public void updateFeature(Feature updatedFeature) {

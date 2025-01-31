@@ -26,7 +26,7 @@ public class KaKaoApiService {
     private static final String KAKAO_API_URL
             = "https://dapi.kakao.com/v2/local/search/keyword.json?query=";
 
-    public KaKaoApiResponse.KaKaoResponse getCenterLocationFromKakao (String keyword) {
+    public KaKaoApiResponse.KaKaoResponse getCenterLocationFromKakao(String keyword) {
         RestTemplate restTemplate = new RestTemplate();
         //String apiUrl = KAKAO_API_URL + URLEncoder.encode(keyword, StandardCharsets.UTF_8);
         String apiUrl = KAKAO_API_URL + keyword;
@@ -42,7 +42,7 @@ public class KaKaoApiService {
 
         ResponseEntity<KaKaoApiResponse> response
                 = restTemplate.exchange(
-                        apiUrl,
+                apiUrl,
                 HttpMethod.GET,
                 entity,
                 KaKaoApiResponse.class);
