@@ -10,7 +10,4 @@ public record ReviewRequest(
 
         @NotBlank(message = "내용은 필수입니다.")
         @Size(max = 1000, message = "내용은 최대 1000자까지 입력 가능합니다.")
-        String content,
-
-        String imageUrl
-) {}
+        String content ){}
