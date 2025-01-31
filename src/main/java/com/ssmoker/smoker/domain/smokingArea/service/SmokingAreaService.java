@@ -108,6 +108,7 @@ public class SmokingAreaService {
 
         double distance;
         double rating;
+        String imageUrl;
         int reviewCount;
         int savedCount;
 
@@ -119,6 +120,9 @@ public class SmokingAreaService {
             distance = calculateHaversineDistance(userLat, userLng,
                     smokingArea.getLocation().getLatitude(), smokingArea.getLocation().getLongitude());
 
+            //imageUrl
+            imageUrl = smokingArea.getImageUrl();
+
             //rating
             rating = reviewRepository.findAvgScoreBySmokingId(smokingArea.getId());
 
@@ -129,7 +133,7 @@ public class SmokingAreaService {
             savedCount = smokingAreaRepository.findSavedCountBySmokingAreaId(smokingAreaId);
         }
 
-        return new  MapResponse.MarkerResponse(distance,reviewCount,savedCount);
+        return new  MapResponse.MarkerResponse(imageUrl,rating,distance,reviewCount,savedCount);
     }
 
     //distance, avgReview, reviewCont, saveCount 계산 함수
