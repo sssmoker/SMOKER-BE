@@ -86,13 +86,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 || path.startsWith("/swagger-resources")
                 || path.startsWith("/webjars")
                 || path.equals("/swagger-ui.html")
-
-                // 로그인/토큰발급 등등
+                || path.equals("/health")
                 || path.startsWith("/api/auth/login/")
-                || path.startsWith("/test")
 
+                // test
+                || path.startsWith("/test")
+                // fixme : 차라리 관리자 권한을 가진 유저만 호출할 수 있도록 변경해야할 듯
+                || path.startsWith("/api/open-api/")
                 //smokingArea
-                || path.startsWith("/api/smoking-area")
+                || path.startsWith("/api/smoking-area/marker")
                 || path.startsWith("/api/smoking-area/{smokingAreaId}/simple")
                 || path.startsWith("/api/smoking-area/list")
                 || path.startsWith("/api/smoking-area/search")
@@ -101,8 +103,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 || path.startsWith("/api/reviews/{smokingAreaId}")
                 || path.startsWith("/api/reviews/{smokingAreaId}/starInfo")
 
-                //Open-API
-                || path.startsWith("/api/open-api")
+                //Notice
+                || path.startsWith("/api/member/notices")
+                || path.startsWith("/api/member/notices/detail/{noticeId}")
+
                 // 필요하다면 다른 permitAll 경로들도 추가
                 // ...
                 ;
