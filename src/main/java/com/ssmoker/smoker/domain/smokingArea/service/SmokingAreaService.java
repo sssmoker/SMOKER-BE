@@ -7,6 +7,7 @@ import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.review.repository.ReviewRepository;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
 import com.ssmoker.smoker.domain.smokingArea.domain.Feature;
+import com.ssmoker.smoker.domain.smokingArea.domain.Location;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
@@ -23,9 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -107,6 +105,8 @@ public class SmokingAreaService {
                 .orElse(null);
 
         double distance;
+        double rating;
+        String imageUrl;
         int reviewCount;
         int savedCount;
 
@@ -118,6 +118,12 @@ public class SmokingAreaService {
             distance = calculateHaversineDistance(userLat, userLng,
                     smokingArea.getLocation().getLatitude(), smokingArea.getLocation().getLongitude());
 
+            //imageUrl
+            imageUrl = smokingArea.getImageUrl();
+
+            //rating
+            rating = reviewRepository.findAvgScoreBySmokingId(smokingArea.getId());
+
             //review Count
             reviewCount = smokingAreaRepository.findReviewCountBySmokingAreaId(smokingAreaId);
 
@@ -125,7 +131,7 @@ public class SmokingAreaService {
             savedCount = smokingAreaRepository.findSavedCountBySmokingAreaId(smokingAreaId);
         }
 
-        return new  MapResponse.MarkerResponse(distance,reviewCount,savedCount);
+        return new  MapResponse.MarkerResponse(imageUrl,rating,distance,reviewCount,savedCount);
     }
 
     //distance, avgReview, reviewCont, saveCount 계산 함수
@@ -149,6 +155,7 @@ public class SmokingAreaService {
         return new MapResponse.SmokingAreaInfoWithRequest(
                 smokingArea.getId(),
                 smokingArea.getSmokingAreaName(),
+                smokingArea.getImageUrl(),
                 distance,
                 smokingArea.getLocation(),
                 avgRating,
@@ -170,7 +177,7 @@ public class SmokingAreaService {
         }
     }
 
-    //정렬 코드는 개선 가능함. 나중에 시간이 되면 개선해야겠음
+    //목록 리스트의 개별 내용
     private List<MapResponse.SmokingAreaInfoWithRequest> getSmokingAreaInfoWithDistance(
             Double userLat, Double userLng, String filter){
         //모든 Db 불러오기
@@ -184,7 +191,7 @@ public class SmokingAreaService {
                 .collect(Collectors.toList());
     }
 
-    //db를 뒤져서 그에 맞는 smokingArea 구하기
+    //smokingarea 목록 조회하기
     public MapResponse.SmokingAreaListResponse getSmokingAreaListResponse(
             Double userLat, Double userLng, String filter
     ) {
@@ -218,6 +225,7 @@ public class SmokingAreaService {
         .collect(Collectors.toList());
     }
 
+    //검색으로 목록 조회하기
     public MapResponse.SmokingAreaListResponse getSearchingAreaListResponse
             (SmokingAreaRequest.SearchRequest searchRequest) {
         List<MapResponse.SmokingAreaInfoWithRequest> smokingLists =
@@ -295,5 +303,12 @@ public class SmokingAreaService {
         );
     }
 
+    //새로운 흡연구역 등록
+    public Long saveSmokingArea(SmokingAreaRegisterRequest request, String imageUrl, Double latitude, Double longitude, String address) {
+        SmokingArea smokingArea = SmokingAreaRegisterRequest.of(request, imageUrl, latitude, longitude, address);
+
+        SmokingArea savedSmokingArea = smokingAreaRepository.save(smokingArea);
+        return savedSmokingArea.getId();
+    }
 }
 

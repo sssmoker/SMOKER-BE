@@ -23,6 +23,7 @@ import org.hibernate.annotations.Formula;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class SmokingArea extends BaseEntity {
 
     @Id

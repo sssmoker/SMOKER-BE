@@ -4,14 +4,20 @@ import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.dto.MapResponse;
 //import com.ssmoker.smoker.domain.smokingArea.dto.ReviewResponses;
 import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaRequest;
+import com.ssmoker.smoker.domain.smokingArea.service.GoogleVisionOCRService;
 import com.ssmoker.smoker.domain.smokingArea.service.SmokingAreaService;
 import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaInfoResponse;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
+import com.ssmoker.smoker.global.exception.GeneralException;
+import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class SmokingAreaController {
 
     private final SmokingAreaService smokingAreaService;
+    private final GoogleVisionOCRService googleVisionOCRService;
 
     //Swagger 를 어디까지 적어야할 지
     @Operation(summary = "흡연 구역 상세 조회")
@@ -99,5 +106,28 @@ public class SmokingAreaController {
     public ApiResponse<SmokingAreaDetailResponse> getSmokingAreaDetails(@PathVariable Long smokingAreaId) {
         SmokingAreaDetailResponse response = smokingAreaService.getSmokingAreaDetails(smokingAreaId);
         return ApiResponse.onSuccess(response);
+    }
+
+    @Operation(summary = "구글 OCR 검증 및 S3 이미지 저장")
+    @PostMapping("/verify")
+    public ApiResponse<?> verifySmokingAreaOCR(@RequestParam("file") MultipartFile file) throws IOException {
+        if(googleVisionOCRService.isSmokingArea(googleVisionOCRService.detectText(file))) {
+            return ApiResponse.of(SuccessStatus.OCR_VERIFY_OK, googleVisionOCRService.uploadSmokingAreaImage(file));
+        } else {
+          throw new GeneralException(ErrorStatus.SMOKING_KEYWORD_NOT_FOUND);
+        }
+    }
+
+    @Operation(summary = "검증된 새로운 흡연 구역 등록")
+    @PostMapping("/register")
+    public ApiResponse<Long> registerSmokingArea(
+            @RequestParam String image_url,
+            @RequestParam Double latitude,
+            @RequestParam Double longitude,
+            @RequestParam String address,
+            @RequestBody SmokingAreaRegisterRequest request) {
+
+        Long smokingAreaId = smokingAreaService.saveSmokingArea(request, image_url, latitude, longitude, address);
+        return ApiResponse.onSuccess(smokingAreaId);
     }
 }
