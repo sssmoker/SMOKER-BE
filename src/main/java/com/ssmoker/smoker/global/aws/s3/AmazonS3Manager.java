@@ -40,7 +40,7 @@ public class AmazonS3Manager {
         return amazonConfig.getProfilePath() + '/'  + uuid;
     }
     // 흡연 구역 사진 저장은 해당 url 을 사용하여 저장
-    public String generateSmokingAreaKeyName(String keyName, String uuid) {
-        return amazonConfig.getSmokingAreaPath() + '/' + keyName + uuid;
+    public String generateSmokingAreaKeyName(String uuid) {
+        return amazonConfig.getSmokingAreaPath() + '/' + uuid;
     }
 }
