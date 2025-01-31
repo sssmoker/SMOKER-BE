@@ -117,4 +117,17 @@ public class SmokingAreaController {
           throw new GeneralException(ErrorStatus.SMOKING_KEYWORD_NOT_FOUND);
         }
     }
+
+    @Operation(summary = "검증된 새로운 흡연 구역 등록")
+    @PostMapping("/register")
+    public ApiResponse<Long> registerSmokingArea(
+            @RequestParam String image_url,
+            @RequestParam Double latitude,
+            @RequestParam Double longitude,
+            @RequestParam String address,
+            @RequestBody SmokingAreaRegisterRequest request) {
+
+        Long smokingAreaId = smokingAreaService.saveSmokingArea(request, image_url, latitude, longitude, address);
+        return ApiResponse.onSuccess(smokingAreaId);
+    }
 }

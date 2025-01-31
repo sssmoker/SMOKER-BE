@@ -93,8 +93,6 @@ public class ReviewService {
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
                 .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
 
-        System.out.println("member:" + member.getId()+ " " + member.getNickName()+ " " + member.getEmail());
-
         Review review = Review.builder()
                 .smokingArea(smokingArea)
                 .score(reviewRequest.score())

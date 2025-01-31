@@ -7,6 +7,7 @@ import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.review.repository.ReviewRepository;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
 import com.ssmoker.smoker.domain.smokingArea.domain.Feature;
+import com.ssmoker.smoker.domain.smokingArea.domain.Location;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
@@ -302,5 +303,12 @@ public class SmokingAreaService {
         );
     }
 
+    //새로운 흡연구역 등록
+    public Long saveSmokingArea(SmokingAreaRegisterRequest request, String imageUrl, Double latitude, Double longitude, String address) {
+        SmokingArea smokingArea = SmokingAreaRegisterRequest.of(request, imageUrl, latitude, longitude, address);
+
+        SmokingArea savedSmokingArea = smokingAreaRepository.save(smokingArea);
+        return savedSmokingArea.getId();
+    }
 }
 

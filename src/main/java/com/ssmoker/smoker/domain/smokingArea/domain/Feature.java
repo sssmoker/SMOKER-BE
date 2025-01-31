@@ -54,9 +54,7 @@ public class Feature {
     @Column(nullable = false)
     private Boolean hasRainProtection; // 비바람 차단 시설
 
-    /**
-     * Feature 업데이트 메서드 (불변성을 유지하면서 새로운 객체 생성)
-     */
+
     public Feature update(Feature updatedFeature) {
         return new Feature(
                 updatedFeature.hasAirPurifier,
