@@ -3,28 +3,31 @@ package com.ssmoker.smoker.domain.review.service;
 import static com.ssmoker.smoker.global.exception.code.ErrorStatus.REVIEW_BAD_REQUEST;
 
 import com.ssmoker.smoker.domain.member.domain.Member;
+import com.ssmoker.smoker.domain.member.exception.MemberNotFoundException;
+import com.ssmoker.smoker.domain.member.repository.MemberRepository;
 import com.ssmoker.smoker.domain.review.domain.Review;
-import com.ssmoker.smoker.domain.review.dto.ReviewStarsInfoResponse;
+import com.ssmoker.smoker.domain.review.dto.*;
 import com.ssmoker.smoker.domain.review.exception.ReviewPageNumberException;
-import com.ssmoker.smoker.domain.review.dto.ReviewGetResponse;
-import com.ssmoker.smoker.domain.review.dto.ReviewRequest;
 import com.ssmoker.smoker.domain.review.exception.ReviewNotFoundException;
 import com.ssmoker.smoker.domain.review.repository.ReviewRepository;
-import com.ssmoker.smoker.domain.review.dto.ReviewResponse;
-import com.ssmoker.smoker.domain.review.dto.ReviewResponses;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaRepository;
 import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
+import com.ssmoker.smoker.global.aws.s3.AmazonS3Manager;
+import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.ssmoker.smoker.global.exception.code.ErrorStatus.*;
 
@@ -37,6 +40,8 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final SmokingAreaRepository smokingAreaRepository;
+    private final MemberRepository memberRepository;
+    private final AmazonS3Manager amazonS3Manager;
 
     public ReviewResponses getReviewsBySmokingAreaId(Long id, int pageNumber) {
         if (pageNumber < 0) {
@@ -89,19 +94,37 @@ public class ReviewService {
     }
 
     @Transactional
-    public Long saveReview(Long smokingAreaId, ReviewRequest reviewRequest, Member member) {
+    public Long saveReview(Long smokingAreaId, MultipartFile img, ReviewRequest request, Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
                 .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
 
-        Review review = Review.builder()
-                .smokingArea(smokingArea)
-                .score(reviewRequest.score())
-                .content(reviewRequest.content())
-                .imageUrl(reviewRequest.imageUrl())
-                .member(member).build();
+        String imageUrl = uploadImageIfExists(img);
 
-        Review savedReview = reviewRepository.save(review);
-        return savedReview.getId();
+        Review newReview = Review.builder()
+                .score(request.score())
+                .content(request.content())
+                .member(member)
+                .imageUrl(imageUrl)
+                .smokingArea(smokingArea)
+                .build();
+
+        reviewRepository.save(newReview);
+        return newReview.getId();
+    }
+
+    private String uploadImageIfExists(MultipartFile img) {
+        if (img == null || img.isEmpty()) {
+            return null;
+        }
+        try {
+            final String uuid = UUID.randomUUID().toString();
+            final String keyName = amazonS3Manager.generateProfileKeyName(uuid);
+            return amazonS3Manager.uploadFile(keyName, img);
+        } catch (IOException e) {
+            throw new RuntimeException("파일 업로드 오류입니다.");
+        }
     }
 
     public ReviewGetResponse getReviewById(Long reviewId) {
