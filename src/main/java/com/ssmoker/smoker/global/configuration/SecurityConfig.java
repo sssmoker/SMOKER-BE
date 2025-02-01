@@ -34,7 +34,11 @@ public class SecurityConfig {
             ALLOW_SMOKING_AREA_URL,
             ALLOW_REVIEW_URL,
             "/api/member/notices",
-            "/api/member/notices/detail/{noticeId}",//공지사항
+            "/api/member/notices/detail/{noticeId}",
+            "/api/smoking-area/simple/{smokingAreaId}",
+            "/api/smoking-area/marker",
+            "/api/smoking-area/list",
+            "/api/smoking-area/search",
             "/test/**",
             //등등 추가 및 수정해주세요
             "/health",
