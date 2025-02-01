@@ -30,7 +30,7 @@ public class SmokingArea extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
     private String smokingAreaName;
 
     @Embedded
@@ -44,7 +44,6 @@ public class SmokingArea extends BaseEntity {
     // 공공기관 데이터와 사용자 데이터를 분리 (수정 가능)
     private Boolean isOpenData = false;
 
-    @NotNull
     private String areaType;
 
     @OneToMany(mappedBy = "smokingArea", cascade = CascadeType.ALL, orphanRemoval = true)
