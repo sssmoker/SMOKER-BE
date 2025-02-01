@@ -13,6 +13,7 @@ import com.ssmoker.smoker.global.exception.GeneralException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -109,8 +110,10 @@ public class SmokingAreaController {
     }
 
     @Operation(summary = "구글 OCR 검증 및 S3 이미지 저장")
-    @PostMapping("/verify")
-    public ApiResponse<?> verifySmokingAreaOCR(@RequestParam("file") MultipartFile file) throws IOException {
+    @PostMapping(value = "/verify", consumes = "multipart/form-data")
+    public ApiResponse<?> verifySmokingAreaOCR(
+            @Parameter(description = "업로드할 이미지 파일", required = true)
+            @RequestParam(value = "file") MultipartFile file) throws IOException {
         if(googleVisionOCRService.isSmokingArea(googleVisionOCRService.detectText(file))) {
             return ApiResponse.of(SuccessStatus.OCR_VERIFY_OK, googleVisionOCRService.uploadSmokingAreaImage(file));
         } else {
