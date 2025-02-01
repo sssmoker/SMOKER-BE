@@ -53,5 +53,5 @@ cloud:
     region:
       static: ap-northeast-2
 open-api:
-  key: ${OPEN-API-KEY}
-  check-key: ${CHECK-KEY}
+  key: ${OPEN_API_KEY}
+  check-key: ${CHECK_KEY}
