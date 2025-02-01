@@ -22,17 +22,19 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
     /**
-     * 가독성을 위해 api 요청중에서 로그인이 필요없는 것 url 많은 api 들은 일단 전부 허용되게 처리해뒀고(/**)
-     * 해당 api 에서 로그인이 필요한 것이 있으면 configureAuthorization 에 해당 url 추가하시면 됩니다.
+     * 가독성을 위해 api 요청중에서 로그인이 필요없는 것 url 많은 api 들은 일단 전부 허용되게 처리해뒀고(/**) 해당 api 에서 로그인이 필요한 것이 있으면
+     * configureAuthorization 에 해당 url 추가하시면 됩니다.
      */
     private static final String ALLOW_REVIEW_URL = "/api/reviews/**";
     private static final String ALLOW_SMOKING_AREA_URL = "/api/smoking-area/**";
     private static final String ALLOW_AUTH_URL = "/api/auth/**";
+    private static final String ALLOW_OPEN_API = "/api/open-api/**";
 
     private static final String[] SECURITY_ALLOW_ARRAY = { //인증 없이 접근 가능한 엔드 포인트
             ALLOW_AUTH_URL,
             ALLOW_SMOKING_AREA_URL,
             ALLOW_REVIEW_URL,
+            ALLOW_OPEN_API,
             "/api/member/notices",
             "/api/member/notices/detail/{noticeId}",
             "/api/smoking-area/simple/{smokingAreaId}",

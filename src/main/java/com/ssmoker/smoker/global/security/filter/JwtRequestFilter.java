@@ -87,7 +87,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 || path.startsWith("/webjars")
                 || path.equals("/swagger-ui.html")
                 // open-api
-                || path.startsWith("/api/open-api/")
+                || path.startsWith("/api/open-api")
 
                 // eb health check 용 API
                 || path.equals("/health")
