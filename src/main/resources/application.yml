@@ -8,7 +8,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -46,7 +46,7 @@ cloud:
       path:
         review: review
         smokingArea: area
-        profile : profile
+        profile: profile
     credentials:
       access-key: ${AWS_ACCESS_KEY}
       secret-key: ${AWS_SECRET_KEY}
@@ -55,3 +55,4 @@ cloud:
 
 open-api:
   key: ${OPEN-API-KEY}
+  check-key: ${CHECK-KEY}

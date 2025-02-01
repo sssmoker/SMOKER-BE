@@ -46,6 +46,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                         principalDetailsService.loadUserByUsername(userId.toString());
 
                 if (userDetails != null) {
+
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                             new UsernamePasswordAuthenticationToken(
                                     userDetails, "", userDetails.getAuthorities());
@@ -88,6 +89,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 || path.equals("/swagger-ui.html")
                 || path.equals("/health")
                 || path.startsWith("/api/auth/login/")
+                // open-api
+                || path.startsWith("/api/open-api/")
 
                 // test
                 || path.startsWith("/test")
