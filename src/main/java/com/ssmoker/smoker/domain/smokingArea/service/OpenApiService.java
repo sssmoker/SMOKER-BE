@@ -1,13 +1,11 @@
 package com.ssmoker.smoker.domain.smokingArea.service;
 
-import static com.ssmoker.smoker.domain.smokingArea.domain.Feature.makeEmptyFeature;
 
 import com.ssmoker.smoker.domain.smokingArea.domain.Feature;
 import com.ssmoker.smoker.domain.smokingArea.domain.Location;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.dto.KaKaoApiResponse.KaKaoResponse;
 import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaJdbcRepository;
-import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaRepository;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -49,6 +47,8 @@ public class OpenApiService {
 
     public void getPublicData() throws URISyntaxException {
         // 각 URL 별로 데이터를 모아서 벌크 인서트 진행
+
+
         for (String baseUrl : BASE_URLS) {
             int pageNumber = 1;
             boolean hasNextPage = true;
@@ -106,7 +106,7 @@ public class OpenApiService {
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
                 } catch (RuntimeException e) {
-                    log.warn("지오코딩 실패: {}", address);
+
                     continue;
                 }
             }
@@ -114,10 +114,8 @@ public class OpenApiService {
             if ((latitude != null && longitude != null) && address == null) {
                 address = kaKaoApiService.getAddress(latitude, longitude);
                 if (address == null) {
-                    log.warn("지오코딩 실패: {},{}", latitude, longitude);
                     continue;
                 }
-                log.info("address: {}", address);
             }
             if (address == null || latitude == null || longitude == null) {
                 continue; // 잘못된 데이터 무시
@@ -148,7 +146,6 @@ public class OpenApiService {
             try {
                 return Double.parseDouble((String) value);
             } catch (NumberFormatException e) {
-                log.warn("Double 변환 실패: {}", value);
                 return null;
             }
         }
