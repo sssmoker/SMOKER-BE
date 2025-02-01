@@ -46,9 +46,12 @@ cloud:
       path:
         review: review
         smokingArea: area
-        profile : profile
+        profile: profile
     credentials:
       access-key: ${AWS_ACCESS_KEY}
       secret-key: ${AWS_SECRET_KEY}
     region:
       static: ap-northeast-2
+open-api:
+  key: ${OPEN-API-KEY}
+  check-key: ${CHECK-KEY}
