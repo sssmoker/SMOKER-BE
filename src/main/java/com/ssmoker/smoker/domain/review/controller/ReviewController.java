@@ -51,7 +51,7 @@ public class ReviewController {
 
     @Operation(summary = "흡연 구역 리뷰 등록",
             description = "흡연 구역 리뷰를 등록합니다.")
-    @PostMapping(value = "/write/{smokingAreaId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/{smokingAreaId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<Long> createReview(@PathVariable Long smokingAreaId,
                                           @RequestPart(value = "request") ReviewRequest request,
                                           @RequestPart (value = "image", required = false) MultipartFile image,
