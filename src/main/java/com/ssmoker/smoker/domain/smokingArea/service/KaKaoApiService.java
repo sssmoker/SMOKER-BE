@@ -42,9 +42,6 @@ public class KaKaoApiService {
                 entity,
                 KaKaoApiResponse.class);
 
-        System.out.println("response.getBody().getDocuments()" + response.getBody().getDocuments());
-        System.out.println("response.getStatusCode()" + response.getStatusCode());
-
         //JSONObject jsonResponse = new JSONObject(response.getBody());
 
         //JsonArray documents = jsonResponse.getAsJsonArray("documents");
