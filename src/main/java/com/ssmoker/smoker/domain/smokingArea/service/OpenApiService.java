@@ -6,9 +6,11 @@ import com.ssmoker.smoker.domain.smokingArea.domain.Feature;
 import com.ssmoker.smoker.domain.smokingArea.domain.Location;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.dto.KaKaoApiResponse.KaKaoResponse;
+import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaJdbcRepository;
 import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaRepository;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,7 +37,6 @@ public class OpenApiService {
             "https://api.odcloud.kr/api/15080296/v1/uddi:87a3b7f3-fa03-4345-8001-b0fb950a1ab1",   // 중구
             "https://api.odcloud.kr/api/15073796/v1/uddi:17fbd06c-45bb-48aa-9be7-b26dbc708c9c"    // 용산구
     };
-
     private static final int PER_PAGE = 100;
     private static final String HAS_KEY = "키가 존재하지 않습니다";
 
@@ -43,27 +44,32 @@ public class OpenApiService {
     private String encodeKey;
 
     private final RestTemplate restTemplate;
-    private final SmokingAreaRepository smokingAreaRepository;
+    private final SmokingAreaJdbcRepository smokingAreaJdbcRepository;
     private final KaKaoApiService kaKaoApiService;
 
     public void getPublicData() throws URISyntaxException {
+        // 각 URL 별로 데이터를 모아서 벌크 인서트 진행
         for (String baseUrl : BASE_URLS) {
             int pageNumber = 1;
             boolean hasNextPage = true;
+            List<SmokingArea> smokingAreaList = new ArrayList<>();
 
             while (hasNextPage) {
                 ResponseEntity<Map> response = fetchDataFromApi(baseUrl, pageNumber, encodeKey);
-
                 if (response.getStatusCode().is2xxSuccessful()) {
                     List<Map<String, Object>> dataList = (List<Map<String, Object>>) response.getBody().get("data");
-
                     if (dataList.isEmpty()) {
-                        hasNextPage = false; // 데이터가 없으면 종료
+                        hasNextPage = false;
                     } else {
-                        storeOpenData(dataList);
-                        pageNumber++; // 다음 페이지로 이동
+                        // 페이지별 데이터를 처리해 SmokingArea 객체 리스트에 추가
+                        smokingAreaList.addAll(processDataList(dataList));
+                        pageNumber++;
                     }
                 }
+            }
+            // 해당 URL의 모든 데이터를 모은 후 벌크 인서트 실행
+            if (!smokingAreaList.isEmpty()) {
+                smokingAreaJdbcRepository.bulkInsert(smokingAreaList);
             }
         }
     }
@@ -71,13 +77,7 @@ public class OpenApiService {
     private ResponseEntity<Map> fetchDataFromApi(String baseUrl, int pageNumber, String apiKey)
             throws URISyntaxException {
         String apiUrl = baseUrl + "?page=" + pageNumber + "&perPage=" + PER_PAGE + "&serviceKey=" + apiKey;
-
-        return restTemplate.exchange(
-                new URI(apiUrl),
-                HttpMethod.GET,
-                getHttpEntity(),
-                Map.class
-        );
+        return restTemplate.exchange(new URI(apiUrl), HttpMethod.GET, getHttpEntity(), Map.class);
     }
 
     private HttpEntity<?> getHttpEntity() {
@@ -86,7 +86,9 @@ public class OpenApiService {
         return new HttpEntity<>(headers);
     }
 
-    private void storeOpenData(List<Map<String, Object>> dataList) {
+    // 데이터를 가공하여 SmokingArea 객체 리스트로 변환하는 메서드
+    private List<SmokingArea> processDataList(List<Map<String, Object>> dataList) {
+        List<SmokingArea> list = new ArrayList<>();
         for (Map<String, Object> data : dataList) {
             String addressKey = findKey(data, List.of("도로", "주소")).orElse(HAS_KEY);
             String areaTypeKey = findKey(data, List.of("형태", "구분")).orElse(HAS_KEY);
@@ -96,10 +98,10 @@ public class OpenApiService {
             Double latitude = convertToDouble(data.get("위도"));
             Double longitude = convertToDouble(data.get("경도"));
 
+            // 좌표가 없으면 카카오 API를 통해 보완
             if ((latitude == null || longitude == null) && address != null) {
                 try {
                     String processedAddress = address.split("[,(]")[0].trim();
-
                     KaKaoResponse location = kaKaoApiService.getCenterLocationFromKakao(processedAddress);
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
@@ -108,6 +110,7 @@ public class OpenApiService {
                     continue;
                 }
             }
+            // 좌표는 있는데 주소가 없으면 좌표로부터 주소 조회
             if ((latitude != null && longitude != null) && address == null) {
                 address = kaKaoApiService.getAddress(latitude, longitude);
                 if (address == null) {
@@ -116,16 +119,16 @@ public class OpenApiService {
                 }
                 log.info("address: {}", address);
             }
-
             if (address == null || latitude == null || longitude == null) {
-                continue; // 잘못된 데이터는 무시
+                continue; // 잘못된 데이터 무시
             }
-
             Location location = new Location(address, latitude, longitude);
-            Feature feature = makeEmptyFeature();
+            // 서비스에서 feature 를 초기화하여 사용
+            Feature feature = Feature.makeEmptyFeature();
             SmokingArea smokingArea = new SmokingArea(address, location, feature, areaType);
-            smokingAreaRepository.save(smokingArea);
+            list.add(smokingArea);
         }
+        return list;
     }
 
     private Optional<String> findKey(Map<String, Object> data, List<String> priorityKeys) {
@@ -139,16 +142,16 @@ public class OpenApiService {
             return null;
         }
         if (value instanceof Double) {
-            return (Double) value;  // 이미 Double이면 그대로 반환
+            return (Double) value;
         }
         if (value instanceof String) {
             try {
-                return Double.parseDouble((String) value); // String이면 변환 시도
+                return Double.parseDouble((String) value);
             } catch (NumberFormatException e) {
                 log.warn("Double 변환 실패: {}", value);
-                return null;  // 변환 실패 시 null 반환
+                return null;
             }
         }
-        return null;  // 다른 타입이면 null 반환
+        return null;
     }
 }

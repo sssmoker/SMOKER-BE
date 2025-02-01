@@ -29,8 +29,8 @@ public class Feature {
     @Column(nullable = false)
     private Boolean isAccessible; // 휠체어 진입 가능 여부
 
-    @Column(nullable = false)
-    private Boolean hasCCTV; // CCTV 설치 여부
+    @Column(name = "has_cctv", nullable = false)
+    private Boolean hasCCTV;
 
     @Column(nullable = false)
     private Boolean hasEmergencyButton; // 비상 버튼
