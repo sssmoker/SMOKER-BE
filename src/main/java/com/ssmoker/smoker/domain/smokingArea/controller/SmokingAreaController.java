@@ -48,7 +48,7 @@ public class SmokingAreaController {
 
     @Operation(summary = "흡연 구역 마커 클릭(모달)",
             description = "흡연구역 마커 클릭 시 다른 작은 창으로 마커 정보 알려주는 역할")
-    @GetMapping("/{smokingAreaId}/simple")
+    @GetMapping("/simple/{smokingAreaId}")
     public ApiResponse<MapResponse.MarkerResponse> getSmokingAreaMarker(
             @PathVariable(name = "smokingAreaId") Long smokingAreaId,
             @RequestParam(name = "userLat") Double userLat,
