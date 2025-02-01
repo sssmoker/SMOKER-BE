@@ -73,4 +73,30 @@ public class Feature {
                 updatedFeature.hasRainProtection
         );
     }
+
+    public Feature(Boolean hasAirPurifier, Boolean hasAirConditioning, Boolean hasChair, Boolean hasTrashBin,
+                   Boolean hasVentilationSystem, Boolean isAccessible, Boolean hasCCTV, Boolean hasEmergencyButton,
+                   Boolean hasVoiceGuidance, Boolean hasFireExtinguisher, Boolean isRegularlyCleaned,
+                   Boolean hasCigaretteDisposal, Boolean hasSunshade, Boolean hasRainProtection) {
+        this.hasAirPurifier = hasAirPurifier != null ? hasAirPurifier : false;
+        this.hasAirConditioning = hasAirConditioning != null ? hasAirConditioning : false;
+        this.hasChair = hasChair != null ? hasChair : false;
+        this.hasTrashBin = hasTrashBin != null ? hasTrashBin : false;
+        this.hasVentilationSystem = hasVentilationSystem != null ? hasVentilationSystem : false;
+        this.isAccessible = isAccessible != null ? isAccessible : false;
+        this.hasCCTV = hasCCTV != null ? hasCCTV : false;
+        this.hasEmergencyButton = hasEmergencyButton != null ? hasEmergencyButton : false;
+        this.hasVoiceGuidance = hasVoiceGuidance != null ? hasVoiceGuidance : false;
+        this.hasFireExtinguisher = hasFireExtinguisher != null ? hasFireExtinguisher : false;
+        this.isRegularlyCleaned = isRegularlyCleaned != null ? isRegularlyCleaned : false;
+        this.hasCigaretteDisposal = hasCigaretteDisposal != null ? hasCigaretteDisposal : false;
+        this.hasSunshade = hasSunshade != null ? hasSunshade : false;
+        this.hasRainProtection = hasRainProtection != null ? hasRainProtection : false;
+    }
+
+    public static Feature makeEmptyFeature() {
+        return new Feature(false, false, false, false, false, false, false, false, false, false, false, false, false,
+                false);
+    }
+}
 }

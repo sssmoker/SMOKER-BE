@@ -41,6 +41,9 @@ public class SmokingArea extends BaseEntity {
 
     private String imageUrl;
 
+    // 공공기관 데이터와 사용자 데이터를 분리 (수정 가능)
+    private Boolean isOpenData = false;
+
     @NotNull
     private String areaType;
 
@@ -55,5 +58,13 @@ public class SmokingArea extends BaseEntity {
 
     public void updateFeature(Feature updatedFeature) {
         this.feature = this.feature.update(updatedFeature);
+    }
+
+    public SmokingArea(String addressName, Location location, Feature feature, String areaType) {
+        this.smokingAreaName = addressName;
+        this.location = location;
+        this.feature = feature;
+        this.areaType = areaType;
+        this.isOpenData = true;
     }
 }
