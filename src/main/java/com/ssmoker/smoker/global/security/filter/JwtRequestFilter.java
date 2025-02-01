@@ -91,8 +91,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
                 // test
                 || path.startsWith("/test")
-                // fixme : 차라리 관리자 권한을 가진 유저만 호출할 수 있도록 변경해야할 듯
-                || path.startsWith("/api/open-api/")
+
                 //smokingArea
                 || path.startsWith("/api/smoking-area/marker")
                 || path.startsWith("/api/smoking-area/{smokingAreaId}/simple")

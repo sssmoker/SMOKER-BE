@@ -41,7 +41,6 @@ public class SmokingArea extends BaseEntity {
 
     private String imageUrl;
 
-    @NotNull
     private String areaType;
 
     // 공공기관 데이터와 사용자 데이터를 분리 (수정 가능)
@@ -56,11 +55,11 @@ public class SmokingArea extends BaseEntity {
     @OneToMany(mappedBy = "smokingArea", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SavedSmokingArea> savedSmokingAreas = new ArrayList<>();
 
-    public SmokingArea(String addressName, Location location, Feature feature) {
+    public SmokingArea(String addressName, Location location, Feature feature, String areaType) {
         this.smokingAreaName = addressName;
         this.location = location;
         this.feature = feature;
-        this.areaType = "임시";
+        this.areaType = areaType;
     }
 
     public void updateFeature(Feature updatedFeature) {
