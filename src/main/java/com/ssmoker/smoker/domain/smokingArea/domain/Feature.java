@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 @Embeddable
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 public class Feature {
 
