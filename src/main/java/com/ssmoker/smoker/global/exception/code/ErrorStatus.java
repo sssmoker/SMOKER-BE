@@ -20,7 +20,7 @@ public enum ErrorStatus implements BaseErrorCode {
     NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4002", "닉네임은 필수 입니다."),
     // Review
     REVIEW_BAD_REQUEST(HttpStatus.BAD_REQUEST, "REVIEW4001", "페이지 넘버는 0 이상이어야 합니다."),
-    REVIEW_CONTENT_EXCEED(HttpStatus.BAD_REQUEST, "REVIEW4002", "리뷰 내용은 1000자 이내여야 합니다." ),
+    REVIEW_CONTENT_EXCEED(HttpStatus.BAD_REQUEST, "REVIEW4002", "리뷰 내용은 1000자 이내여야 합니다."),
     REVIEW_NOT_FOUND(HttpStatus.BAD_REQUEST, "REVIEW4003", "리뷰가 없습니다"),
 
     // SmokingArea
@@ -29,7 +29,7 @@ public enum ErrorStatus implements BaseErrorCode {
     SMOKING_KEYWORD_NOT_FOUND(HttpStatus.BAD_REQUEST, "AREA4003", "이미지에서 '흡연' 또는 'Smoking Area' 문구를 감지할 수 없습니다."),
     OCR_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "AREA4004", "OCR API 요청 중 오류가 발생했습니다."),
     TEXT_NOT_DETECTED(HttpStatus.BAD_REQUEST, "AREA4005", "텍스트를 감지할 수 없습니다."),
-
+    SAVED_SMOKING_AREA_NOT_FOUND(HttpStatus.NOT_FOUND, "AREA4006", "저장한 흡연 구역을 찾을 수 없습니다."),
 
     //Notice
     NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTICE4001", "공지사항이 존재하지 않습니다."),
