@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Builder
 public class SavedSmokingArea extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

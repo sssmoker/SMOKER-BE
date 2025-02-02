@@ -2,6 +2,7 @@ package com.ssmoker.smoker.domain.smokingArea.dto;
 
 import com.ssmoker.smoker.domain.smokingArea.domain.Location;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,14 +13,14 @@ public class MapResponse {
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class SmokingMarkersResponse{
+    public static class SmokingMarkersResponse {
         private final List<SmokingAreaMarkersResponse> makers;
     }
 
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class MarkerResponse{
+    public static class MarkerResponse {
         private final String imageUrl;
         private final double Rating;
         private final double distance;
@@ -30,7 +31,14 @@ public class MapResponse {
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class SmokingAreaInfoWithRequest{
+    public static class SmokingAreaListResponse {
+        private final List<SmokingAreaInfoWithRequest> smokingAreas;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class SmokingAreaInfoWithRequest {
         private final Long smokingAreaId;
         private final String smokingAreaName;
         private final String imageUrl;
@@ -39,12 +47,5 @@ public class MapResponse {
         private final Double Rating;
         private final int reviewCount;
         private final int savedCount;
-    }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    public static class SmokingAreaListResponse{
-        private final List<SmokingAreaInfoWithRequest> smokingAreas;
     }
 }
