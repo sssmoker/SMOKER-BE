@@ -31,14 +31,17 @@ public class AmazonS3Manager {
         }
         return amazonS3.getUrl(amazonConfig.getBucket(), keyName).toString();
     }
+
     // 리뷰 사진 저장은 해당 url 을 사용하여 저장
     public String generateReviewKeyName(String uuid) {
-        return amazonConfig.getReviewPath() + '/'  + uuid;
+        return amazonConfig.getReviewPath() + '/' + uuid;
     }
+
     // 프로필 사진 저장은 해당 url 을 사용하여 저장
     public String generateProfileKeyName(String uuid) {
-        return amazonConfig.getProfilePath() + '/'  + uuid;
+        return amazonConfig.getProfilePath() + '/' + uuid;
     }
+
     // 흡연 구역 사진 저장은 해당 url 을 사용하여 저장
     public String generateSmokingAreaKeyName(String uuid) {
         return amazonConfig.getSmokingAreaPath() + '/' + uuid;

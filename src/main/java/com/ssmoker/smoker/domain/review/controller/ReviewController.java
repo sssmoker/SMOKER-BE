@@ -1,9 +1,6 @@
 package com.ssmoker.smoker.domain.review.controller;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssmoker.smoker.domain.review.dto.*;
-import com.ssmoker.smoker.domain.member.domain.Member;
-import com.ssmoker.smoker.domain.member.service.MemberService;
 import com.ssmoker.smoker.domain.review.service.ReviewService;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
@@ -14,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,10 +50,10 @@ public class ReviewController {
     @PostMapping(value = "/{smokingAreaId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<Long> createReview(@PathVariable Long smokingAreaId,
                                           @RequestPart(value = "request") ReviewRequest request,
-                                          @RequestPart (value = "image", required = false) MultipartFile image,
+                                          @RequestPart(value = "image", required = false) MultipartFile image,
                                           @AuthUser Long memberId) {
-        Long reviewId = reviewService.saveReview(smokingAreaId,image,request,memberId);
-        return ApiResponse.of(REVIEW_OK,reviewId);
+        Long reviewId = reviewService.saveReview(smokingAreaId, image, request, memberId);
+        return ApiResponse.of(REVIEW_OK, reviewId);
     }
 
     @Operation(summary = "리뷰 작성 완료 페이지")
