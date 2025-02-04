@@ -1,7 +1,7 @@
 package com.ssmoker.smoker.domain.smokingArea.domain;
 
 import com.ssmoker.smoker.domain.member.domain.Member;
-import com.ssmoker.smoker.global.common.BaseEntity;
+import com.ssmoker.smoker.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

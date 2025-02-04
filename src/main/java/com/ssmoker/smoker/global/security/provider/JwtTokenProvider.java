@@ -1,6 +1,5 @@
 package com.ssmoker.smoker.global.security.provider;
 
-import static com.ssmoker.smoker.global.exception.code.ErrorStatus.AUTH_EXTRACT_ERROR;
 import static com.ssmoker.smoker.global.exception.code.ErrorStatus.AUTH_EXTRACT_ERROR_TEST;
 
 import com.ssmoker.smoker.global.security.exception.AuthException;

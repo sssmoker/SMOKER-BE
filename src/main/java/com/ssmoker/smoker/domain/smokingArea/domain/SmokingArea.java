@@ -2,7 +2,7 @@ package com.ssmoker.smoker.domain.smokingArea.domain;
 
 import com.ssmoker.smoker.domain.review.domain.Review;
 import com.ssmoker.smoker.domain.updatedHistory.domain.UpdatedHistory;
-import com.ssmoker.smoker.global.common.BaseEntity;
+import com.ssmoker.smoker.domain.common.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

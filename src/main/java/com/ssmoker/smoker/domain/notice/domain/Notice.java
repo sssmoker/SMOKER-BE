@@ -1,6 +1,6 @@
 package com.ssmoker.smoker.domain.notice.domain;
 
-import com.ssmoker.smoker.global.common.BaseEntity;
+import com.ssmoker.smoker.domain.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
