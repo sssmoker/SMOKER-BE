@@ -2,7 +2,6 @@ package com.ssmoker.smoker.domain.review.repository;
 
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.review.domain.Review;
-import com.ssmoker.smoker.domain.review.dto.ReviewStarsInfoResponse;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

@@ -1,6 +1,5 @@
 package com.ssmoker.smoker.domain.updatedHistory.service;
 
-import com.ssmoker.smoker.domain.updatedHistory.domain.UpdatedHistory;
 import com.ssmoker.smoker.domain.updatedHistory.dto.UpdatedHistoryResponse;
 import com.ssmoker.smoker.domain.updatedHistory.dto.UpdatedHistoryResponses;
 import com.ssmoker.smoker.domain.updatedHistory.repository.UpdatedHistoryRepository;

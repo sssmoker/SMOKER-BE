@@ -1,6 +1,5 @@
 package com.ssmoker.smoker.domain.smokingArea.service;
 
-
 import com.ssmoker.smoker.domain.smokingArea.domain.Feature;
 import com.ssmoker.smoker.domain.smokingArea.domain.Location;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
@@ -47,7 +46,6 @@ public class OpenApiService {
 
     public void getPublicData() throws URISyntaxException {
         // 각 URL 별로 데이터를 모아서 벌크 인서트 진행
-
 
         for (String baseUrl : BASE_URLS) {
             int pageNumber = 1;

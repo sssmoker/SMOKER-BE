@@ -1,6 +1,5 @@
 package com.ssmoker.smoker.domain.updatedHistory.dto;
 
-import com.ssmoker.smoker.domain.updatedHistory.domain.UpdatedHistory;
 import java.util.List;
 
 public record UpdatedHistoryResponses(List<UpdatedHistoryResponse> updatedHistories,
