@@ -48,12 +48,12 @@ public class AuthService {
                 memberRepository.findByEmail(
                         kakaoProfile.getKakaoAccount().getEmail());
 
-
         // 가입자 혹은 비가입자 체크해서 로그인 처리
         if (queryMember.isPresent()) {
             Member member = queryMember.get();
             return getOauthResponseForPresentUser(member, queryMember);
         }
+
         Member member = memberRepository.save(AuthConverter.kakaoToMember(kakaoProfile));
         return getOauthResponseForNewUser(member);
     }
@@ -81,6 +81,7 @@ public class AuthService {
             Member member = queryMember.get();
             return getOauthResponseForPresentUser(member, queryMember);
         }
+
         Member member = memberRepository.save(AuthConverter.googleToMember(googleProfile));
         return getOauthResponseForNewUser(member);
     }
