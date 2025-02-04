@@ -37,7 +37,11 @@ public enum SuccessStatus implements BaseCode {
     PROFILE_REVIEWS_OK(HttpStatus.OK, "PROFILE2004", "내가 쓴 리뷰 조회 성공"),
     PROFILE_UPDATE_OK(HttpStatus.OK, "PROFILE2005", "나의 업데이트 히스토리 조회 성공"),
     // Review 관련
-    REVIEW_OK(HttpStatus.OK, "REVIEW2001", "리뷰가 등록 되었습니다.")
+    REVIEW_OK(HttpStatus.OK, "REVIEW2001", "리뷰가 등록 되었습니다."),
+
+    //question 관련
+    QUESTION_OK(HttpStatus.OK, "QUESTION2001", "자주 묻는 질문 리스트 조회가 완료되었습니다."),
+    QUESTION_DETAIL_OK(HttpStatus.OK, "QUESTION2002", "자주 묻는 질문 세부 조회가 완료되었습니다."),
     ;
 
     private final HttpStatus httpStatus;

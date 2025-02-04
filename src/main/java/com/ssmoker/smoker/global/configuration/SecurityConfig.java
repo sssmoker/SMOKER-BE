@@ -35,6 +35,8 @@ public class SecurityConfig {
             ALLOW_SMOKING_AREA_URL,
             ALLOW_REVIEW_URL,
             ALLOW_OPEN_API,
+            "/api/member/question",
+            "/api/member/question/detail/{questionId}",
             "/api/member/notices",
             "/api/member/notices/detail/{noticeId}",
             "/api/smoking-area/simple/{smokingAreaId}",
