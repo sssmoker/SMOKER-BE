@@ -1,4 +1,4 @@
-package com.ssmoker.smoker.global.common;
+package com.ssmoker.smoker.domain.common;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
