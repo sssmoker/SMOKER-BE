@@ -1,6 +1,6 @@
 package com.ssmoker.smoker.domain.question.domain;
 
-import com.ssmoker.smoker.global.common.BaseEntity;
+import com.ssmoker.smoker.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
