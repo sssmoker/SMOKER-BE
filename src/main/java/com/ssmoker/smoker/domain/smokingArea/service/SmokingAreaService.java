@@ -207,7 +207,7 @@ public class SmokingAreaService {
     private List<MapResponse.SmokingAreaInfoWithRequest> getSmokingAreaWithSearching(
             SmokingAreaRequest.SearchRequest searchRequest
     ) {
-        //검새거 가공 : '동'으로 끝나면 제거
+        //검색어 가공 : '동'으로 끝나면 제거
         String searchKeyword = searchRequest.getSearch();
         if (searchKeyword.endsWith("동")){
             searchKeyword
@@ -216,18 +216,14 @@ public class SmokingAreaService {
         }
 
         //카카오 api 를 통해 키워드의 중심 좌표 찾기
-        KaKaoApiResponse.KaKaoResponse center
+        /*KaKaoApiResponse.KaKaoResponse center
                 = kakaoApiService.getCenterLocationFromKakao
-                (searchKeyword);
-
-
+                (searchKeyword);*/
 
         //검색어로 찾기
         List<SmokingArea> smokingAreas
                 = smokingAreaRepository.findBySearch(
-                searchKeyword,
-                center.getLatitude(),
-                center.getLongitude());
+                searchKeyword);
 
         //SmokingAreaInfoWithRequest dto에 넣기
         return smokingAreas.stream().map(smokingArea ->
