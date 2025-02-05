@@ -2,7 +2,6 @@ package com.ssmoker.smoker.domain.smokingArea.controller;
 
 import com.ssmoker.smoker.domain.smokingArea.dto.*;
 import com.ssmoker.smoker.domain.smokingArea.dto.MapResponse;
-//import com.ssmoker.smoker.domain.smokingArea.dto.ReviewResponses;
 import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaRequest;
 import com.ssmoker.smoker.domain.smokingArea.service.GoogleVisionOCRService;
 import com.ssmoker.smoker.domain.smokingArea.service.SmokingAreaService;

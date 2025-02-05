@@ -23,7 +23,7 @@ public class UpdatedHistoryController {
     @Operation(summary = "업데이트 내역 조회, 흡연 구역 기준", description = "쿼리 스트링으로 원하는 페이지를 넘겨주시면 됩니다(0Page 부터 시작).")
     @GetMapping("/{smokingAreaId}/smokingArea")
     public ApiResponse<UpdatedHistoryResponses> getUpdatedHistoryBySmokingArea(@PathVariable Long smokingAreaId,
-                                                                  @RequestParam  @Min(0) @NotNull Integer page) {
+                                                                               @RequestParam @Min(0) @NotNull Integer page) {
         UpdatedHistoryResponses result = updatedHistoryService.getUpdatedHistoryBySmokingAreaId(smokingAreaId, page);
 
         return ApiResponse.onSuccess(result);
@@ -32,7 +32,7 @@ public class UpdatedHistoryController {
     @GetMapping("/{memberId}/member")
     @Operation(summary = "업데이트 내역 조회, 멤버 기준", description = "쿼리 스트링으로 원하는 페이지를 넘겨주시면 됩니다(0Page 부터 시작).")
     public ApiResponse<UpdatedHistoryResponses> getUpdatedHistoryByMember(@PathVariable Long memberId,
-                                                                  @RequestParam  @Min(0) @NotNull Integer page) {
+                                                                          @RequestParam @Min(0) @NotNull Integer page) {
         UpdatedHistoryResponses result = updatedHistoryService.getUpdatedHistoryByMemberId(memberId, page);
 
         return ApiResponse.onSuccess(result);

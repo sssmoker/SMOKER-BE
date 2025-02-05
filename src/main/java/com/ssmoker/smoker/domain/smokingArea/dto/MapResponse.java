@@ -2,7 +2,6 @@ package com.ssmoker.smoker.domain.smokingArea.dto;
 
 import com.ssmoker.smoker.domain.smokingArea.domain.Location;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 

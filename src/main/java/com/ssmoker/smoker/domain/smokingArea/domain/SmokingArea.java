@@ -2,7 +2,7 @@ package com.ssmoker.smoker.domain.smokingArea.domain;
 
 import com.ssmoker.smoker.domain.review.domain.Review;
 import com.ssmoker.smoker.domain.updatedHistory.domain.UpdatedHistory;
-import com.ssmoker.smoker.global.common.BaseEntity;
+import com.ssmoker.smoker.domain.common.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -11,12 +11,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 import lombok.*;
-import org.hibernate.annotations.Formula;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

@@ -6,16 +6,16 @@ import com.ssmoker.smoker.global.security.authDTO.AuthResponseDTO;
 import com.ssmoker.smoker.global.security.authDTO.AuthResponseDTO.TokenResponse;
 import com.ssmoker.smoker.global.security.authDTO.GoogleProfile;
 import com.ssmoker.smoker.global.security.authDTO.KakaoProfile;
-import lombok.Value;
 
 public class AuthConverter {
+    private static final String DEFAULT_PROFILE_IMG = "https://smoker-bucket.s3.ap-northeast-2.amazonaws.com/%ED%94%84%EB%A1%9C%ED%95%84%EC%9D%B4%EB%AF%B8%EC%A7%80.png";
 
     public static Member kakaoToMember(KakaoProfile kakaoProfile) {
         return Member.builder()
                 .nickName(kakaoProfile.getKakaoNickname().getNickname())
                 .email(kakaoProfile.getKakaoAccount().getEmail())
                 .updateCount(0)
-                .profileImageUrl("https://smoker-bucket.s3.ap-northeast-2.amazonaws.com/profile/595395fe-e76c-4c23-9c02-fb223723214b")
+                .profileImageUrl(DEFAULT_PROFILE_IMG)
                 .status(MemberStatus.ACTIVE)
                 .build();
     }
@@ -25,7 +25,7 @@ public class AuthConverter {
                 .nickName(googleProfile.getNickName())
                 .email(googleProfile.getEmail())
                 .updateCount(0)
-                .profileImageUrl("https://smoker-bucket.s3.ap-northeast-2.amazonaws.com/profile/595395fe-e76c-4c23-9c02-fb223723214b")
+                .profileImageUrl(DEFAULT_PROFILE_IMG)
                 .status(MemberStatus.ACTIVE)
                 .build();
     }

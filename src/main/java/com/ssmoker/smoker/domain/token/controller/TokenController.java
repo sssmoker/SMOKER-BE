@@ -1,13 +1,11 @@
 package com.ssmoker.smoker.domain.token.controller;
 
-import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
 import com.ssmoker.smoker.global.security.authDTO.AuthResponseDTO.TokenResponse;
 import com.ssmoker.smoker.domain.token.service.TokenService;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

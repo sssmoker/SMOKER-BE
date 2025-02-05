@@ -8,8 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest # (3).OS 환경
-    if: github.event.pull_request.merged == true &&
-      github.event.pull_request.base.ref == 'develop'
+
+    # 조건 수정: 수동 실행(workflow_dispatch)에서도 실행되도록 추가
+    if: (github.event_name == 'workflow_dispatch') ||
+      (github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'develop')
 
     steps:
       - name: Checkout
@@ -56,4 +58,3 @@ jobs:
           version_label: github_action-${{ steps.current-time.outputs.formattedTime }}
           region: ap-northeast-2
           deployment_package: deploy/deploy.zip
-          wait_for_deployment: false
