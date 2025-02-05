@@ -50,4 +50,18 @@ public interface SmokingAreaRepository extends JpaRepository<SmokingArea, Long> 
             @Param("search") String search,
             @Param("centerLat") Double centerLat,
             @Param("centerLng") Double centerLng);
+
+    //위도 경도 차 구하기
+    @Query(value = """
+    SELECT MAX(s.latitude) - MIN(s.latitude) as lat_diff
+    from smoking_area s 
+    where s.address LIKE CONCAT('%', :search, '%')""", nativeQuery = true)
+    Number findLatDiff(@Param("search") String search);
+
+    @Query(value = """
+    SELECT MAX(s.longitude) - MIN(s.longitude) as lng_diff
+    from smoking_area s 
+    where s.address LIKE CONCAT('%', :search, '%')""", nativeQuery = true)
+    Number findLngDiff(@Param("search") String search);
+
 }
