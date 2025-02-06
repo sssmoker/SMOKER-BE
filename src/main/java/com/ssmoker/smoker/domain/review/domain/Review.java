@@ -29,7 +29,7 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "smoking_area_id", nullable = false)
     private SmokingArea smokingArea;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private Member member;
 
