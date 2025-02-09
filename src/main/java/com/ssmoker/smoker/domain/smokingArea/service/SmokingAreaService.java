@@ -168,9 +168,9 @@ public class SmokingAreaService {
 
     //정렬(filter)
     private Comparator<MapResponse.SmokingAreaInfoWithRequest> sorting(String filter) {
-        if ("nearest".equals(filter)) {
+        if ("거리순".equals(filter)) {
             return Comparator.comparing(MapResponse.SmokingAreaInfoWithRequest::getDistance); //가까운 순
-        } else if ("highestRated".equals(filter)) {
+        } else if ("평점순".equals(filter)) {
             return Comparator.comparing(MapResponse.SmokingAreaInfoWithRequest::getRating,
                             Comparator.reverseOrder())//별점 높은 순
                     .thenComparing(MapResponse.SmokingAreaInfoWithRequest::getDistance); //같으면 가까운 순
