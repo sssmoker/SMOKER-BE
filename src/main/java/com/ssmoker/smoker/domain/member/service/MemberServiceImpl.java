@@ -53,9 +53,6 @@ public class MemberServiceImpl implements MemberService {
         if (nickname == null || nickname.trim().isEmpty() || nickname.length() > 15) {
             throw new SmokerBadRequestException(ErrorStatus.FORBIDDEN_NICKNAME);
         }
-        if(memberRepository.existsByNickName(nickname)) {
-            throw new SmokerBadRequestException(ErrorStatus.DUPLICATE_NICKNAME);
-        }
         member.setNickName(nickname);
     }
 

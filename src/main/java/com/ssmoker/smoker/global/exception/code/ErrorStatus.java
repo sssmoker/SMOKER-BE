@@ -57,8 +57,7 @@ public enum ErrorStatus implements BaseErrorCode {
     USER_DELETE_FAILED(HttpStatus.NOT_FOUND, "USER_003", "회원 탈퇴에 실패했습니다."),
 
     // Profile 관련
-    FORBIDDEN_NICKNAME(HttpStatus.BAD_REQUEST, "PROFILE_001", "사용할 수 없는 닉네임입니다."),
-    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "PROFILE_002", "이미 존재하는 닉네임입니다"),
+    FORBIDDEN_NICKNAME(HttpStatus.BAD_REQUEST, "PROFILE_001", "사용할 수 없는 닉네임입니다.")
     ;
 
     // todo: 필요한 예외 추가
