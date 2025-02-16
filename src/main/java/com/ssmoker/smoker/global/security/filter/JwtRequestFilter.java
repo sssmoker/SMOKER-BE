@@ -97,14 +97,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 || path.startsWith("/test")
 
                 //smokingArea
+                || path.matches("^/api/smoking-area/\\d+$")
                 || path.startsWith("/api/smoking-area/marker")
                 || path.startsWith("/api/smoking-area/simple")
                 || path.startsWith("/api/smoking-area/list")
                 || path.startsWith("/api/smoking-area/search")
 
                 //Review
-                || path.startsWith("/api/reviews/{smokingAreaId}")
-                || path.startsWith("/api/reviews/{smokingAreaId}/starInfo")
+                || path.matches("^/api/reviews/\\d+$")
+                || path.matches("^/api/reviews/\\d+/starInfo$")
 
                 //Notice
                 || path.startsWith("/api/member/notices")
