@@ -53,7 +53,7 @@ public class MemberServiceImpl implements MemberService {
         if (nickname == null || nickname.trim().isEmpty() || nickname.length() > 15) {
             throw new SmokerBadRequestException(ErrorStatus.FORBIDDEN_NICKNAME);
         }
-        if(memberRepository.existsByNickName(nickname)) {
+        if (memberRepository.existsByNickName(nickname)) {
             throw new SmokerBadRequestException(ErrorStatus.DUPLICATE_NICKNAME);
         }
         member.setNickName(nickname);
@@ -61,9 +61,10 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public String updateProfileImage(Long memberId ,MemberRequestDTO.updateProfileImageRequestDTO request){
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
-        try{
+    public String updateProfileImage(Long memberId, MemberRequestDTO.updateProfileImageRequestDTO request) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        try {
             final String uuid = UUID.randomUUID().toString();
             final String keyName = amazonS3Manager.generateProfileKeyName(uuid);
             final String imageUrl = amazonS3Manager.uploadFile(keyName, request.getMultipartFile());
@@ -78,17 +79,19 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberResponseDTO.MemberProfileDTO viewProfile(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
-        return new MemberResponseDTO.MemberProfileDTO(memberId,member.getNickName(),member.getProfileImageUrl());
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        return new MemberResponseDTO.MemberProfileDTO(memberId, member.getNickName(), member.getProfileImageUrl());
     }
 
     @Override
     @Transactional
-    public MemberResponseDTO.MemberReviewListDTO viewMemberReviews(Long memberId, Integer page){
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+    public MemberResponseDTO.MemberReviewListDTO viewMemberReviews(Long memberId, Integer page) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
         PageRequest pageRequest = PageRequest.of(page - 1, 5);
 
-        Page<Review> reviewPage = reviewRepository.findAllByMember(member,pageRequest);
+        Page<Review> reviewPage = reviewRepository.findAllByMember(member, pageRequest);
         MemberResponseDTO.MemberReviewListDTO memberReviewList = MemberConverter.toMemberReviewListDTO(reviewPage);
 
         return memberReviewList;
@@ -97,11 +100,13 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberResponseDTO.MemberUpdateListDTO viewMemberUpdateHistory(Long memberId, Integer page) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
         PageRequest pageRequest = PageRequest.of(page - 1, 5);
 
-        Page<UpdatedHistory> updatedHistoryPage = updatedHistoryRepository.findAllByMember(pageRequest,member);
-        MemberResponseDTO.MemberUpdateListDTO memberUpdateList = MemberConverter.toMemberUpdateListDTO(updatedHistoryPage);
+        Page<UpdatedHistory> updatedHistoryPage = updatedHistoryRepository.findAllByMember(pageRequest, member);
+        MemberResponseDTO.MemberUpdateListDTO memberUpdateList = MemberConverter.toMemberUpdateListDTO(
+                updatedHistoryPage);
 
         return memberUpdateList;
     }
