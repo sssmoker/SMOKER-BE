@@ -36,9 +36,9 @@ public class SmokingAreaService {
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
     private final UpdatedHistoryRepository updatedHistoryRepository;
-    private final KaKaoApiService kakaoApiService;
     private final SavedSmokingAreaRepository savedSmokingAreaRepository;
 
+    @Transactional(readOnly = true)
     public SmokingAreaInfoResponse getSmokingAreaInfo(Long id) {
         Optional<SmokingArea> smokingArea = smokingAreaRepository.findById(id);
         if (smokingArea.isPresent()) {
@@ -47,8 +47,8 @@ public class SmokingAreaService {
         throw new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND);
     }
 
-
     //marker를 위한 모든 db 보내기
+    @Transactional(readOnly = true)
     public MapResponse.SmokingMarkersResponse getSmokingMarkersResponse() {
         List<SmokingArea> smokingAreas = smokingAreaRepository.findAll();
 
@@ -209,10 +209,10 @@ public class SmokingAreaService {
     ) {
         //검색어 가공 : '동'으로 끝나면 제거
         String searchKeyword = searchRequest.getSearch();
-        if (searchKeyword.endsWith("동")){
+        if (searchKeyword.endsWith("동")) {
             searchKeyword
                     = searchKeyword
-                    .substring(0, searchRequest.getSearch().length()-1);
+                    .substring(0, searchRequest.getSearch().length() - 1);
         }
 
         //카카오 api 를 통해 키워드의 중심 좌표 찾기
@@ -242,7 +242,8 @@ public class SmokingAreaService {
         return new MapResponse.SmokingAreaListResponse(smokingLists);
     }
 
-    public SmokingAreaUpdateRequest updateSmokingArea(Long smokingAreaId, SmokingAreaUpdateRequest request, Long memberId) { //상세정보 업데이트
+    public SmokingAreaUpdateRequest updateSmokingArea(Long smokingAreaId, SmokingAreaUpdateRequest request,
+                                                      Long memberId) { //상세정보 업데이트
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
                 .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
 
@@ -312,7 +313,8 @@ public class SmokingAreaService {
     }
 
     //새로운 흡연구역 등록
-    public Long saveSmokingArea(SmokingAreaRegisterRequest request, String imageUrl, Double latitude, Double longitude, String address) {
+    public Long saveSmokingArea(SmokingAreaRegisterRequest request, String imageUrl, Double latitude, Double longitude,
+                                String address) {
         SmokingArea smokingArea = SmokingAreaRegisterRequest.of(request, imageUrl, latitude, longitude, address);
 
         SmokingArea savedSmokingArea = smokingAreaRepository.save(smokingArea);
@@ -353,13 +355,15 @@ public class SmokingAreaService {
 
     // 저장된 흡연구역 목록 조회 및 검색
     @Transactional(readOnly = true)
-    public List<MapResponse.SmokingAreaInfoWithRequest> getSavedSmokingAreaList(Long memberId, Double lat, Double lng, String filterBy, String query) {
+    public List<MapResponse.SmokingAreaInfoWithRequest> getSavedSmokingAreaList(Long memberId, Double lat, Double lng,
+                                                                                String filterBy, String query) {
 
         List<SmokingArea> savedSmokingAreaList;
 
         if (query != null && !query.isEmpty()) {
             if (filterBy.equals("name")) {
-                savedSmokingAreaList = savedSmokingAreaRepository.findSmokingAreasByMemberIdAndAreaName(memberId, query);
+                savedSmokingAreaList = savedSmokingAreaRepository.findSmokingAreasByMemberIdAndAreaName(memberId,
+                        query);
             } else {
                 savedSmokingAreaList = savedSmokingAreaRepository.findSmokingAreasByMemberIdAndAddress(memberId, query);
             }
