@@ -8,7 +8,7 @@ Smoker는 흡연자와 비흡연자가 공존할 수 있는 환경을 만들기 
 <br/>
 <br/>
 ## 💻 BACKEND Developer
-| <center>이소정(</center>| <center>정희훈</center>| <center>김예빈</center>| <center>임서연</center>| <center>김단하</center>| 
+| <center>이소정</center>| <center>정희훈</center>| <center>김예빈</center>| <center>임서연</center>| <center>김단하</center>| 
 | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | <center><img width="150px" src="https://avatars.githubusercontent.com/Sojeong0430" /></center> | <center><img width="150px" src="https://avatars.githubusercontent.com/heehunjung" /></center> | <center><img width="150px" src="https://avatars.githubusercontent.com/20210699" /></center> | <center><img width="150px" src="https://avatars.githubusercontent.com/seoyeon0103" /></center> | <center><img width="150px" src="https://avatars.githubusercontent.com/kimdanha" /></center> |
 | [@Sojeong0430](https://github.com/Sojeong0430) | [@heehunjung](https://github.com/heehunjung)| [@20210699](https://github.com/20210699) | [@seoyeon0103](https://github.com/seoyeon0103) | [@kimdanha](https://github.com/kimdanha) |
