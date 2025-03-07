@@ -34,27 +34,7 @@ public class SmokingAreaJdbcRepository {
                 SmokingArea sa = smokingAreas.get(i);
                 Feature feature = sa.getFeature();
 
-                ps.setString(1, sa.getSmokingAreaName());
-                ps.setDouble(2, sa.getLocation().getLatitude());
-                ps.setDouble(3, sa.getLocation().getLongitude());
-                // address 컬럼은 Location 객체의 address 필드를 사용합니다.
-                ps.setString(4, sa.getLocation().getAddress());
-                ps.setString(5, sa.getAreaType());
-
-                ps.setBoolean(6, feature.getHasAirPurifier());
-                ps.setBoolean(7, feature.getHasAirConditioning());
-                ps.setBoolean(8, feature.getHasChair());
-                ps.setBoolean(9, feature.getHasTrashBin());
-                ps.setBoolean(10, feature.getHasVentilationSystem());
-                ps.setBoolean(11, feature.getIsAccessible());
-                ps.setBoolean(12, feature.getHasCCTV());
-                ps.setBoolean(13, feature.getHasEmergencyButton());
-                ps.setBoolean(14, feature.getHasVoiceGuidance());
-                ps.setBoolean(15, feature.getHasFireExtinguisher());
-                ps.setBoolean(16, feature.getIsRegularlyCleaned());
-                ps.setBoolean(17, feature.getHasCigaretteDisposal());
-                ps.setBoolean(18, feature.getHasSunshade());
-                ps.setBoolean(19, feature.getHasRainProtection());
+                setFeild(ps, sa, feature);
             }
 
             @Override
@@ -62,5 +42,30 @@ public class SmokingAreaJdbcRepository {
                 return smokingAreas.size();
             }
         });
+    }
+
+    private static void setFeild(final PreparedStatement ps, final SmokingArea sa, final Feature feature)
+            throws SQLException {
+        ps.setString(1, sa.getSmokingAreaName());
+        ps.setDouble(2, sa.getLocation().getLatitude());
+        ps.setDouble(3, sa.getLocation().getLongitude());
+        // address 컬럼은 Location 객체의 address 필드를 사용합니다.
+        ps.setString(4, sa.getLocation().getAddress());
+        ps.setString(5, sa.getAreaType());
+
+        ps.setBoolean(6, feature.getHasAirPurifier());
+        ps.setBoolean(7, feature.getHasAirConditioning());
+        ps.setBoolean(8, feature.getHasChair());
+        ps.setBoolean(9, feature.getHasTrashBin());
+        ps.setBoolean(10, feature.getHasVentilationSystem());
+        ps.setBoolean(11, feature.getIsAccessible());
+        ps.setBoolean(12, feature.getHasCCTV());
+        ps.setBoolean(13, feature.getHasEmergencyButton());
+        ps.setBoolean(14, feature.getHasVoiceGuidance());
+        ps.setBoolean(15, feature.getHasFireExtinguisher());
+        ps.setBoolean(16, feature.getIsRegularlyCleaned());
+        ps.setBoolean(17, feature.getHasCigaretteDisposal());
+        ps.setBoolean(18, feature.getHasSunshade());
+        ps.setBoolean(19, feature.getHasRainProtection());
     }
 }

@@ -23,22 +23,20 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<Object> validation(ConstraintViolationException e, WebRequest request) {
-        String errorMessage = e.getConstraintViolations().stream()
+    public ResponseEntity<Object> validation(ConstraintViolationException exception, WebRequest request) {
+        String errorMessage = exception.getConstraintViolations().stream()
                 .map(constraintViolation -> constraintViolation.getMessage())
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("ConstraintViolationException 추출 도중 에러 발생"));
 
-        return handleExceptionInternalConstraint(e, ErrorStatus.valueOf(errorMessage), HttpHeaders.EMPTY, request);
+        return handleExceptionInternalConstraint(exception, ErrorStatus.valueOf(errorMessage), HttpHeaders.EMPTY, request);
     }
 
-    @Override
-    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpHeaders headers,
+    @ExceptionHandler
+    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers,
                                                                HttpStatusCode status, WebRequest request) {
-
         Map<String, String> errors = new LinkedHashMap<>();
-
-        e.getBindingResult().getFieldErrors().stream()
+        exception.getBindingResult().getFieldErrors().stream()
                 .forEach(fieldError -> {
                     String fieldName = fieldError.getField();
                     String errorMessage = Optional.ofNullable(fieldError.getDefaultMessage()).orElse("");
@@ -46,19 +44,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                             (existingErrorMessage, newErrorMessage) -> existingErrorMessage + ", " + newErrorMessage);
                 });
 
-        return handleExceptionInternalArgs(e, HttpHeaders.EMPTY, ErrorStatus.valueOf("_BAD_REQUEST"), request, errors);
+        return handleExceptionInternalArgs(exception, HttpHeaders.EMPTY, ErrorStatus.valueOf("_BAD_REQUEST"), request, errors);
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler
-    public ResponseEntity<Object> exception(Exception e, WebRequest request) {
-        e.printStackTrace();
+    @ExceptionHandler
+    public ResponseEntity<Object> exceptionHandler(Exception exception, WebRequest request) {
+        log.warn("message: ", exception);
 
-        return handleExceptionInternalFalse(e, ErrorStatus._INTERNAL_SERVER_ERROR, HttpHeaders.EMPTY,
-                ErrorStatus._INTERNAL_SERVER_ERROR.getHttpStatus(), request, e.getMessage());
+        return handleExceptionInternalFalse(exception, ErrorStatus._INTERNAL_SERVER_ERROR, HttpHeaders.EMPTY,
+                ErrorStatus._INTERNAL_SERVER_ERROR.getHttpStatus(), request, exception.getMessage());
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(value = SmokerException.class)
-    public ResponseEntity onThrowException(SmokerException exception) {
+    @ExceptionHandler(value = SmokerException.class)
+    public ResponseEntity smokerExceptionHandler(SmokerException exception) {
         log.warn("message: ", exception);
 
         return ResponseEntity.status(exception.getStatus())

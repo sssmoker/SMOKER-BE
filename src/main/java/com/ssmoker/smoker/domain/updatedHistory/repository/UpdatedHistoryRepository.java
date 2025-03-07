@@ -19,7 +19,8 @@ public interface UpdatedHistoryRepository extends JpaRepository<UpdatedHistory, 
             "JOIN uh.smokingArea sa " +
             "WHERE sa.id = :smokingAreaId",
             countQuery = "SELECT COUNT(uh) FROM UpdatedHistory uh JOIN uh.smokingArea sa WHERE sa.id = :smokingAreaId")
-    Page<UpdatedHistoryResponse> findPagedMemberDetailsBySmokingAreaId(@Param("smokingAreaId") Long smokingAreaId, PageRequest pageRequest);
+    Page<UpdatedHistoryResponse> findPagedMemberDetailsBySmokingAreaId(@Param("smokingAreaId") Long smokingAreaId,
+                                                                       PageRequest pageRequest);
 
     @Query(value = "SELECT new com.ssmoker.smoker.domain.updatedHistory.dto.UpdatedHistoryResponse(" +
             "uh.member.nickName, uh.member.updateCount, uh.createdAt) " +
@@ -27,7 +28,8 @@ public interface UpdatedHistoryRepository extends JpaRepository<UpdatedHistory, 
             "JOIN uh.member m " +
             "WHERE m.id = :memberId",
             countQuery = "SELECT COUNT(uh) FROM UpdatedHistory uh JOIN uh.member m WHERE m.id = :memberId")
-    Page<UpdatedHistoryResponse> findUpdatedHistoriesByMemberId(@Param("memberId") Long memberId, PageRequest pageRequest);
+    Page<UpdatedHistoryResponse> findUpdatedHistoriesByMemberId(@Param("memberId") Long memberId,
+                                                                PageRequest pageRequest);
 
     @Query("SELECT COUNT(uh) FROM UpdatedHistory uh WHERE uh.smokingArea.id = :smokingAreaId")
     int countBySmokingAreaId(@Param("smokingAreaId") Long smokingAreaId);
