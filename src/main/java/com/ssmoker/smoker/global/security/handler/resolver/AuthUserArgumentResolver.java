@@ -1,6 +1,6 @@
 package com.ssmoker.smoker.global.security.handler.resolver;
 
-import com.ssmoker.smoker.global.security.exception.AuthException;
+import com.ssmoker.smoker.global.exception.SmokerClientException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
 import com.ssmoker.smoker.global.security.principal.PrincipalDetails;
@@ -29,25 +29,25 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
             ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest,
             WebDataBinderFactory binderFactory)
-            throws AuthException {
+            throws SmokerClientException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         Object principal = null;
         if (authentication != null) {
 
             if (authentication.getName().equals("anonymousUser")) {
-                throw new AuthException(ErrorStatus._UNAUTHORIZED);
+                throw new SmokerClientException(ErrorStatus._UNAUTHORIZED);
             }
             principal = authentication.getPrincipal();
         }
         if (principal == null || principal.getClass() == String.class) {
-            throw new AuthException(ErrorStatus.USER_NOT_FOUND);
+            throw new SmokerClientException(ErrorStatus.USER_NOT_FOUND);
         }
 
         if (principal instanceof PrincipalDetails) {
             PrincipalDetails userDetails = (PrincipalDetails) principal;
             return userDetails.getId();
         }
-        throw new AuthException(ErrorStatus.USER_NOT_FOUND);
+        throw new SmokerClientException(ErrorStatus.USER_NOT_FOUND);
     }
 }

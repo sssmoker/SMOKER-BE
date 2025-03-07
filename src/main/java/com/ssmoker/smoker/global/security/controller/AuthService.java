@@ -4,6 +4,7 @@ import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.token.domain.Token;
 import com.ssmoker.smoker.domain.token.repository.TokenRepository;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
+import com.ssmoker.smoker.global.exception.SmokerClientException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import com.ssmoker.smoker.global.security.authDTO.AuthResponseDTO;
 import com.ssmoker.smoker.global.security.authDTO.AuthResponseDTO.OAuthResponse;
@@ -11,7 +12,6 @@ import com.ssmoker.smoker.global.security.authDTO.GoogleProfile;
 import com.ssmoker.smoker.global.security.authDTO.KakaoProfile;
 import com.ssmoker.smoker.global.security.authDTO.OAuthToken;
 import com.ssmoker.smoker.global.security.converter.AuthConverter;
-import com.ssmoker.smoker.global.security.exception.AuthException;
 import com.ssmoker.smoker.global.security.provider.GoogleAuthProvider;
 import com.ssmoker.smoker.global.security.provider.JwtTokenProvider;
 import com.ssmoker.smoker.global.security.provider.KakaoAuthProvider;
@@ -40,7 +40,7 @@ public class AuthService {
             kakaoProfile =
                     kakaoAuthProvider.requestKakaoProfile(oAuthToken.getAccess_token());
         } catch (Exception e) {
-            throw new AuthException(ErrorStatus.INVALID_REQUEST_INFO_KAKAO);
+            throw new SmokerClientException(ErrorStatus.INVALID_REQUEST_INFO_KAKAO);
         }
 
         // 유저 정보 받기
@@ -68,7 +68,7 @@ public class AuthService {
             googleProfile =
                     googleAuthProvider.requestGoogleProfile(oAuthToken.getAccess_token());
         } catch (Exception e) {
-            throw new AuthException(ErrorStatus.INVALID_REQUEST_INFO_GOOGLE);
+            throw new SmokerClientException(ErrorStatus.INVALID_REQUEST_INFO_GOOGLE);
         }
 
         // 유저 정보 받기
@@ -115,7 +115,7 @@ public class AuthService {
         try {
             oAuthToken = googleAuthProvider.requestToken(code);
         } catch (Exception e) {
-            throw new AuthException(ErrorStatus.AUTH_INVALID_CODE);
+            throw new SmokerClientException(ErrorStatus.AUTH_INVALID_CODE);
         }
         return oAuthToken;
     }
@@ -125,7 +125,7 @@ public class AuthService {
         try {
             oAuthToken = kakaoAuthProvider.requestToken(code);
         } catch (Exception e) {
-            throw new AuthException(ErrorStatus.AUTH_INVALID_CODE);
+            throw new SmokerClientException(ErrorStatus.AUTH_INVALID_CODE);
         }
         return oAuthToken;
     }

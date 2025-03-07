@@ -19,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
@@ -44,6 +45,7 @@ public class OpenApiService {
     private final SmokingAreaJdbcRepository smokingAreaJdbcRepository;
     private final KaKaoApiService kaKaoApiService;
 
+    @Transactional
     public void getPublicData() throws URISyntaxException {
         // 각 URL 별로 데이터를 모아서 벌크 인서트 진행
 

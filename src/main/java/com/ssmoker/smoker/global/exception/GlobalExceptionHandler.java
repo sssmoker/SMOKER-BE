@@ -1,10 +1,7 @@
 package com.ssmoker.smoker.global.exception;
 
-
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
-import com.ssmoker.smoker.global.exception.code.ErrorReasonDTO;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,13 +15,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Slf4j
 @RestControllerAdvice(annotations = {RestController.class})
-public class ExceptionAdvice extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<Object> validation(ConstraintViolationException e, WebRequest request) {
@@ -44,7 +40,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
         e.getBindingResult().getFieldErrors().stream()
                 .forEach(fieldError -> {
-                    String fieldName =  fieldError.getField();
+                    String fieldName = fieldError.getField();
                     String errorMessage = Optional.ofNullable(fieldError.getDefaultMessage()).orElse("");
                     errors.merge(fieldName, errorMessage,
                             (existingErrorMessage, newErrorMessage) -> existingErrorMessage + ", " + newErrorMessage);
@@ -53,7 +49,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         return handleExceptionInternalArgs(e, HttpHeaders.EMPTY, ErrorStatus.valueOf("_BAD_REQUEST"), request, errors);
     }
 
-    @ExceptionHandler
+    @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<Object> exception(Exception e, WebRequest request) {
         e.printStackTrace();
 
@@ -61,50 +57,12 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                 ErrorStatus._INTERNAL_SERVER_ERROR.getHttpStatus(), request, e.getMessage());
     }
 
-    @ExceptionHandler(value = GeneralException.class)
-    public ResponseEntity onThrowException(GeneralException generalException, HttpServletRequest request) {
-        ErrorReasonDTO errorReasonHttpStatus = generalException.getErrorReasonHttpStatus();
-        return handleExceptionInternal(generalException, errorReasonHttpStatus, null, request);
-    }
+    @org.springframework.web.bind.annotation.ExceptionHandler(value = SmokerException.class)
+    public ResponseEntity onThrowException(SmokerException exception) {
+        log.warn("message: ", exception);
 
-    @ExceptionHandler(value = SmokerBadRequestException.class)
-    public ResponseEntity onThrowException(SmokerBadRequestException badRequestException, HttpServletRequest request) {
-        ErrorReasonDTO errorReasonHttpStatus = badRequestException.getErrorReasonHttpStatus();
-        return handleExceptionInternal(badRequestException, errorReasonHttpStatus, null, request);
-    }
-
-    @ExceptionHandler(value = SmokerForbiddenException.class)
-    public ResponseEntity onThrowException(SmokerForbiddenException forbiddenException, HttpServletRequest request) {
-        ErrorReasonDTO errorReasonHttpStatus = forbiddenException.getErrorReasonHttpStatus();
-        return handleExceptionInternal(forbiddenException, errorReasonHttpStatus, null, request);
-    }
-
-    @ExceptionHandler(value = SmokerNotFoundException.class)
-    public ResponseEntity onThrowException(SmokerNotFoundException notFoundException, HttpServletRequest request) {
-        ErrorReasonDTO errorReasonHttpStatus = notFoundException.getErrorReasonHttpStatus();
-        return handleExceptionInternal(notFoundException, errorReasonHttpStatus, null, request);
-    }
-
-    @ExceptionHandler(value = SmokerUnauthorizedException.class)
-    public ResponseEntity onThrowException(SmokerUnauthorizedException unauthorizedException, HttpServletRequest request) {
-        ErrorReasonDTO errorReasonHttpStatus = unauthorizedException.getErrorReasonHttpStatus();
-        return handleExceptionInternal(unauthorizedException, errorReasonHttpStatus, null, request);
-    }
-
-    private ResponseEntity<Object> handleExceptionInternal(Exception e, ErrorReasonDTO reason,
-                                                           HttpHeaders headers, HttpServletRequest request) {
-
-        ApiResponse<Object> body = ApiResponse.onFailure(reason.getCode(), reason.getMessage(), null);
-//        e.printStackTrace();
-
-        WebRequest webRequest = new ServletWebRequest(request);
-        return super.handleExceptionInternal(
-                e,
-                body,
-                headers,
-                reason.getHttpStatus(),
-                webRequest
-        );
+        return ResponseEntity.status(exception.getStatus())
+                .body(exception.getMessage());
     }
 
     private ResponseEntity<Object> handleExceptionInternalFalse(Exception e, ErrorStatus errorCommonStatus,

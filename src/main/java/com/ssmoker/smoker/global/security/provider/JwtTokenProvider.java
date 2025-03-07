@@ -2,7 +2,7 @@ package com.ssmoker.smoker.global.security.provider;
 
 import static com.ssmoker.smoker.global.exception.code.ErrorStatus.AUTH_EXTRACT_ERROR_TEST;
 
-import com.ssmoker.smoker.global.security.exception.AuthException;
+import com.ssmoker.smoker.global.exception.SmokerClientException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -39,13 +39,13 @@ public class JwtTokenProvider {
         this.refreshTokenValidityMilliseconds = refreshTokenValidityMilliseconds;
     }
 
-    public String extractToken (final HttpServletRequest request) {
+    public String extractToken(final HttpServletRequest request) {
         String authorizationHeader = request.getHeader(HEADER_STRING);
 
         if (authorizationHeader != null && authorizationHeader.startsWith(HEADER_STRING_PREFIX)) {
             return authorizationHeader.substring(7);
         }
-        throw new AuthException(AUTH_EXTRACT_ERROR_TEST);
+        throw new SmokerClientException(AUTH_EXTRACT_ERROR_TEST);
     }
 
     public String createAccessToken(Long memberId) {
@@ -83,12 +83,12 @@ public class JwtTokenProvider {
 
             return expiredDate.after(now);
         } catch (ExpiredJwtException e) {
-            throw new AuthException(ErrorStatus.AUTH_EXPIRED_TOKEN);
+            throw new SmokerClientException(ErrorStatus.AUTH_EXPIRED_TOKEN);
         } catch (SecurityException
                  | MalformedJwtException
                  | UnsupportedJwtException
                  | IllegalArgumentException e) {
-            throw new AuthException(ErrorStatus.AUTH_INVALID_TOKEN);
+            throw new SmokerClientException(ErrorStatus.AUTH_INVALID_TOKEN);
         }
     }
 
@@ -100,11 +100,11 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         try {
             Long memberId = getId(token); // Extract member ID from JWT
-            User principal = new User(memberId.toString(), "", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+            User principal = new User(memberId.toString(), "",
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
             return new UsernamePasswordAuthenticationToken(principal, token, principal.getAuthorities());
         } catch (Exception e) {
-            throw new AuthException(ErrorStatus.AUTH_INVALID_TOKEN);
+            throw new SmokerClientException(ErrorStatus.AUTH_INVALID_TOKEN);
         }
     }
-
 }

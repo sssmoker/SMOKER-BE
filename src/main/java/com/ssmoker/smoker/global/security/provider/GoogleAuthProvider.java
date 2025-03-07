@@ -2,7 +2,7 @@ package com.ssmoker.smoker.global.security.provider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssmoker.smoker.global.security.exception.AuthException;
+import com.ssmoker.smoker.global.exception.SmokerClientException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import com.ssmoker.smoker.global.security.authDTO.GoogleProfile;
 import com.ssmoker.smoker.global.security.authDTO.OAuthToken;
@@ -65,7 +65,7 @@ public class GoogleAuthProvider {
         try {
             oAuthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
         } catch (JsonProcessingException e) {
-            throw new AuthException(ErrorStatus.INVALID_REQUEST_INFO_GOOGLE);
+            throw new SmokerClientException(ErrorStatus.INVALID_REQUEST_INFO_GOOGLE);
         }
 
         return oAuthToken;
@@ -92,7 +92,7 @@ public class GoogleAuthProvider {
         try {
             googleProfile = objectMapper.readValue(response.getBody(), GoogleProfile.class);
         } catch (JsonProcessingException e) {
-            throw new AuthException(ErrorStatus.INVALID_REQUEST_INFO_GOOGLE);
+            throw new SmokerClientException(ErrorStatus.INVALID_REQUEST_INFO_GOOGLE);
         }
 
         System.out.println(googleProfile.getEmail()); // 이메일 출력 예시

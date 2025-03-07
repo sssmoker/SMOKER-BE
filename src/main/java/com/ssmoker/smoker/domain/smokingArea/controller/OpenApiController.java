@@ -1,7 +1,7 @@
 package com.ssmoker.smoker.domain.smokingArea.controller;
 
-
 import com.ssmoker.smoker.domain.smokingArea.service.OpenApiService;
+import com.ssmoker.smoker.global.exception.SmokerServerError;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 @Slf4j
 @RestController
@@ -29,10 +28,9 @@ public class OpenApiController {
                 openApiService.getPublicData();
                 return "저장 완료";
             } catch (Exception e) {
-                log.error("API 호출 실패", e);
-                return "API 호출 실패: " + e.getMessage();
+                throw new SmokerServerError("API 호출 실패");
             }
         }
-        return "키 오류(경로 변수)";
+        throw new SmokerServerError("키 오류");
     }
 }

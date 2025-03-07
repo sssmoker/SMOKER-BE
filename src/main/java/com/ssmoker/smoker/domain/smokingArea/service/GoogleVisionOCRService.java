@@ -3,7 +3,7 @@ package com.ssmoker.smoker.domain.smokingArea.service;
 import com.google.cloud.vision.v1.*;
 import com.google.protobuf.ByteString;
 import com.ssmoker.smoker.global.aws.s3.AmazonS3Manager;
-import com.ssmoker.smoker.global.exception.GeneralException;
+import com.ssmoker.smoker.global.exception.SmokerClientException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ public class GoogleVisionOCRService {
             BatchAnnotateImagesResponse response = client.batchAnnotateImages(requests);
             List<AnnotateImageResponse> responses = response.getResponsesList();
 
-            if (responses.isEmpty()) throw new GeneralException(ErrorStatus.TEXT_NOT_DETECTED);
+            if (responses.isEmpty()) throw new SmokerClientException(ErrorStatus.TEXT_NOT_DETECTED);
 
             return responses.get(0).getTextAnnotations(0).getDescription().trim();
         }
