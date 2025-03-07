@@ -3,11 +3,11 @@ package com.ssmoker.smoker.domain.token.service;
 import static com.ssmoker.smoker.global.exception.code.ErrorStatus.NOT_CONTAIN_TOKEN;
 
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
+import com.ssmoker.smoker.global.exception.SmokerClientException;
 import com.ssmoker.smoker.global.security.authDTO.AuthResponseDTO.TokenResponse;
 import com.ssmoker.smoker.domain.token.domain.Token;
 import com.ssmoker.smoker.domain.token.repository.TokenRepository;
 import com.ssmoker.smoker.global.security.converter.AuthConverter;
-import com.ssmoker.smoker.global.security.exception.AuthException;
 import com.ssmoker.smoker.global.security.provider.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -47,7 +47,7 @@ public class TokenService {
     private Token getToken(String refreshToken) {
         Optional<Token> token = tokenRepository.findByRefreshToken(refreshToken);
         if (!token.isPresent()) {
-            throw new AuthException(NOT_CONTAIN_TOKEN);
+            throw new SmokerClientException(NOT_CONTAIN_TOKEN);
             // Logout 되어있는 상황
         }
         return token.get();

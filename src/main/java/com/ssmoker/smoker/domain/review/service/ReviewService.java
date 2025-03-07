@@ -3,14 +3,12 @@ package com.ssmoker.smoker.domain.review.service;
 import static com.ssmoker.smoker.global.exception.code.ErrorStatus.REVIEW_BAD_REQUEST;
 
 import com.ssmoker.smoker.domain.member.domain.Member;
-import com.ssmoker.smoker.domain.member.exception.MemberNotFoundException;
 import com.ssmoker.smoker.domain.member.repository.MemberRepository;
 import com.ssmoker.smoker.domain.review.domain.Review;
 import com.ssmoker.smoker.domain.review.dto.*;
-import com.ssmoker.smoker.domain.review.exception.ReviewPageNumberException;
-import com.ssmoker.smoker.domain.review.exception.ReviewNotFoundException;
 import com.ssmoker.smoker.domain.review.repository.ReviewRepository;
 
+import com.ssmoker.smoker.global.exception.SmokerClientException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +17,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaRepository;
-import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
 import com.ssmoker.smoker.global.aws.s3.AmazonS3Manager;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +42,7 @@ public class ReviewService {
 
     public ReviewResponses getReviewsBySmokingAreaId(Long id, int pageNumber) {
         if (pageNumber < 0) {
-            throw new ReviewPageNumberException(REVIEW_BAD_REQUEST);
+            throw new SmokerClientException(REVIEW_BAD_REQUEST);
         }
         Page<Review> reviewPage = reviewRepository.findReviewsWithMemberBySmokingAreaId(id,
                 PageRequest.of(pageNumber, REVIEW_PAGE_SIZE));
@@ -96,9 +93,9 @@ public class ReviewService {
     @Transactional
     public Long saveReview(Long smokingAreaId, MultipartFile img, ReviewRequest request, Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new SmokerClientException(MEMBER_NOT_FOUND));
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
-                .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
+                .orElseThrow(() -> new SmokerClientException(SMOKING_AREA_NOT_FOUND));
 
         String imageUrl = uploadImageIfExists(img);
 
@@ -129,12 +126,11 @@ public class ReviewService {
 
     public ReviewGetResponse getReviewById(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ReviewNotFoundException(REVIEW_NOT_FOUND));
+                .orElseThrow(() -> new SmokerClientException(REVIEW_NOT_FOUND));
 
         SmokingArea smokingArea = smokingAreaRepository.findById(review.getSmokingArea().getId())
-                .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
+                .orElseThrow(() -> new SmokerClientException(SMOKING_AREA_NOT_FOUND));
 
         return ReviewGetResponse.of(review, smokingArea);
     }
-
 }

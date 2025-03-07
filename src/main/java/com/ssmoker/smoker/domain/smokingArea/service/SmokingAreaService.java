@@ -7,14 +7,12 @@ import com.ssmoker.smoker.domain.smokingArea.domain.Feature;
 import com.ssmoker.smoker.domain.smokingArea.domain.SavedSmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.domain.SmokingArea;
 import com.ssmoker.smoker.domain.smokingArea.dto.*;
-import com.ssmoker.smoker.domain.smokingArea.exception.SmokingAreaNotFoundException;
 import com.ssmoker.smoker.domain.smokingArea.repository.SavedSmokingAreaRepository;
 import com.ssmoker.smoker.domain.smokingArea.repository.SmokingAreaRepository;
 import com.ssmoker.smoker.domain.updatedHistory.domain.Action;
 import com.ssmoker.smoker.domain.updatedHistory.domain.UpdatedHistory;
 import com.ssmoker.smoker.domain.updatedHistory.repository.UpdatedHistoryRepository;
-import com.ssmoker.smoker.global.exception.SmokerBadRequestException;
-import com.ssmoker.smoker.global.exception.SmokerNotFoundException;
+import com.ssmoker.smoker.global.exception.SmokerClientException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 
 import java.util.Comparator;
@@ -44,7 +42,7 @@ public class SmokingAreaService {
         if (smokingArea.isPresent()) {
             return SmokingAreaInfoResponse.of(smokingArea.get());
         }
-        throw new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND);
+        throw new SmokerClientException(SMOKING_AREA_NOT_FOUND);
     }
 
     //marker를 위한 모든 db 보내기
@@ -80,7 +78,7 @@ public class SmokingAreaService {
 
         //smoking area 예외처리
         if (smokingArea == null) {
-            throw new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND);
+            throw new SmokerClientException(SMOKING_AREA_NOT_FOUND);
         } else {
             //거리 계산
             distance = calculateHaversineDistance(userLat, userLng,
@@ -111,7 +109,7 @@ public class SmokingAreaService {
                             Comparator.reverseOrder())//별점 높은 순
                     .thenComparing(MapResponse.SmokingAreaInfoWithRequest::getDistance); //같으면 가까운 순
         } else {
-            throw new SmokerBadRequestException(ErrorStatus.FILTER_NOT_FOUND);
+            throw new SmokerClientException(ErrorStatus.FILTER_NOT_FOUND);
         }
     }
 
@@ -140,7 +138,7 @@ public class SmokingAreaService {
     public SmokingAreaUpdateRequest updateSmokingArea(Long smokingAreaId, SmokingAreaUpdateRequest request,
                                                       Long memberId) { //상세정보 업데이트
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
-                .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
+                .orElseThrow(() -> new SmokerClientException(SMOKING_AREA_NOT_FOUND));
 
         Feature updatedFeature = getFeature(request);
         smokingArea.updateFeature(updatedFeature);
@@ -148,7 +146,7 @@ public class SmokingAreaService {
         smokingArea = smokingAreaRepository.save(smokingArea);
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new SmokerNotFoundException(MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new SmokerClientException(MEMBER_NOT_FOUND));
         member.setUpdateCount(member.getUpdateCount() + 1);
 
         memberRepository.save(member);
@@ -166,7 +164,7 @@ public class SmokingAreaService {
     @Transactional(readOnly = true)
     public SmokingAreaNameResponse getSmokingAreaName(Long smokingAreaId) {
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
-                .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
+                .orElseThrow(() -> new SmokerClientException(SMOKING_AREA_NOT_FOUND));
 
         return SmokingAreaNameResponse.of(smokingArea);
     }
@@ -177,7 +175,7 @@ public class SmokingAreaService {
         int updateCount = updatedHistoryRepository.countBySmokingAreaId(smokingAreaId);
 
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
-                .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
+                .orElseThrow(() -> new SmokerClientException(SMOKING_AREA_NOT_FOUND));
 
         return new SmokingAreaDetailResponse(
                 updateCount,
@@ -203,10 +201,10 @@ public class SmokingAreaService {
     @Transactional
     public void createSavedSmokingArea(Long memberId, Long smokingAreaId) {
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
-                .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
+                .orElseThrow(() -> new SmokerClientException(SMOKING_AREA_NOT_FOUND));
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new SmokerNotFoundException(MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new SmokerClientException(MEMBER_NOT_FOUND));
 
         SavedSmokingArea savedSmokingArea = SavedSmokingArea.builder()
                 .member(member)
@@ -220,13 +218,13 @@ public class SmokingAreaService {
     @Transactional
     public void deleteSavedSmokingArea(Long memberId, Long smokingAreaId) {
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
-                .orElseThrow(() -> new SmokingAreaNotFoundException(SMOKING_AREA_NOT_FOUND));
+                .orElseThrow(() -> new SmokerClientException(SMOKING_AREA_NOT_FOUND));
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new SmokerNotFoundException(MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new SmokerClientException(MEMBER_NOT_FOUND));
 
         SavedSmokingArea savedSmokingArea = savedSmokingAreaRepository.findBySmokingAreaAndMember(smokingArea, member)
-                .orElseThrow(() -> new SmokerNotFoundException(SAVED_SMOKING_AREA_NOT_FOUND));
+                .orElseThrow(() -> new SmokerClientException(SAVED_SMOKING_AREA_NOT_FOUND));
 
         savedSmokingAreaRepository.delete(savedSmokingArea);
     }

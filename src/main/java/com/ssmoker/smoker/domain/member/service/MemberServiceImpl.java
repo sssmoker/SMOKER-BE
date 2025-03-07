@@ -10,9 +10,8 @@ import com.ssmoker.smoker.domain.review.repository.ReviewRepository;
 import com.ssmoker.smoker.domain.updatedHistory.domain.UpdatedHistory;
 import com.ssmoker.smoker.domain.updatedHistory.repository.UpdatedHistoryRepository;
 import com.ssmoker.smoker.global.aws.s3.AmazonS3Manager;
-import com.ssmoker.smoker.global.exception.GeneralException;
-import com.ssmoker.smoker.global.exception.SmokerBadRequestException;
-import com.ssmoker.smoker.global.security.exception.AuthException;
+import com.ssmoker.smoker.global.exception.SmokerClientException;
+import com.ssmoker.smoker.global.exception.SmokerServerError;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import io.jsonwebtoken.io.IOException;
 import jakarta.transaction.Transactional;
@@ -40,7 +39,7 @@ public class MemberServiceImpl implements MemberService {
         log.info("memberId: {}", memberId);
         return memberRepository
                 .findById(memberId)
-                .orElseThrow(() -> new AuthException(ErrorStatus.USER_NOT_FOUND));
+                .orElseThrow(() -> new SmokerClientException(ErrorStatus.USER_NOT_FOUND));
     }
 
     @Override
@@ -51,7 +50,7 @@ public class MemberServiceImpl implements MemberService {
             return;
         }
         if (nickname == null || nickname.trim().isEmpty() || nickname.length() > 15) {
-            throw new SmokerBadRequestException(ErrorStatus.FORBIDDEN_NICKNAME);
+            throw new SmokerClientException(ErrorStatus.FORBIDDEN_NICKNAME);
         }
         member.setNickName(nickname);
     }
@@ -59,7 +58,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public String updateProfileImage(Long memberId ,MemberRequestDTO.updateProfileImageRequestDTO request){
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new SmokerClientException(ErrorStatus.USER_NOT_FOUND));
         try{
             final String uuid = UUID.randomUUID().toString();
             final String keyName = amazonS3Manager.generateProfileKeyName(uuid);
@@ -68,21 +67,21 @@ public class MemberServiceImpl implements MemberService {
             memberRepository.save(member);
             return imageUrl;
         } catch (IOException e) {
-            throw new RuntimeException("파일 업로드 오류입니다.");
+            throw new SmokerServerError("파일 업로드 오류입니다.");
         }
     }
 
     @Override
     @Transactional
     public MemberResponseDTO.MemberProfileDTO viewProfile(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new SmokerClientException(ErrorStatus.USER_NOT_FOUND));
         return new MemberResponseDTO.MemberProfileDTO(memberId,member.getNickName(),member.getProfileImageUrl());
     }
 
     @Override
     @Transactional
     public MemberResponseDTO.MemberReviewListDTO viewMemberReviews(Long memberId, Integer page){
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new SmokerClientException(ErrorStatus.USER_NOT_FOUND));
         PageRequest pageRequest = PageRequest.of(page - 1, 5);
 
         Page<Review> reviewPage = reviewRepository.findAllByMember(member,pageRequest);
@@ -94,7 +93,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberResponseDTO.MemberUpdateListDTO viewMemberUpdateHistory(Long memberId, Integer page) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new SmokerClientException(ErrorStatus.USER_NOT_FOUND));
         PageRequest pageRequest = PageRequest.of(page - 1, 5);
 
         Page<UpdatedHistory> updatedHistoryPage = updatedHistoryRepository.findAllByMember(pageRequest,member);

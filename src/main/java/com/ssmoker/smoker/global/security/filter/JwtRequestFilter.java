@@ -1,13 +1,15 @@
 package com.ssmoker.smoker.global.security.filter;
 
+import com.ssmoker.smoker.global.exception.SmokerClientException;
+import com.ssmoker.smoker.global.exception.code.ErrorReasonDTO;
 import com.ssmoker.smoker.global.security.principal.PrincipalDetailsService;
 import com.ssmoker.smoker.global.security.provider.JwtTokenProvider;
-import com.ssmoker.smoker.global.security.exception.AuthException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,17 +54,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext()
                             .setAuthentication(usernamePasswordAuthenticationToken);
                 } else { //유저 없음
-                    throw new AuthException(ErrorStatus.USER_NOT_FOUND);
+                    throw new SmokerClientException(ErrorStatus.USER_NOT_FOUND);
                 }
             } else { //토큰이 유효하지 않음
-                throw new AuthException(ErrorStatus.AUTH_INVALID_TOKEN);
+                throw new SmokerClientException(ErrorStatus.AUTH_INVALID_TOKEN);
             }
 
             filterChain.doFilter(request, response);
-        } catch (AuthException ex) {
-            setJsonResponse(response, ex.getErrorReasonHttpStatus().getHttpStatus().value(),
-                    ex.getErrorReason().getCode(),
-                    ex.getErrorReason().getMessage());
+        } catch (SmokerClientException ex) {
+            ErrorReasonDTO reason = ex.getReason();
+            setJsonResponse(response, ex.getStatus().value(),
+                    reason.getCode(),
+                    reason.getMessage());
         } catch (Exception ex) {
             setJsonResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     "INTERNAL_SERVER_ERROR",

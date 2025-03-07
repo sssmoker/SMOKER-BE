@@ -2,7 +2,7 @@ package com.ssmoker.smoker.global.security.provider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssmoker.smoker.global.security.exception.AuthException;
+import com.ssmoker.smoker.global.exception.SmokerClientException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import com.ssmoker.smoker.global.security.authDTO.KakaoProfile;
 import com.ssmoker.smoker.global.security.authDTO.OAuthToken;
@@ -56,7 +56,7 @@ public class KakaoAuthProvider {
         try {
             oAuthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
         } catch (JsonProcessingException e) {
-            throw new AuthException(ErrorStatus.INVALID_REQUEST_INFO_KAKAO);
+            throw new SmokerClientException(ErrorStatus.INVALID_REQUEST_INFO_KAKAO);
         }
 
         return oAuthToken;
@@ -84,7 +84,7 @@ public class KakaoAuthProvider {
         try {
             kakaoProfile = objectMapper.readValue(response.getBody(), KakaoProfile.class);
         } catch (JsonProcessingException e) {
-            throw new AuthException(ErrorStatus.INVALID_REQUEST_INFO_KAKAO);
+            throw new SmokerClientException(ErrorStatus.INVALID_REQUEST_INFO_KAKAO);
         }
         System.out.println(kakaoProfile.getKakaoAccount().getEmail());
         return kakaoProfile;

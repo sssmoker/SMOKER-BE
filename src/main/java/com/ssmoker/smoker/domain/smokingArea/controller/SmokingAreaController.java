@@ -8,7 +8,7 @@ import com.ssmoker.smoker.domain.smokingArea.service.SmokingAreaService;
 import com.ssmoker.smoker.domain.smokingArea.dto.SmokingAreaInfoResponse;
 import com.ssmoker.smoker.global.apiPayload.ApiResponse;
 import com.ssmoker.smoker.global.apiPayload.code.SuccessStatus;
-import com.ssmoker.smoker.global.exception.GeneralException;
+import com.ssmoker.smoker.global.exception.SmokerClientException;
 import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -116,7 +116,7 @@ public class SmokingAreaController {
         if(googleVisionOCRService.isSmokingArea(googleVisionOCRService.detectText(file))) {
             return ApiResponse.of(SuccessStatus.OCR_VERIFY_OK, googleVisionOCRService.uploadSmokingAreaImage(file));
         } else {
-          throw new GeneralException(ErrorStatus.SMOKING_KEYWORD_NOT_FOUND);
+          throw new SmokerClientException(ErrorStatus.SMOKING_KEYWORD_NOT_FOUND);
         }
     }
 
