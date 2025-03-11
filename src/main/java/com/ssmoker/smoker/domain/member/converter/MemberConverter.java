@@ -34,13 +34,12 @@ public class MemberConverter {
                 .build();
     }
 
-    public static MemberResponseDTO.MemberUpdateDTO toMemberUpdateDTO(UpdatedHistory updatedHistory) {
-        String content = updatedHistory.getUpdateCount().toString();
+    public static MemberResponseDTO.MemberUpdateDTO toMemberUpdateDTO(UpdatedHistory updatedHistory, int count) {
+        String content = null;
 
-        Action action = updatedHistory.getAction();
-        switch (action) {
+        switch (updatedHistory.getAction()) {
             case UPDATE:
-                content += "번째 수정에 참여했어요!";
+                content = count + "번째 수정에 참여했어요!";
                 break;
             case REGISTRATION:
                 content = "장소를 등록했어요!";
@@ -54,15 +53,10 @@ public class MemberConverter {
                 .build();
     }
 
-    public static MemberResponseDTO.MemberUpdateListDTO toMemberUpdateListDTO(Page<UpdatedHistory> updatedHistories) {
-        List<MemberResponseDTO.MemberUpdateDTO> memberUpdateDTOList = updatedHistories.stream()
-                .map(MemberConverter::toMemberUpdateDTO).collect(Collectors.toList());
-
-        Collections.reverse(memberUpdateDTOList);
-
+    public static MemberResponseDTO.MemberUpdateListDTO toMemberUpdateListDTO(List<MemberResponseDTO.MemberUpdateDTO> updateDtoList, int totalPage) {
         return MemberResponseDTO.MemberUpdateListDTO.builder()
-                .MemberUpdateList(memberUpdateDTOList)
-                .totalPage(updatedHistories.getTotalPages())
+                .MemberUpdateList(updateDtoList)
+                .totalPage(totalPage)
                 .build();
     }
 

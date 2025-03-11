@@ -7,6 +7,8 @@ import com.ssmoker.smoker.global.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +44,7 @@ public class SavedSmokingAreaController {
                                                               {@ExampleObject(name = "주소명", value = "address"),
                                                               @ExampleObject(name = "장소명", value = "name")}) String filterBy,
                                               @RequestParam(value = "q", required = false)
-                                              @Parameter(description = "검색어") String query) {
+                                              @Parameter(description = "검색어")@NotNull @NotEmpty String query) {
         return ApiResponse.onSuccess(new MapResponse.SmokingAreaListResponse(smokingAreaService.getSavedSmokingAreaList(memberId, userLat, userLng, filterBy, query)));
     }
 }

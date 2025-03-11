@@ -20,7 +20,6 @@ import lombok.*;
 @Entity
 @Builder
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Member extends BaseEntity {
@@ -48,6 +47,19 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SavedSmokingArea> savedSmokingAreas = new ArrayList<>();
+
+    public void increaseUpdateCount() {
+        updateCount++;
+    }
+
+    public void updateImageUrl(String imageUrl) {
+        this.profileImageUrl = imageUrl;
+    }
+
+
+    public void updateNickName(String nickName) {
+        this.nickName = nickName;
+    }
 
     @Override
     public String toString() {

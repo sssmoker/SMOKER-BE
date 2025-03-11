@@ -15,7 +15,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler{
 
     // @RequestBody 바인딩, 보통 발생하면 서버 에러일듯..? 외부로 공개하는 api 가 아닌 경우면
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     // @PathVariable, @RequestParam, @ModelAttribute 바인딩
     @ExceptionHandler(BindException.class)
-    public ResponseEntity bindException(BindException exception) {
+    public ResponseEntity handleBindingException(BindException exception) {
         log.warn("message: ", exception);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)

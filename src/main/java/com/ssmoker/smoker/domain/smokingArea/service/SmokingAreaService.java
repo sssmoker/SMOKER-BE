@@ -49,87 +49,47 @@ public class SmokingAreaService {
     @Transactional(readOnly = true)
     public MapResponse.SmokingMarkersResponse getSmokingMarkersResponse() {
         List<SmokingArea> smokingAreas = smokingAreaRepository.findAll();
-
-        List<SmokingAreaMarkersResponse> markers =
-                smokingAreas.stream()
-                        .map(marker -> new SmokingAreaMarkersResponse(
-                                marker.getId(),
-                                marker.getSmokingAreaName(),
-                                marker.getLocation()
-                        ))
-                        .collect(Collectors.toList());
+        List<SmokingAreaMarkersResponse> markers = smokingAreas.stream()
+                .map(marker -> new SmokingAreaMarkersResponse(marker.getId(), marker.getSmokingAreaName(),
+                        marker.getLocation())).toList();
 
         return new MapResponse.SmokingMarkersResponse(markers);
     }
 
     //marker 간단한 정보 보여주기 (모달)
     @Transactional(readOnly = true)
-    public MapResponse.MarkerResponse getMarkerResponse(Long smokingAreaId,
-                                                        Double userLat,
-                                                        Double userLng) {
-        SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
-                .orElse(null);
+    public MapResponse.MarkerResponse getMarkerResponse(Long smokingAreaId, Double userLat, Double userLng) {
+        SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId).orElse(null);
 
-        double distance;
-        double rating;
-        String imageUrl;
-        int reviewCount;
-        int savedCount;
-
-        //smoking area 예외처리
         if (smokingArea == null) {
             throw new SmokerClientException(SMOKING_AREA_NOT_FOUND);
-        } else {
-            //거리 계산
-            distance = calculateHaversineDistance(userLat, userLng,
-                    smokingArea.getLocation().getLatitude(), smokingArea.getLocation().getLongitude());
-
-            //imageUrl
-            imageUrl = smokingArea.getImageUrl();
-
-            //rating
-            rating = reviewRepository.findAvgScoreBySmokingId(smokingArea.getId());
-
-            //review Count
-            reviewCount = smokingAreaRepository.findReviewCountBySmokingAreaId(smokingAreaId);
-
-            //saved Count
-            savedCount = smokingAreaRepository.findSavedCountBySmokingAreaId(smokingAreaId);
         }
+
+        double distance = calculateHaversineDistance(userLat, userLng, smokingArea.getLocation().getLatitude(),
+                smokingArea.getLocation().getLongitude());
+        String imageUrl = smokingArea.getImageUrl();
+        double rating = reviewRepository.findAvgScoreBySmokingId(smokingArea.getId());
+        int reviewCount = smokingAreaRepository.findReviewCountBySmokingAreaId(smokingAreaId);
+        int savedCount = smokingAreaRepository.findSavedCountBySmokingAreaId(smokingAreaId);
 
         return new MapResponse.MarkerResponse(imageUrl, rating, distance, reviewCount, savedCount);
     }
 
-    //정렬(filter)
-    private Comparator<MapResponse.SmokingAreaInfoWithRequest> sorting(String filter) {
-        if ("거리순".equals(filter)) {
-            return Comparator.comparing(MapResponse.SmokingAreaInfoWithRequest::getDistance); //가까운 순
-        } else if ("평점순".equals(filter)) {
-            return Comparator.comparing(MapResponse.SmokingAreaInfoWithRequest::getRating,
-                            Comparator.reverseOrder())//별점 높은 순
-                    .thenComparing(MapResponse.SmokingAreaInfoWithRequest::getDistance); //같으면 가까운 순
-        } else {
-            throw new SmokerClientException(ErrorStatus.FILTER_NOT_FOUND);
-        }
-    }
-
     //smokingarea 목록 조회하기
     @Transactional(readOnly = true)
-    public MapResponse.SmokingAreaListResponse getSmokingAreaListResponse(
-            Double userLat, Double userLng, String filter
-    ) {
-        List<MapResponse.SmokingAreaInfoWithRequest> smokingLists =
-                getSmokingAreaInfoWithDistance(userLat, userLng, filter);
+    public MapResponse.SmokingAreaListResponse getSmokingAreaListResponse(Double userLat, Double userLng,
+                                                                          String filter) {
+        List<MapResponse.SmokingAreaInfoWithRequest> smokingLists = getSmokingAreaInfoWithDistance(userLat, userLng,
+                filter);
 
         return new MapResponse.SmokingAreaListResponse(smokingLists);
     }
 
     //검색으로 목록 조회하기
     @Transactional(readOnly = true)
-    public MapResponse.SmokingAreaListResponse getSearchingAreaListResponse
-    (SmokingAreaRequest.SearchRequest searchRequest) {
-        List<MapResponse.SmokingAreaInfoWithRequest> smokingLists =
-                getSmokingAreaWithSearching(searchRequest);
+    public MapResponse.SmokingAreaListResponse getSearchingAreaListResponse(
+            SmokingAreaRequest.SearchRequest searchRequest) {
+        List<MapResponse.SmokingAreaInfoWithRequest> smokingLists = getSmokingAreaWithSearching(searchRequest);
 
         return new MapResponse.SmokingAreaListResponse(smokingLists);
     }
@@ -140,21 +100,14 @@ public class SmokingAreaService {
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
                 .orElseThrow(() -> new SmokerClientException(SMOKING_AREA_NOT_FOUND));
 
-        Feature updatedFeature = getFeature(request);
-        smokingArea.updateFeature(updatedFeature);
-
+        smokingArea.updateFeature(getFeature(request));
         smokingArea = smokingAreaRepository.save(smokingArea);
-
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new SmokerClientException(MEMBER_NOT_FOUND));
-        member.setUpdateCount(member.getUpdateCount() + 1);
-
+        member.increaseUpdateCount();
         memberRepository.save(member);
 
-        int updateCount = updatedHistoryRepository.countBySmokingAreaId(smokingAreaId) + 1;
-        Action action = Action.UPDATE;
-
-        UpdatedHistory history = new UpdatedHistory(updateCount, action, member, smokingArea);
+        UpdatedHistory history = new UpdatedHistory(Action.UPDATE, member, smokingArea);
         updatedHistoryRepository.save(history);
 
         return SmokingAreaUpdateRequest.of(smokingArea);
@@ -177,14 +130,9 @@ public class SmokingAreaService {
         SmokingArea smokingArea = smokingAreaRepository.findById(smokingAreaId)
                 .orElseThrow(() -> new SmokerClientException(SMOKING_AREA_NOT_FOUND));
 
-        return new SmokingAreaDetailResponse(
-                updateCount,
-                smokingArea.getSmokingAreaName(),
-                smokingArea.getLocation().getAddress(),
-                smokingArea.getImageUrl(),
-                smokingArea.getAreaType(),
-                smokingArea.getFeature()
-        );
+        return new SmokingAreaDetailResponse(updateCount, smokingArea.getSmokingAreaName(),
+                smokingArea.getLocation().getAddress(), smokingArea.getImageUrl(), smokingArea.getAreaType(),
+                smokingArea.getFeature());
     }
 
     //새로운 흡연구역 등록
@@ -206,10 +154,7 @@ public class SmokingAreaService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new SmokerClientException(MEMBER_NOT_FOUND));
 
-        SavedSmokingArea savedSmokingArea = SavedSmokingArea.builder()
-                .member(member)
-                .smokingArea(smokingArea)
-                .build();
+        SavedSmokingArea savedSmokingArea = SavedSmokingArea.builder().member(member).smokingArea(smokingArea).build();
 
         savedSmokingAreaRepository.save(savedSmokingArea);
     }
@@ -233,26 +178,23 @@ public class SmokingAreaService {
     @Transactional(readOnly = true)
     public List<MapResponse.SmokingAreaInfoWithRequest> getSavedSmokingAreaList(Long memberId, Double lat, Double lng,
                                                                                 String filterBy, String query) {
-
         List<SmokingArea> savedSmokingAreaList;
-
-        if (query != null && !query.isEmpty()) {
-            if (filterBy.equals("name")) {
-                savedSmokingAreaList = savedSmokingAreaRepository.findSmokingAreasByMemberIdAndAreaName(memberId,
-                        query);
-            } else {
+        switch (filterBy) {
+            case "name":
+                savedSmokingAreaList = savedSmokingAreaRepository.findSmokingAreasByMemberIdAndAreaName(memberId, query);
+                break;
+            case "address":
                 savedSmokingAreaList = savedSmokingAreaRepository.findSmokingAreasByMemberIdAndAddress(memberId, query);
-            }
-        } else {
-            savedSmokingAreaList = savedSmokingAreaRepository.findSmokingAreasByMemberId(memberId);
+                break;
+            default:
+                throw new SmokerClientException(FILTER_NOT_FOUND);
         }
 
         return savedSmokingAreaList.stream().map(smokingArea -> getDtoElement(lat, lng, smokingArea)).toList();
     }
 
     private Feature getFeature(SmokingAreaUpdateRequest request) {
-        return new Feature(
-                request.hasAirPurifier(),        // 공기 청정 기능
+        return new Feature(request.hasAirPurifier(),        // 공기 청정 기능
                 request.hasAirConditioning(),    // 냉난방 기능
                 request.hasChair(),              // 의자 제공
                 request.hasTrashBin(),           // 쓰레기통
@@ -264,59 +206,54 @@ public class SmokingAreaService {
                 request.hasFireExtinguisher(),   // 소화기 비치 여부
                 request.isRegularlyCleaned(),    // 정기적인 청소 여부
                 request.hasCigaretteDisposal(),  // 담배꽁초 처리함 제공 여부
-                request.hasSunshade(),           // 햇빛 차단 시설
+                request.hasSunshade(),           //
+
+                // 햇빛 차단 시설
                 request.hasRainProtection()      // 비바람 차단 시설
         );
     }
 
     //db로 검색어 찾기
     private List<MapResponse.SmokingAreaInfoWithRequest> getSmokingAreaWithSearching(
-            SmokingAreaRequest.SearchRequest searchRequest
-    ) {
-        //검색어 가공 : '동'으로 끝나면 제거
+            SmokingAreaRequest.SearchRequest searchRequest) {
         String searchKeyword = searchRequest.getSearch();
         if (searchKeyword.endsWith("동")) {
-            searchKeyword
-                    = searchKeyword
-                    .substring(0, searchRequest.getSearch().length() - 1);
+            searchKeyword = searchKeyword.substring(0, searchRequest.getSearch().length() - 1);
         }
+        List<SmokingArea> smokingAreas = smokingAreaRepository.findBySearch(searchKeyword);
 
-        //카카오 api 를 통해 키워드의 중심 좌표 찾기
-        /*KaKaoApiResponse.KaKaoResponse center
-                = kakaoApiService.getCenterLocationFromKakao
-                (searchKeyword);*/
-
-        //검색어로 찾기
-        List<SmokingArea> smokingAreas
-                = smokingAreaRepository.findBySearch(
-                searchKeyword);
-
-        //SmokingAreaInfoWithRequest dto에 넣기
-        return smokingAreas.stream().map(smokingArea ->
-                        getDtoElement(searchRequest.getUserLat(), searchRequest.getUserLng(),
-                                smokingArea)
-                ).sorted(sorting(searchRequest.getFilter()))
-                .collect(Collectors.toList());
+        return smokingAreas.stream()
+                .map(smokingArea -> getDtoElement(searchRequest.getUserLat(), searchRequest.getUserLng(), smokingArea))
+                .sorted(sorting(searchRequest.getFilter())).collect(Collectors.toList());
     }
 
     //목록 리스트의 개별 내용
-    private List<MapResponse.SmokingAreaInfoWithRequest> getSmokingAreaInfoWithDistance(
-            Double userLat, Double userLng, String filter) {
-        //모든 Db 불러오기
-        List<SmokingArea> smokingAreas =
-                smokingAreaRepository.findBySmokingAreaIdWithin1km(userLat, userLng);
+    private List<MapResponse.SmokingAreaInfoWithRequest> getSmokingAreaInfoWithDistance(Double userLat, Double userLng,
+                                                                                        String filter) {
+        List<SmokingArea> smokingAreas = smokingAreaRepository.findBySmokingAreaIdWithin1km(userLat, userLng);
 
-        //해당 db에 대한 모든 reviewCount와 savedCount 불러오기
-        return smokingAreas.stream().map(
-                        smokingArea -> getDtoElement(userLat, userLng, smokingArea)
-                ).sorted(sorting(filter))
+        return smokingAreas.stream()
+                .map(smokingArea -> getDtoElement(userLat, userLng, smokingArea))
+                .sorted(sorting(filter))
                 .collect(Collectors.toList());
+    }
+
+    //정렬(filter)
+    private Comparator<MapResponse.SmokingAreaInfoWithRequest> sorting(String filter) {
+        switch (filter) {
+            case "거리순":
+                return Comparator.comparing(MapResponse.SmokingAreaInfoWithRequest::getDistance);
+            case "평점순":
+                return Comparator.comparing(MapResponse.SmokingAreaInfoWithRequest::getRating, Comparator.reverseOrder())
+                        .thenComparing(MapResponse.SmokingAreaInfoWithRequest::getDistance);
+            default:
+                throw new SmokerClientException(ErrorStatus.FILTER_NOT_FOUND);
+        }
     }
 
     //거리 계산하는 함수
     //latitude = 위도, longitude = 경도
-    private Double calculateHaversineDistance(Double userLat, Double userLng,
-                                              Double destLat, Double destLng) {
+    private Double calculateHaversineDistance(Double userLat, Double userLng, Double destLat, Double destLng) {
         Double distance;
         double earthRad = 6371000;
 
@@ -327,12 +264,10 @@ public class SmokingAreaService {
         Double deltaLng = Math.toRadians(destLng - userLng); //경도 차
 
         //공식 적용
-        Double haver = Math.pow(Math.sin(deltaLat / 2), 2) +
-                Math.cos(latRad1) * Math.cos(latRad2) * Math.pow(
-                        Math.sin(deltaLng / 2), 2);
+        Double haver = Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(latRad1) * Math.cos(latRad2) * Math.pow(
+                Math.sin(deltaLng / 2), 2);
 
-        Double haversin = 2 * Math.atan2(Math.sqrt(haver),
-                Math.sqrt(1 - haver));
+        Double haversin = 2 * Math.atan2(Math.sqrt(haver), Math.sqrt(1 - haver));
 
         //단위 m
         Double dis = earthRad * haversin;
@@ -349,33 +284,15 @@ public class SmokingAreaService {
     }
 
     //distance, avgReview, reviewCont, saveCount 계산 함수
-    private MapResponse.SmokingAreaInfoWithRequest getDtoElement
-    (Double userLat, Double userLng, SmokingArea smokingArea) {
-        Double distance = calculateHaversineDistance(userLat, userLng,
-                smokingArea.getLocation().getLatitude(),
+    private MapResponse.SmokingAreaInfoWithRequest getDtoElement(Double userLat, Double userLng,
+                                                                 SmokingArea smokingArea) {
+        Double distance = calculateHaversineDistance(userLat, userLng, smokingArea.getLocation().getLatitude(),
                 smokingArea.getLocation().getLongitude());
+        Double avgRating = reviewRepository.findAvgScoreBySmokingId(smokingArea.getId());
+        int reviewCount = smokingAreaRepository.findReviewCountBySmokingAreaId(smokingArea.getId());
+        int savedCount = smokingAreaRepository.findSavedCountBySmokingAreaId(smokingArea.getId());
 
-        Double avgRating
-                = reviewRepository.findAvgScoreBySmokingId(smokingArea.getId());
-
-        int reviewCount
-                = smokingAreaRepository.findReviewCountBySmokingAreaId(
-                smokingArea.getId());
-
-        int savedCount
-                = smokingAreaRepository.findSavedCountBySmokingAreaId(
-                smokingArea.getId());
-
-        return new MapResponse.SmokingAreaInfoWithRequest(
-                smokingArea.getId(),
-                smokingArea.getSmokingAreaName(),
-                smokingArea.getImageUrl(),
-                distance,
-                smokingArea.getLocation(),
-                avgRating,
-                reviewCount,
-                savedCount
-        );
+        return new MapResponse.SmokingAreaInfoWithRequest(smokingArea.getId(), smokingArea.getSmokingAreaName(),
+                smokingArea.getImageUrl(), distance, smokingArea.getLocation(), avgRating, reviewCount, savedCount);
     }
 }
-

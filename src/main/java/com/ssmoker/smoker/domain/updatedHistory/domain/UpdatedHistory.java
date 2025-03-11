@@ -16,9 +16,6 @@ public class UpdatedHistory extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Integer updateCount=0;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Action action;
@@ -31,11 +28,9 @@ public class UpdatedHistory extends BaseEntity {
     @JoinColumn(name = "smoking_area_id", nullable = false)
     private SmokingArea smokingArea;
 
-    public UpdatedHistory(Integer updateCount, Action action, Member member, SmokingArea smokingArea) {
-        this.updateCount = updateCount;
+    public UpdatedHistory(Action action, Member member, SmokingArea smokingArea) {
         this.action = action;
         this.member = member;
         this.smokingArea = smokingArea;
     }
-
 }

@@ -1,5 +1,9 @@
 package com.ssmoker.smoker.domain.member.service;
 
+import static com.ssmoker.smoker.domain.member.converter.MemberConverter.toMemberUpdateDTO;
+import static com.ssmoker.smoker.global.exception.code.ErrorStatus.FORBIDDEN_NICKNAME;
+import static com.ssmoker.smoker.global.exception.code.ErrorStatus.USER_NOT_FOUND;
+
 import com.ssmoker.smoker.domain.member.converter.MemberConverter;
 import com.ssmoker.smoker.domain.member.domain.Member;
 import com.ssmoker.smoker.domain.member.dto.MemberRequestDTO;
@@ -12,9 +16,9 @@ import com.ssmoker.smoker.domain.updatedHistory.repository.UpdatedHistoryReposit
 import com.ssmoker.smoker.global.aws.s3.AmazonS3Manager;
 import com.ssmoker.smoker.global.exception.SmokerClientException;
 import com.ssmoker.smoker.global.exception.SmokerServerError;
-import com.ssmoker.smoker.global.exception.code.ErrorStatus;
 import io.jsonwebtoken.io.IOException;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -39,7 +43,7 @@ public class MemberServiceImpl implements MemberService {
         log.info("memberId: {}", memberId);
         return memberRepository
                 .findById(memberId)
-                .orElseThrow(() -> new SmokerClientException(ErrorStatus.USER_NOT_FOUND));
+                .orElseThrow(() -> new SmokerClientException(USER_NOT_FOUND));
     }
 
     @Override
@@ -50,20 +54,21 @@ public class MemberServiceImpl implements MemberService {
             return;
         }
         if (nickname == null || nickname.trim().isEmpty() || nickname.length() > 15) {
-            throw new SmokerClientException(ErrorStatus.FORBIDDEN_NICKNAME);
+            throw new SmokerClientException(FORBIDDEN_NICKNAME);
         }
-        member.setNickName(nickname);
+        member.updateNickName(nickname);
     }
 
     @Override
     @Transactional
-    public String updateProfileImage(Long memberId ,MemberRequestDTO.updateProfileImageRequestDTO request){
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new SmokerClientException(ErrorStatus.USER_NOT_FOUND));
-        try{
-            final String uuid = UUID.randomUUID().toString();
-            final String keyName = amazonS3Manager.generateProfileKeyName(uuid);
-            final String imageUrl = amazonS3Manager.uploadFile(keyName, request.getMultipartFile());
-            member.setProfileImageUrl(imageUrl);
+    public String updateProfileImage(Long memberId, MemberRequestDTO.updateProfileImageRequestDTO request) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new SmokerClientException(USER_NOT_FOUND));
+        try {
+            String uuid = UUID.randomUUID().toString();
+            String keyName = amazonS3Manager.generateProfileKeyName(uuid);
+            String imageUrl = amazonS3Manager.uploadFile(keyName, request.getMultipartFile());
+            member.updateImageUrl(imageUrl);
             memberRepository.save(member);
             return imageUrl;
         } catch (IOException e) {
@@ -74,17 +79,19 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberResponseDTO.MemberProfileDTO viewProfile(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new SmokerClientException(ErrorStatus.USER_NOT_FOUND));
-        return new MemberResponseDTO.MemberProfileDTO(memberId,member.getNickName(),member.getProfileImageUrl());
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new SmokerClientException(USER_NOT_FOUND));
+        return new MemberResponseDTO.MemberProfileDTO(memberId, member.getNickName(), member.getProfileImageUrl());
     }
 
     @Override
     @Transactional
-    public MemberResponseDTO.MemberReviewListDTO viewMemberReviews(Long memberId, Integer page){
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new SmokerClientException(ErrorStatus.USER_NOT_FOUND));
+    public MemberResponseDTO.MemberReviewListDTO viewMemberReviews(Long memberId, Integer page) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new SmokerClientException(USER_NOT_FOUND));
         PageRequest pageRequest = PageRequest.of(page - 1, 5);
 
-        Page<Review> reviewPage = reviewRepository.findAllByMember(member,pageRequest);
+        Page<Review> reviewPage = reviewRepository.findAllByMember(member, pageRequest);
         MemberResponseDTO.MemberReviewListDTO memberReviewList = MemberConverter.toMemberReviewListDTO(reviewPage);
 
         return memberReviewList;
@@ -93,12 +100,17 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberResponseDTO.MemberUpdateListDTO viewMemberUpdateHistory(Long memberId, Integer page) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new SmokerClientException(ErrorStatus.USER_NOT_FOUND));
-        PageRequest pageRequest = PageRequest.of(page - 1, 5);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new SmokerClientException(USER_NOT_FOUND));
+        Page<UpdatedHistory> updatedHistoryPage = updatedHistoryRepository.findAllByMember(PageRequest.of(page - 1, 5),
+                member);
 
-        Page<UpdatedHistory> updatedHistoryPage = updatedHistoryRepository.findAllByMember(pageRequest,member);
-        MemberResponseDTO.MemberUpdateListDTO memberUpdateList = MemberConverter.toMemberUpdateListDTO(updatedHistoryPage);
+        List<MemberResponseDTO.MemberUpdateDTO> responseDTOS = updatedHistoryPage.stream()
+                .map(updatedHistory -> toMemberUpdateDTO(
+                        updatedHistory,
+                        updatedHistoryRepository.countBySmokingAreaId(updatedHistory.getSmokingArea().getId())))
+                .toList();
 
-        return memberUpdateList;
+        return MemberConverter.toMemberUpdateListDTO(responseDTOS, updatedHistoryPage.getTotalPages());
     }
 }
