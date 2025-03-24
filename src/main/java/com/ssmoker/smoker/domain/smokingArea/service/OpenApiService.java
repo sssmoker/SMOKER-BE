@@ -26,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 public class OpenApiService {
+
     private static final String[] BASE_URLS = {
             "https://api.odcloud.kr/api/15040615/v1/uddi:d494c578-f45e-4c42-9dde-c277cbd8717a",   // 광진구
             "https://api.odcloud.kr/api/15040413/v1/uddi:a665ca8b-95d6-4ef8-a7c0-8e31c6b1b9a7",   // 서대문구
@@ -36,7 +37,7 @@ public class OpenApiService {
             "https://api.odcloud.kr/api/15073796/v1/uddi:17fbd06c-45bb-48aa-9be7-b26dbc708c9c"    // 용산구
     };
     private static final int PER_PAGE = 100;
-    private static final String HAS_KEY = "키가 존재하지 않습니다";
+    private static final String KEY_ERROR_MSG = "키가 존재하지 않습니다";
 
     @Value("${open-api.key}")
     private String encodeKey;
@@ -90,8 +91,8 @@ public class OpenApiService {
     private List<SmokingArea> processDataList(List<Map<String, Object>> dataList) {
         List<SmokingArea> list = new ArrayList<>();
         for (Map<String, Object> data : dataList) {
-            String addressKey = findKey(data, List.of("도로", "주소")).orElse(HAS_KEY);
-            String areaTypeKey = findKey(data, List.of("형태", "구분")).orElse(HAS_KEY);
+            String addressKey = findKey(data, List.of("도로", "주소")).orElse(KEY_ERROR_MSG);
+            String areaTypeKey = findKey(data, List.of("형태", "구분")).orElse(KEY_ERROR_MSG);
 
             String address = (String) data.getOrDefault(addressKey, null);
             String areaType = (String) data.getOrDefault(areaTypeKey, null);
